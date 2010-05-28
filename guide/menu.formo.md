@@ -5,5 +5,6 @@
 	- [HTML views](formo.html-views)
 	- [Validation](formo.validation)
 	- [Validation errors](formo.errors)
+	- [Ordering](formo.ordering)
 	- [Jelly Integration](formo.jelly)
 	- [Formo DOM object](formo.dom)
