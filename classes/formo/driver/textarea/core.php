@@ -8,7 +8,7 @@ class Formo_Driver_Textarea_Core extends Formo_Driver {
 	{
 		$field
 			->set('tag', 'textarea')
-			->set('text', htmlentities($field->get('value')))
+			->set('text', htmlentities($field->val()))
 			->attr('name', $field->alias());
 	}
 

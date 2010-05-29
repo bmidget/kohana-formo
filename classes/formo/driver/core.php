@@ -39,14 +39,14 @@ abstract class Formo_Driver_Core {
 
 		return $prefix.$this->get('render_type').'/'.$view;
 	}
-		
-	public function add_post($value)
+			
+	public function val($value)
 	{
-		$this->set('value', $value);
+		$this->field->defaults('value', $value);
 		
-		if ($model = $this->model())
+		if ($model = $this->field->model())
 		{
-			$model->{$this->alias()} = $value;
+			$model->{$this->field->alias()} = $value;
 		}
 	}
 	

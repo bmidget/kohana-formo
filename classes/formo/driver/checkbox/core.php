@@ -9,12 +9,13 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 		$field
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
-			->attr('name', $field->_alias)
-			->attr('value', htmlentities($field->_value));
-			
-		if ($field->_value)
+			->attr('name', $this->parent()->alias().'[]')
+			->attr('value', htmlentities($field->val()));
+		
+		$parent_value = $field->parent()->val();
+				
+		if (is_array($parent_value) AND in_array($field->val(), $parent_value))
 		{
-			$field->_event->run('check', $field);
 			$field->attr('checked', 'checked');
 		}
 	}

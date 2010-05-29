@@ -5,7 +5,10 @@ class Formo_Render_html_Core extends Formo_Render {
 	// HTML tag
 	public $tag;
 	// Array of attributes
-	public $attr = array();
+	public $attr = array
+	(
+		'class' => array(),
+	);
 	// Styles
 	public $css = array();
 	// Text inside thag
@@ -38,15 +41,16 @@ class Formo_Render_html_Core extends Formo_Render {
 			$this->$item = $value;
 		}
 		
-		// Copy settings and defaults
+		// Copy settings and defaults and error messages
 		if ($object instanceof Container)
 		{
 			$this->_settings = $object->get('_settings');
 			$this->_defaults = $object->get('_defaults');
+			$this->_errors = $object->get('_errors');
 		}
-		
 	}
-			
+	
+	// Get or set an html attribute
 	public function attr($attr, $value = NULL)
 	{
 		if (is_array($attr))
@@ -68,12 +72,15 @@ class Formo_Render_html_Core extends Formo_Render {
 		}
 		else
 		{
-			$this->attr[$attr] = $value;
+			$this->attr[$attr] = (array_key_exists($attr, $this->attr) AND is_array($this->attr[$attr]))
+				? (array) $value
+				: $value;
 		}
 		
 		return $this;
 	}
 	
+	// Set or get a "style" attribute
 	public function css($style, $value = NULL)
 	{
 		if (is_array($style))
@@ -114,9 +121,7 @@ class Formo_Render_html_Core extends Formo_Render {
 			return $this;
 		}
 		
-		$this->attr['class'] = ( ! empty($this->attr['class']))
-			? $this->attr['class'].' '.$class
-			: $class;
+		$this->attr['class'][] = $class;
 			
 		return $this;
 	}
@@ -124,36 +129,11 @@ class Formo_Render_html_Core extends Formo_Render {
 	// Remove a class if it exists
 	public function remove_class($class)
 	{
-		(preg_match('/ /', $class) AND $class = explode(' ', $class));
-		
-		if (is_array($class))
+		if ($key = array_search($class, $this->attr['class']) !== FALSE)
 		{
-			foreach ($class as $_class)
-			{
-				$this->remove_class(trim($_class));
-			}
-			
-			return $this;
+			unset($this->attr['class'][$key]);
 		}
-				
-		$search = array
-		(
-			'/^'.$class.' /',
-			'/ '.$class.'( )/',
-			'/ '.$class.'$/'
-		);
-		
-		$this->attr['class'] = preg_replace($search,'$1',$this->attr['class']);
-		
-		if ( ! $this->attr['class'])
-		{
-			unset($this->attr['class']);
-		}
-		else
-		{
-			$this->attr['class'] = trim($this->attr['class']);
-		}
-		
+					
 		return $this;
 	}
 	
@@ -174,7 +154,7 @@ class Formo_Render_html_Core extends Formo_Render {
 		}
 		
 		// Return the generated object
-		return $this->html($options);
+		return self::factory($options);
 	}
 
 	// Set or return the text
@@ -235,7 +215,8 @@ class Formo_Render_html_Core extends Formo_Render {
 		
 		foreach ($this->attr as $attr => $value)
 		{
-			$str.= ' '.$attr.'='.$this->quote.$value.$this->quote;
+			$value = (is_array($value)) ? implode(' ', $value) : $value;
+			$str.= " $attr = $this->quote$value$this->quote";
 		}
 		
 		// Then attach styles
@@ -250,39 +231,6 @@ class Formo_Render_html_Core extends Formo_Render {
 		}
 		
 		return $str;
-	}
-
-	// Generate an html object on the fly using this object's parameters
-	public function html($tag, $var = NULL, array $options = NULL)
-	{
-		$options = func_get_args();
-		$orig_options = $options;
-		$options = Container::args(__CLASS__, __FUNCTION__, $options);
-		
-		// This is what the stored name will be
-		$stored_name = isset($options['var']) ? $options['var'] : $options['tag'];
-		
-		// If it's already been made, return it
-		if (isset($this->_variables['generated_objects'][$stored_name]))
-			return $this->_variables['generated_objects'][$stored_name];
-			
-		// Create the options array to use
-		$_options = array();
-		
-		if (isset($options['var']) AND isset($this->$var))
-		{
-			$_options = (is_array($this->$var))
-				? $this->{$options['param']}
-				: array('text' => $this->$var);
-		}
-				
-		foreach ($options as $option => $value)
-		{
-			$_options[$option] = $value;
-		}
-				
-		// Cache the object and return it
-		return $this->_variables['generated_objects'][$var] = self::factory($_options);
 	}
 	
 	// Allows just the opening tag to be returned
@@ -309,12 +257,13 @@ class Formo_Render_html_Core extends Formo_Render {
 		return $str;
 	}
 	
-	// Convenience method
+	// Convenience method for finding all fields
 	public function fields()
 	{
 		return $this->defaults('fields');
 	}
 	
+	// Render fields as html
 	public function __toString()
 	{
 		return $this->render();

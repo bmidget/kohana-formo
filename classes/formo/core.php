@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Core extends Container {
+class Formo_Core extends Validator {
 	
 	protected $_settings = array
 	(
@@ -79,10 +79,11 @@ class Formo_Core extends Container {
 				
 		foreach ($validate_options as $option)
 		{
-			if ( ! empty($options[$option.'s']))
+			$option_name = Inflector::plural($option);
+			if ( ! empty($options[$option_name]))
 			{
-				$validate_settings[$option] = $options[$option.'s'];
-				unset($options[$option.'s']);
+				$validate_settings[$option] = $options[$option_name];
+				unset($options[$option_name]);
 			}
 		}
 								
@@ -112,9 +113,9 @@ class Formo_Core extends Container {
 	}
 		
 	// Determine whether data was sent
-	public function was_sent(array $input = NULL)
+	public function sent()
 	{
-		if ($input !== NULL AND $val = Arr::get($input, '_formo') AND $val == $this->alias())
+		if ($val = Arr::get($this->get('input'), '_formo') AND $val == $this->alias())
 		{
 			$this->set('sent', TRUE);
 		}
@@ -162,17 +163,19 @@ class Formo_Core extends Container {
 		{
 			if ($field = $this->find($name))
 			{
-				$field->driver->add_post($value);
+				$field->driver->val($value);
 				continue;
 			}
 			
 			if ($field = $this->find(str_replace('_', ' ', $name)))
 			{
-				$field->driver->add_post($value);
+				$field->driver->val($value);
 			}
 		}
 		
-		$this->was_sent($input);
+		$this->input = $input;
+		
+		$this->sent();
 		
 		return $this;
 	}

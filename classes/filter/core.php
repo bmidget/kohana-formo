@@ -22,7 +22,8 @@ class Filter_Core {
 	{
 		$this->context->pseudo_args($this->args);
 		
-		$this->context->set('value', call_user_func_array($this->callback, $this->args));
+		// Set the context's value to whatever the filter returns
+		$this->context->val(call_user_func_array($this->callback, $this->args));
 	}
 
 }

@@ -6,10 +6,12 @@ class Formo_Driver_Radios_Core extends Formo_Driver {
 	
 	public function pre_render_html($field)
 	{
-		foreach ($field->options as $options)
+		foreach ($field->options as $label => $options)
 		{
-			$options['driver'] = 'radio';
-			$field->append($options);
+			$options = is_array($options) ? $options : array('value' => $options);
+			$checkbox = Ffield::factory($label, 'radio', $options);
+						
+			$field->append($checkbox);
 		}
 	}
 

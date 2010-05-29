@@ -13,9 +13,7 @@ return array
 	// File for validate messages
 	'validate_messages_file'	=> 'validate',
 	// Whether to translate labels
-	'translate_labels'			=> TRUE,
-	// Whether to translate messages
-	'translate_messages'		=> TRUE,
+	'translate'					=> TRUE,
 	// ORM driver to use
 	'ORM'						=> 'Jelly',
 	

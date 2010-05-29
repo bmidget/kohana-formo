@@ -1,5 +1,5 @@
 <p>
 	<?=$field->label()->text('callback', 'ucfirst')->text('.=', ':')?>
-	<?=$field->add_class('input')?>
-	<span class="errorMessage"><?=ucfirst($field->_error)?></span>
+		<?=$field->render('html')?>
+	<span class="errorMessage"><?=ucfirst($field->error())?></span>
 </p>

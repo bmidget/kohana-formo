@@ -23,6 +23,7 @@ class Trigger_Core {
 		$this->check_against = $check_against === FALSE;
 	}
 	
+	// Add the trigger's context
 	public function context($context)
 	{
 		$this->context = $context;
@@ -30,6 +31,7 @@ class Trigger_Core {
 		return $this;
 	}
 	
+	// Add a single action to the trigger
 	public function action($action_field, $action_callback, array $action_args = NULL)
 	{
 		$this->action_fields[] = $action_field;

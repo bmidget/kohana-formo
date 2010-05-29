@@ -10,7 +10,7 @@ class Formo_Driver_Text_Core extends Formo_Driver {
 			->set('tag', 'input')
 			->attr('type', 'text')
 			->attr('name', $field->alias())
-			->attr('value', htmlentities($field->get('value')));
+			->attr('value', htmlentities($field->val()));
 	}
 
 }

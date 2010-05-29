@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Ffield_Core extends Container {
+class Ffield_Core extends Validator {
 	
 	public $options = array();
 	public $attr = array();
@@ -10,7 +10,6 @@ class Ffield_Core extends Container {
 	(
 		'driver'		=> 'text',
 		'render_type'	=> 'html',
-		'value'			=> NULL,
 	);
 	
 	public static function factory($alias, $driver = NULL, array $options = NULL)
@@ -23,7 +22,7 @@ class Ffield_Core extends Container {
 		$options = func_get_args();
 		$orig_options = $options;
 		$options = Container::args(__CLASS__, __FUNCTION__, $options);
-		
+				
 		$this->load_options($options);
 	}
 	

@@ -37,6 +37,10 @@ class Rule_Core {
 		// If :: is in the callback, context is aleady specifically defined
 		if (preg_match('/::/', $this->callback))
 			return NULL;
+			
+		// If it's a straight-up function, use that
+		if (function_exists($this->callback))
+			return NULL;
 
 		// Always check against a possible model first
 		if ($model = $context->model() AND method_exists($model, $this->callback))
@@ -71,13 +75,13 @@ class Rule_Core {
 		{
 			// If context is set, run the method on the context object
 			$method = new ReflectionMethod($this->context, $this->callback);
-			if ($method->invokeArgs($this->context, $this->args) === FALSE)
+			if ((bool) $method->invokeArgs($this->context, array_values($this->args)) === FALSE)
 				return $this->error = $this->name;
 		}
 		else
 		{
 			// Otherwise run the method as a standalone method
-			if (call_user_func_array($this->callback, $this->args) === FALSE)
+			if ((bool) call_user_func_array($this->callback, array_values($this->args)) === FALSE)
 				return $this->error = $this->name;
 		}
 
