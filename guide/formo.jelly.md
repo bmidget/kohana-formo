@@ -18,7 +18,14 @@ The following example will pull an entire model and create a form from it:
 		
 	if ($form->load()->validate())
 	{
-		$user-save();
+		try
+		{
+			$user-save();
+		}
+		catch (Validate_Exception $e)
+		{
+			// Do somethign with $e
+		}
 	}	
 		
 Notice any relationship fields are automatically populated as select lists or checkboxes for BelongsTo, HasMany, HasOne and ManyToMany fields. Also, rules defined and inside the field definitions are included in Formo as well. You can add other information you need inside your Formo object by adding them to field definitions, too, such as:
@@ -61,9 +68,18 @@ Here's an example of working with a user record using this approach:
 		
 	$this->template->content = $user->form->render('html');
 	
-	if ($user->load()->validate())
+	if ($user->load()->sent())
 	{
-		$user->save();
+		try
+		{
+			// Data is validated at save
+			$user->save();
+		}
+		catch(Validate_Exception $e)
+		{
+			// Do something with $e
+		}
+		
 	}
 
 Here's an example of a login form and how clean and obvious this tight integration makes working with forms:
@@ -103,7 +119,7 @@ If you set up your model correctly, the following would always fail at $user->sa
 		// This would fail because in a typical user model,
 		// username and password would at least be required
 		// for a new record
-		$user->validate();
+		$user->savew();
 	}
 	
 Therefore validation takes place at two levels: the form level, and the model level. This preserves data integrity and allows for separate form logic from model logic.

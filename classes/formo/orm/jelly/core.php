@@ -33,10 +33,12 @@ class Formo_ORM_Jelly_Core {
 		{
 			if (in_array($column, $skip_fields))
 				continue;
-				
+			
 			if ($fields AND ( ! in_array($column, $fields)))
 				continue;
-				
+			
+			$options = (array) $field + array('value' => $model->get($column));
+/*
 			$options = array('value' => $model->get($column));
 			
 			$add_options = array('driver', 'rules', 'filters', 'triggers', 'post_filters');
@@ -48,7 +50,7 @@ class Formo_ORM_Jelly_Core {
 					$options[$option] = $field->$option;
 				}
 			}
-
+*/			
 			$form->add($column, $options);
 		}
 	}

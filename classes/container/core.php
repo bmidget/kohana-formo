@@ -139,7 +139,7 @@ abstract class Container_Core {
 				
 		return $this;
 	}
-	
+		
 	// Fetch variables
 	public function get($variable, $default = FALSE)
 	{
@@ -160,6 +160,16 @@ abstract class Container_Core {
 		$this->driver->val($value);
 		
 		return $this;
+	}
+	
+	// Recursively run a method on every field in the form
+	public function run($method, $params)
+	{
+		foreach ($this->defaults('fields') as $field)
+		{
+			call_user_func_array(array($field, $method), $params);
+			$field->run($method, $params);
+		}
 	}
 	
 	// Convenience method for getting and setting load_value

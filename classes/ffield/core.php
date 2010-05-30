@@ -10,6 +10,8 @@ class Ffield_Core extends Validator {
 	(
 		'driver'		=> 'text',
 		'render_type'	=> 'html',
+		'render'		=> TRUE,
+		'editable'		=> TRUE,
 	);
 	
 	public static function factory($alias, $driver = NULL, array $options = NULL)
@@ -33,6 +35,9 @@ class Ffield_Core extends Validator {
 	
 	public function render($render_type)
 	{
+		if ($this->get('render') === FALSE)
+			return;
+			
 		$render_type = $this->parent()->get('render_type');
 		$this->set('render_type', $render_type);
 

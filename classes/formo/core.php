@@ -24,6 +24,10 @@ class Formo_Core extends Validator {
 		'type'			=> 'post',
 		// html, json, xml, etc
 		'render_type'	=> NULL,
+		// Whether the field should render
+		'render'		=> TRUE,
+		// Whether the field is editable
+		'editable'		=> TRUE,
 	);
 	
 	public static function factory($alias = 'form', $driver = 'form')
@@ -122,6 +126,43 @@ class Formo_Core extends Validator {
 
 		return $this->get('sent');
 	}
+
+	// Disable rendering
+	public function disable_render($field)
+	{
+		if (is_array($field))
+		{
+			foreach ($field as $_field)
+			{
+				$this->disable_render($_field);
+			}
+			
+			return $this;
+		}
+		
+		$this->find($field)->set('render', FALSE);
+		
+		return $this;
+	}
+	
+	// Only render a group
+	public function only_render($search)
+	{
+		foreach ($this->fields() as $field)
+		{
+			if (in_array($field->alias(), (array) $search) === FALSE)
+			{
+				$field->set('render', FALSE);
+			}
+			else
+			{
+				$field->set('render', TRUE);
+			}
+			
+		}
+		
+		return $this;
+	}
 			
 	// Return all fields in order
 	public function fields($field = NULL)
@@ -200,6 +241,9 @@ class Formo_Core extends Validator {
 	
 	public function render($type, $view_prefix = FALSE)
 	{
+		if ($this->get('render') === FALSE)
+			return;
+			
 		if (Kohana::$profiling === TRUE)
 		{
 			// Start a new benchmark
