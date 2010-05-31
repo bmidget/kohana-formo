@@ -78,8 +78,8 @@ abstract class Validator_Core extends Container {
 		}
 						
 		if ($values != TRUE
-			AND (method_exists($this, 'was_sent') AND ! $this->was_sent())
-			AND ! $this->parent(Container::PARENT)->was_sent())
+			AND (method_exists($this, 'sent') AND ! $this->sent())
+			AND ! $this->parent(Container::PARENT)->sent())
 			return FALSE;
 			
 		if ($this->error() !== FALSE)
@@ -337,7 +337,9 @@ abstract class Validator_Core extends Container {
 			$new_params[$key] = $this->parent(Container::PARENT);
 		}
 		
-		$params = empty($new_params) ? (array) $this->val() : $new_params;
+		$params = empty($new_params) ? array($this->val()) : $new_params;
+		
+
 		
 		return $params;
 	}
