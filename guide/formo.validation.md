@@ -67,3 +67,29 @@ This runs the same function but only on the field 'phone'
 	$form->phone->post_filter(NULL, 'Format::phone', array('(3) 304'));
 
 ## Rules
+
+A rule returns TRUE if the field passes it, and FALSE if it doesn't. By default, a field's value is passed as a sole parameter, but this can be overridden to anything and in any order.
+
+Rules 
+
+## Converting Validate rules to Formo-style rules
+
+The two certainly look the same. The one area you will run into issues is Formo only assumes the first rule is a field's value if no params were defined. If any params are defined, then the param that is value must be specifically defined as well.
+
+Take a look at these examples:
+
+	// Validate rules
+	'max_length' => array(32)
+	'min_length' => array(3)
+	
+	// In Formo
+	'max_length' => array(':value', 32)
+	'min_length' => array(':value', 32)
+	
+This is implemented so you don't always have to make your validate methods require value to be the first parameter. Then simple functions like preg_match can easily be validated against:
+
+	// Validate requires special regex method
+	'regex' => array('/^[\pL_.-]+$/ui')
+	
+	// But Formo allows you to just use preg_match
+	'preg_match'	=> array('/^[\pL_.-]+$/ui', ':value')

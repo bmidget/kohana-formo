@@ -184,7 +184,7 @@ abstract class Validator_Core extends Container {
 		$context = $field === NULL ? $this : $this->find($field);
 		
 		// Add the post filter
-		$context->add_validator('post_filters', Filter::factory($context, $callback, $args));
+		$context->add_validator('post_filters', Filter::factory($field, $context, $callback, $args));
 		
 		return $this;
 	}
@@ -202,11 +202,12 @@ abstract class Validator_Core extends Container {
 			
 	// Add a rule to an item in the container object
 	public function rule($field, $callback, array $args = NULL)
-	{		
-		$context = $field === NULL ? $this : $this->find($field);
+	{
+		$context = $field = ($field === NULL) ? $this : $this->find($field);
+		$this->make_context($context, $callback);
 		
 		// Add the rule
-		$context->add_validator('rules', Rule::factory($context, $callback, $args));
+		$field->add_validator('rules', Rule::factory($field, $context, $callback, $args));
 		
 		return $this;
 	}
@@ -244,6 +245,51 @@ abstract class Validator_Core extends Container {
 		}
 		
 		return $this;
+	}
+	
+	protected function make_context( & $context, & $callback)
+	{
+		$regex = '/:([a-zA-Z_0-9]+)::/';
+		
+		// Determine the context of the rule
+		if (preg_match($regex, $callback, $matches))
+		{
+			switch ($matches[1])
+			{
+				case 'parent':
+					$context = $this->parent();
+					break;
+				case 'form':
+					$context = $this->parent(Container::PARENT);
+					break;
+				case 'model':
+					$context = $this->model();
+					break;
+			}
+			
+			$callback = preg_replace($regex, '', $callback);
+		}
+		elseif (preg_match('/::/', $callback))
+		{
+			$context = NULL;
+		}
+		elseif (function_exists($callback))
+		{
+			$context = NULL;
+		}
+		elseif ($model = $this->model() AND method_exists($model, $callback))
+		{
+			$context = $model;
+		}
+		elseif (method_exists($this, $callback))
+		{
+			$context = $this;
+		}
+		elseif (is_callable(array('Validate', $callback)))
+		{
+			$callback = 'Validate::'.$callback;
+			$context = NULL;
+		}
 	}
 	
 	public static function param_names($rule)
@@ -316,10 +362,27 @@ abstract class Validator_Core extends Container {
 	public function pseudo_args( & $params)
 	{
 		$new_params = $params;
-								
+
 		if (($key = array_search(':field', $params)) !== FALSE)
 		{
 			$new_params[$key] = $this;
+		}
+		
+		if (($key = array_search(':parent', $params)) !== FALSE)
+		{
+			$new_params[$key] = $this->parent();
+		}
+
+		if (($key = array_search(':form', $params)) !== FALSE)
+		{
+			$new_params[$key] = $this->parent(Container::PARENT);
+		}
+
+		if (($key = array_search(':model', $params)) !== FALSE)
+		{
+			$new_params[$keyh] = ($this instanceof Formo)
+				? $this->get('model')
+				: $this->parent()->get('model');
 		}
 		
 		if (($key = array_search(':value', $params)) !== FALSE)
@@ -327,19 +390,7 @@ abstract class Validator_Core extends Container {
 			$new_params[$key] = $this->val();
 		}
 		
-		if (($key = array_search(':parent', $params)) !== FALSE)
-		{
-			$new_params[$key] = $this->parent();
-		}
-		
-		if (($key = array_search(':form', $params)) !== FALSE)
-		{
-			$new_params[$key] = $this->parent(Container::PARENT);
-		}
-		
 		$params = empty($new_params) ? array($this->val()) : $new_params;
-		
-
 		
 		return $params;
 	}

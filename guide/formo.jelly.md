@@ -87,8 +87,8 @@ Here's an example of a login form and how clean and obvious this tight integrati
 	// For the login form, we just need a blank record
 	$user = Jelly::factory('user');
 	
-	// We can pull specific parts of the model by using $model->form() instead of $model->form
-	$user->form(array('username', 'password'))
+	// We can pull specific parts of the model by using $model->subform() instead of $model->form
+	$user->subform(array('username', 'password'))
 		->add('submit', 'submit');
 		
 	$this->template->content = $user->form->render('html');
@@ -108,7 +108,7 @@ If you set up your model correctly, the following would always fail at $user->sa
 
 	$user = Jelly::factory('user');
 	
-	$user->form(array('email'))
+	$user->subform(array('email'))
 		->add('submit', 'submit');
 		
 	$this->template->content = $user->form->render('html');

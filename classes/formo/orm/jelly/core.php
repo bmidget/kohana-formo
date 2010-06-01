@@ -36,8 +36,28 @@ class Formo_ORM_Jelly_Core {
 			
 			if ($fields AND ( ! in_array($column, $fields)))
 				continue;
-			
+							
 			$options = (array) $field + array('value' => $model->get($column));
+			
+			// Look for validation rules as defined by the config file
+			foreach (Kohana::config('formo_jelly')->validation_keys as $key => $value)
+			{
+				// If they are using the assumed names, do nothing
+				if ($key === $value)
+					continue;
+									
+				// Only grab the proper validation settings from jelly field definition
+				$options[$key] = ( ! empty($options[$value]))
+					? $options[$value]
+					: array();
+				
+				// No need to carry duplicates for a rule
+				unset($options[$value]);
+			}
+			
+//			echo Kohana::debug($options);
+			
+			// NOTE: This shouldn't really happen until pre_render
 /*
 			$options = array('value' => $model->get($column));
 			

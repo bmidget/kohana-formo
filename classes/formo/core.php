@@ -77,7 +77,7 @@ class Formo_Core extends Validator {
 		}
 		
 		// Allow loading rules, callbacks, filters upon adding a field
-		$validate_options = array('rule', 'callback', 'filter');
+		$validate_options = array('rule', 'trigger', 'filter');
 		// Create the array
 		$validate_settings = array();
 				

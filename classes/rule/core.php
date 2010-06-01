@@ -18,53 +18,24 @@ class Rule_Core {
 	// The messages file
 	public $file = 'validate';
 	
-	public static function factory($context, $callback, array $args = NULL)
+	public static function factory($field, $context, $callback, array $args = NULL)
 	{
-		return new Rule_Core($context, $callback, $args);
+		return new Rule_Core($field, $context, $callback, $args);
 	}
 	
-	public function __construct($context, $callback, array $args = NULL)
+	public function __construct($field, $context, $callback, array $args = NULL)
 	{
-		$this->field = $context;
+		$this->field = $field;
+		$this->context = $context;
 		$this->callback = $callback;
 		$this->name = self::make_name($callback);
-		$this->context = $this->make_context($context);
-		$this->args = $args ? $args : array();
+		$this->args = $args ? $args : array();		
 	}
-	
-	protected function make_context($context)
-	{
-		// If :: is in the callback, context is aleady specifically defined
-		if (preg_match('/::/', $this->callback))
-			return NULL;
-			
-		// If it's a straight-up function, use that
-		if (function_exists($this->callback))
-			return NULL;
-
-		// Always check against a possible model first
-		if ($model = $context->model() AND method_exists($model, $this->callback))
-			return $model;
-			
-		// Next check against the field
-		if (method_exists($context, $this->callback))
-			return $context;
-			
-		// Check for a basic helper function inside Validate
-		if (is_callable(array('Validate', $this->callback)))
-		{
-			$this->callback = 'Validate::'.$this->callback;
-			return NULL;
-		}
 		
-		// Or just return the original context
-		return $context;
-	}
-	
 	protected static function make_name($callback)
 	{
 		// Return the function name, not the class namespace
-		return preg_replace('/[a-zA-Z0-9_]::/', '', $callback);
+		return preg_replace('/[:]*[a-zA-Z_0-9]+::/', '', $callback);
 	}
 			
 	public function execute()

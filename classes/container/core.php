@@ -203,6 +203,9 @@ abstract class Container_Core {
 			$last_parent->remove($field->alias());
 		}
 		
+		// If the parent has a model, copy it to the new subform
+		$subform->set('model', $this->get('model'));
+		
 		// Add the order if applicable
 		($order AND $subform->set('order', $order));
 		
