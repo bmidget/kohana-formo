@@ -76,6 +76,9 @@ abstract class Validator_Core extends Container {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
+
+		// Find the setting for whether to throw exceptions or simply return FALSE
+		$throw_exception = Kohana::config('formo')->throw_exceptions;
 						
 		if ($values != TRUE
 			AND (method_exists($this, 'sent') AND ! $this->sent())
@@ -102,6 +105,12 @@ abstract class Validator_Core extends Container {
 				{
 					// Set this error
 					$this->error($rule->error, TRUE, self::param_names($rule));
+					
+					if ($throw_exception === TRUE)
+					{
+						throw new Validator_Exception($rule->error);
+					}
+					
 
 					// Do not continue if there was an error
 					break;
@@ -115,6 +124,39 @@ abstract class Validator_Core extends Container {
 			// Don't do anything if it's ignored
 			if ($field->get('ignore') === TRUE)
 				continue;
+				
+			if ($throw_exception === TRUE)
+			{
+				try
+				{
+					$field->validate();
+				}
+				catch (Validator_Exception $e)
+				{
+					// Attach errors to its parent
+					$this->errors(Arr::merge($this->errors(), array($field->alias() => $e->array)));
+				}
+			}
+			else
+			{
+				if ($field->validate() === FALSE)
+				{
+					if ($field instanceof Formo)
+					{
+						// If no errors are attached to the subform, continue
+						if ( ! $field_errors = $field->errors())
+							continue;
+						
+						// Attach subform errors to the parent's errors
+						$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->errors())));					
+					}
+					else
+					{
+						// Attach field's error to its parent
+						$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->error())));
+					}
+				}
+			}
 								
 			// Validate everything else
 			if ($field->validate() === FALSE)
@@ -142,8 +184,6 @@ abstract class Validator_Core extends Container {
 			Profiler::stop($benchmark);
 		}
 		
-		// Find the setting for whether to throw exceptions or simply return FALSE
-		$throw_exception = Arr::get($this->get('config', array()), 'throw_exceptions', FALSE);
 				
 		// What to return depends on if it's a field or form object
 		if ($this instanceof Formo)
@@ -167,8 +207,13 @@ abstract class Validator_Core extends Container {
 		}
 		else
 		{
+			$passed = (bool) $this->error() === FALSE;
+			
+			if ($passed === FALSE AND $throw_exception)
+				throw new Validator_Exception($this->error());
+				
 			// Return whether passed validation based on field's error
-			return (bool) $this->error() === FALSE;
+			return $passed;
 		}
 	}
 	
