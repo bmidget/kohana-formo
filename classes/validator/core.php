@@ -152,7 +152,7 @@ abstract class Validator_Core extends Container {
 			if ($this->error() !== FALSE)
 			{
 				if ($throw_exception)
-					throw new Validate_Exception($this->errors());
+					throw new Validator_Exception($this->errors());
 	
 				return FALSE;
 			}
@@ -161,7 +161,7 @@ abstract class Validator_Core extends Container {
 			$passed = (bool) $this->errors() === FALSE;
 			
 			if ($passed === FALSE AND $throw_exception)
-				throw new Validate_Exception($this->errors());
+				throw new Validator_Exception($this->errors());
 
 			return $passed;
 		}
