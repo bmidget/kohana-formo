@@ -18,7 +18,7 @@ return array
 	'ORM'						=> 'Jelly',
 	// Use exception instead of returning FALSE
 	// for validate()
-	'throw_exception'			=> FALSE,
+	'throw_exceptions'			=> FALSE,
 	
 	// Groups are for adding groups of fields
 	'groups'					=> array

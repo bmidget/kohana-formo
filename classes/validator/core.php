@@ -151,14 +151,16 @@ abstract class Validator_Core extends Container {
 			// If the form/subform has an error message, return FALSE
 			if ($this->error() !== FALSE)
 			{
-				throw new Validate_Exception($this->errors());
+				if ($throw_exception)
+					throw new Validate_Exception($this->errors());
+	
 				return FALSE;
 			}
 
 			// Otherwise return whether the form/subform has no errors
 			$passed = (bool) $this->errors() === FALSE;
 			
-			if ($passed === FALSE)
+			if ($passed === FALSE AND $throw_exception)
 				throw new Validate_Exception($this->errors());
 
 			return $passed;
