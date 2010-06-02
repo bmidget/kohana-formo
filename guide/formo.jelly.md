@@ -108,7 +108,7 @@ If you set up your model correctly, the following would always fail at $user->sa
 
 	$user = Jelly::factory('user');
 	
-	$user->subform(array('email'))
+	$user->subq array('email'))
 		->add('submit', 'submit');
 		
 	$this->template->content = $user->form->render('html');

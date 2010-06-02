@@ -142,15 +142,26 @@ abstract class Validator_Core extends Container {
 			Profiler::stop($benchmark);
 		}
 		
+		// Find the setting for whether to throw exceptions or simply return FALSE
+		$throw_exception = Arr::get($this->get('config', array()), 'throw_exceptions', FALSE);
+				
 		// What to return depends on if it's a field or form object
 		if ($this instanceof Formo)
 		{
 			// If the form/subform has an error message, return FALSE
 			if ($this->error() !== FALSE)
+			{
+				throw new Validate_Exception($this->errors());
 				return FALSE;
+			}
 
 			// Otherwise return whether the form/subform has no errors
-			return (bool) $this->errors() === FALSE;
+			$passed = (bool) $this->errors() === FALSE;
+			
+			if ($passed === FALSE)
+				throw new Validate_Exception($this->errors());
+
+			return $passed;
 		}
 		else
 		{

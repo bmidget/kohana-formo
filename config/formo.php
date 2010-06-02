@@ -16,6 +16,9 @@ return array
 	'translate'					=> TRUE,
 	// ORM driver to use
 	'ORM'						=> 'Jelly',
+	// Use exception instead of returning FALSE
+	// for validate()
+	'throw_exception'			=> FALSE,
 	
 	// Groups are for adding groups of fields
 	'groups'					=> array
