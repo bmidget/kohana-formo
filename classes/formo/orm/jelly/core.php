@@ -39,8 +39,18 @@ class Formo_ORM_Jelly_Core {
 							
 			$options = (array) $field + array('value' => $model->get($column));
 			
+			// Fetch the validation key names from the config file
+			$validation_keys = Kohana::config('formo_jelly')->validation_keys;
+			
+			// Add specific rules
+			if ($options['unique'] === TRUE)
+			{
+				// If the field is set to unique, add the rule to check for other records
+				$options[$validation_keys['rules']][':model::unique'] = array($column);
+			}
+						
 			// Look for validation rules as defined by the config file
-			foreach (Kohana::config('formo_jelly')->validation_keys as $key => $value)
+			foreach ($validation_keys as $key => $value)
 			{
 				// If they are using the assumed names, do nothing
 				if ($key === $value)
@@ -54,9 +64,7 @@ class Formo_ORM_Jelly_Core {
 				// No need to carry duplicates for a rule
 				unset($options[$value]);
 			}
-			
-//			echo Kohana::debug($options);
-			
+						
 			// NOTE: This shouldn't really happen until pre_render
 /*
 			$options = array('value' => $model->get($column));

@@ -335,14 +335,6 @@ abstract class Validator_Core extends Container {
 		{
 			$context = NULL;
 		}
-		elseif ($model = $this->model() AND method_exists($model, $callback))
-		{
-			$context = $model;
-		}
-		elseif (method_exists($this, $callback))
-		{
-			$context = $this;
-		}
 		elseif (is_callable(array('Validate', $callback)))
 		{
 			$callback = 'Validate::'.$callback;
