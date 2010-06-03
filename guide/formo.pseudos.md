@@ -14,8 +14,11 @@ Syntax for using the pseudo contexts looks like a simple static function. Here i
 	->fields(array(
 		'username'	=> array
 		(
-			':model::myrule' => array(25),
-			':field::another_rule'	=> NULL,
+			'rules'	=> array
+			(
+				':model::myrule' => array(25),
+				':field::another_rule'	=> NULL,			
+			)
 		),
 	))
 
