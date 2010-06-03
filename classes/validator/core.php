@@ -430,7 +430,7 @@ abstract class Validator_Core extends Container {
 
 		if (($key = array_search(':model', $params)) !== FALSE)
 		{
-			$new_params[$keyh] = ($this instanceof Formo)
+			$new_params[$key] = ($this instanceof Formo)
 				? $this->get('model')
 				: $this->parent()->get('model');
 		}
