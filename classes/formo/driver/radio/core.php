@@ -4,17 +4,17 @@ class Formo_Driver_Radio_Core extends Formo_Driver {
 
 	protected $view = 'radio';
 
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field
+		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'radio')
-			->attr('name', $field->parent()->alias())
-			->attr('value', htmlentities($field->val()));
+			->attr('name', $this->render_field->parent()->alias())
+			->attr('value', htmlentities($this->render_field->val()));
 			
-		if ($field->parent()->val() == $field->val())
+		if ($this->render_field->parent()->val() == $this->render_field->val())
 		{
-			$field->attr('checked', 'checked');
+			$this->render_field->attr('checked', 'checked');
 		}
 	}
 

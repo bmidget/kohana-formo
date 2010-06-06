@@ -1,6 +1,6 @@
 <?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
 <p<?=$class?>>
-	<?=$field->label()->text(array('callback' => 'ucfirst', '.=' => ':'))?>
+	<label><?=ucfirst($field->label())?>:</label>
 		<?php if ($field->get('editable') === TRUE): ?>
 			<?=$field->add_class('input')->attr('rows', 10)?>
 		<?php else: ?>

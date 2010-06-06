@@ -5,37 +5,37 @@ class Formo_Core extends Validator {
 	protected $_settings = array
 	(
 		// The config array
-		'config'		=> array(),
+		'config'				=> array(),
 		// The orm config array
-		'orm_config'	=> array(),
-		// Driver for handling validation/rendering
-		'driver'		=> 'form',
+		'orm_config'			=> array(),
+		// Driver name for handling validation/rendering
+		'driver'				=> 'form',
+		// Driver instance that handles orm comm
+		'orm_driver_instance'	=> NULL,
 		// A model associated with this form
-		'model'			=> NULL,
+		'model'					=> NULL,
 		// Whether the form was sent
-		'sent'			=> FALSE,
+		'sent'					=> FALSE,
 		// The input object ($_GET/$_POST/etc)
-		'input'			=> NULL,
+		'input'					=> NULL,
 		// If the object should be namespaces
-		'namespace'		=> FALSE,
+		'namespace'				=> FALSE,
 		// The view path prefix
-		'view_prefix'	=> 'formo/',
+		'view_prefix'			=> 'formo/',
 		// Whether the form is 'post' or 'get'
-		'type'			=> 'post',
-		// html, json, xml, etc
-		'render_type'	=> NULL,
+		'type'					=> 'post',
 		// Whether the field should render
-		'render'		=> TRUE,
+		'render'				=> TRUE,
 		// Whether the field is editable
-		'editable'		=> TRUE,
+		'editable'				=> TRUE,
 	);
 	
-	public static function factory($alias = 'form', $driver = 'form')
+	public static function factory($alias = NULL, $driver = NULL)
 	{
 		return new Formo($alias, $driver);
 	}
 	
-	public function __construct($alias = 'form', $driver = 'form')
+	public function __construct($alias = NULL, $driver = NULL)
 	{
 		// Setup options array
 		$options = func_get_args();
@@ -44,6 +44,10 @@ class Formo_Core extends Validator {
 		// Load the config file
 		$this->set('config', Kohana::config('formo'));
 		
+		// Set the default alias and driver if necessary
+		(empty($options['alias']) AND $options['alias'] = $this->get('config')->form_alias);
+		(empty($options['driver']) AND $options['driver'] = $this->get('config')->form_driver);
+				
 		// Load the orm config file
 		if ($orm_file = Arr::get($this->get('config'), 'ORM') !== NULL)
 		{
@@ -53,7 +57,25 @@ class Formo_Core extends Validator {
 		// Load the options
 		$this->load_options($options);
 	}
+	
+	public function __get($value)
+	{
+		if ($value == 'orm')
+		{
+			// If the driver's already been created, retrieve it
+			if ($instance = $this->get('orm_driver_instance'))
+				return $instance;
+				
+			$instance = Formo_ORM_Factory::factory($this);
+			$this->set('orm_driver_instance', $instance);
 			
+			return $instance;
+		}
+		
+		return parent::__get($value);
+	}
+	
+	// Add a field to the form
 	public function add($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
 		// If Formo object was passed, add it as a subform
@@ -109,6 +131,7 @@ class Formo_Core extends Validator {
 		return $this;
 	}
 	
+	// Add a subform to the form
 	protected function add_subform(Formo $subform)
 	{
 		$this->append($subform);
@@ -127,43 +150,6 @@ class Formo_Core extends Validator {
 		return $this->get('sent');
 	}
 
-	// Disable rendering
-	public function disable_render($field)
-	{
-		if (is_array($field))
-		{
-			foreach ($field as $_field)
-			{
-				$this->disable_render($_field);
-			}
-			
-			return $this;
-		}
-		
-		$this->find($field)->set('render', FALSE);
-		
-		return $this;
-	}
-	
-	// Only render a group
-	public function only_render($search)
-	{
-		foreach ($this->fields() as $field)
-		{
-			if (in_array($field->alias(), (array) $search) === FALSE)
-			{
-				$field->set('render', FALSE);
-			}
-			else
-			{
-				$field->set('render', TRUE);
-			}
-			
-		}
-		
-		return $this;
-	}
-			
 	// Return all fields in order
 	public function fields($field = NULL)
 	{
@@ -223,22 +209,14 @@ class Formo_Core extends Validator {
 	
 	// Call ORM drivers specifically. This requires ORM settings in the config file
 	public function orm($method, & $model, $data = NULL)
-	{		
+	{
 		$this->set('model', $model);
-
-		$class = new ReflectionMethod('Formo_Orm_Jelly', $method);
-
-		$args = array($model, $this);
-
-		(func_num_args() === 3 AND $args[] = $data);
-
-		$return_val = $class->invokeArgs($model, $args);
-
-		($return_val !== NULL AND $model = $return_val);		
+		$this->orm->$method($model, $data);
 		
 		return $this;
 	}
 	
+	// Render
 	public function render($type, $view_prefix = FALSE)
 	{
 		if ($this->get('render') === FALSE)
@@ -249,25 +227,10 @@ class Formo_Core extends Validator {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
-
-		$this->set('render_type', $type);
-
-		$class = 'Formo_Render_'.$type;
+						
+		$this->driver->pre_render($type);
+		$view = $this->driver->view();
 		
-		$view_prefix = $view_prefix ? $view_prefix : $this->get('view_prefix');
-		$this->set('view_prefix', $view_prefix);
-		
-		$this->driver->pre_render();
-
-		$render_obj = new $class($this);
-		$render_obj->defaults('field', $this->fields());
-		
-		$method = 'pre_render_'.$type;
-		$this->driver->$method($render_obj);
-		
-		$view = View::factory($this->driver->view())
-			->bind('form', $render_obj);
-
 		if (Kohana::$profiling === TRUE)
 		{
 			// Start a new benchmark

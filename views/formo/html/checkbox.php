@@ -1,3 +1,3 @@
 <div>
-	<label><?=$field?><?=$field->label()->text(array('callback' => 'ucfirst'))->text()?></label>
+	<label><?=$field?><?=ucfirst($field->label())?></label>
 </div>

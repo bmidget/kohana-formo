@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Render_html extends Formo_Render_html_Core {}
+class Formo_Driver_Bool extends Formo_Driver_Bool_Core {}

@@ -4,12 +4,12 @@ class Formo_Driver_Textarea_Core extends Formo_Driver {
 
 	protected $view = 'textarea';
 	
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field
+		$this->render_field
 			->set('tag', 'textarea')
-			->set('text', htmlentities($field->val()))
-			->attr('name', $field->alias());
+			->set('text', htmlentities($this->render_field->val()))
+			->attr('name', $this->render_field->alias());
 	}
 
 }

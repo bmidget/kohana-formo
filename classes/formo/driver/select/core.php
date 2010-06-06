@@ -4,20 +4,20 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 
 	protected $view = 'select';
 	
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field->append(Ffield::factory('', 'option'));
+		$this->render_field->append(Ffield::factory('', 'option'));
 		
-		foreach ($field->options as $label => $options)
+		foreach ($this->render_field->options as $label => $options)
 		{
 			$options = is_array($options) ? $options : array('value' => $options);
 			$checkbox = Ffield::factory($label, 'option', $options);
 			
-			$field->append($checkbox);
+			$this->render_field->append($checkbox);
 		}
 		
-		$field->set('tag', 'select')
-			->attr('name', $field->alias());		
+		$this->render_field->set('tag', 'select')
+			->attr('name', $this->render_field->alias());		
 	}
 
 }

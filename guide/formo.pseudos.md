@@ -31,9 +31,10 @@ The nice thing about this is you get to work with the entire model instance inst
 
 ## Pseudo params
 
-Pseudo params work much like pseudo contexts for rules, only they are stings that refer to parameters that are only available when validate is called. The same pseudo parameters exist with the addition to ":value":
+Pseudo params work much like pseudo contexts for rules, only they are stings that refer to parameters that are only available when validate is called. The same pseudo parameters exist with the addition of ":value" and ":alias":
 
 * `:value` - The field's value
+* `:alias` - The field's alias
 * `:field` - The field object
 * `:parent` - The field's immediate parent
 * `:form` - The topmost parent of the form

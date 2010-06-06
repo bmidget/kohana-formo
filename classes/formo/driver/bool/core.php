@@ -1,21 +1,26 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Driver_Checkbox_Core extends Formo_Driver {
+class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 
-	protected $view = 'checkbox';
+	protected $view = 'bool';
+		
+	public function getval()
+	{
+		// The value is always the same
+		return $this->field->get('value');
+	}
 	
-	// Setup the html field
 	protected function html()
 	{
 		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
-			->attr('name', $this->field->parent()->alias().'[]')
+			->attr('name', $this->render_field->alias())
 			->attr('value', htmlentities($this->render_field->val()));
 		
 		$parent_value = $this->render_field->parent()->val();
 				
-		if (is_array($parent_value) AND in_array($this->render_field->val(), $parent_value))
+		if ($this->field->get('new_value') == $this->field->get('value'))
 		{
 			$this->render_field->attr('checked', 'checked');
 		}

@@ -5,6 +5,8 @@ abstract class Container_Core {
 
 	// The topmost parent
 	const PARENT = '__PARENT';
+	// Used to determine if new_value is set
+	const NOTSET = '__UNSET';
 
 	// Other settings
 	protected $_settings = array();
@@ -12,20 +14,21 @@ abstract class Container_Core {
 	// Container settings
 	protected $_defaults = array
 	(
-		'alias'			=> 'item',
-		'parent'		=> NULL,
-		'fields'		=> array(),
-		'value'			=> NULL,
-		'load_value'	=> NULL,
+		'alias'				=> 'item',
+		'parent'			=> NULL,
+		'fields'			=> array(),
+		'value'				=> NULL,
+		'new_value'			=> self::NOTSET,
+		'driver_instance'	=> NULL,
 	);
 		
 	// Validation arrays
 	protected $_validators = array
 	(
-		'filters'		=> array(),
-		'rules'			=> array(),
-		'triggers'		=> array(),
-		'post_filters'	=> array(),
+		'filters'			=> array(),
+		'rules'				=> array(),
+		'triggers'			=> array(),
+		'post_filters'		=> array(),
 	);
 	
 	// Simplifies taking function arguments
@@ -91,12 +94,19 @@ abstract class Container_Core {
 	// Fetch a field or return a driver object
 	public function __get($alias)
 	{
-		if ($alias == 'driver' AND $this->get('driver') !== NULL)
-		{
-			// Create and return a driver object
-			$class = 'Formo_Driver_'.$this->get('driver');
+		if ($alias == 'driver' AND $driver = $this->get('driver'))
+		{			
+			// Make sure the current driver is the correct driver
+			if ($instance = $this->get('driver_instance') AND Formo_Driver_Factory::is_driver($instance, $driver))
+				return $instance;
 			
-			return new $class($this);
+			// Create a new driver instance
+			$instance = Formo_Driver_Factory::factory($this, $driver);
+						
+			// Store the driver instance
+			$this->set('driver_instance', $instance);
+						
+			return $instance;
 		}
 
 		return $this->field($alias);
@@ -143,7 +153,11 @@ abstract class Container_Core {
 	// Fetch variables
 	public function get($variable, $default = FALSE)
 	{
-		// Look for variable in $_settings first
+		// Look for variable in $_defaults first
+		if (array_key_exists($variable, $this->_defaults))
+			return $this->_defaults[$variable];
+
+		// Next look for variable in $_settings
 		if (array_key_exists($variable, $this->_settings))
 			return $this->_settings[$variable];
 
@@ -155,7 +169,7 @@ abstract class Container_Core {
 	public function val($value = NULL)
 	{
 		if (func_num_args() === 0)
-			return $this->_defaults['value'];
+			return $this->driver->getval();
 			
 		$this->driver->val($value);
 		
@@ -165,7 +179,7 @@ abstract class Container_Core {
 	// Recursively run a method on every field in the form
 	public function run($method, $params)
 	{
-		foreach ($this->defaults('fields') as $field)
+		foreach ($this->_defaults['fields'] as $field)
 		{
 			call_user_func_array(array($field, $method), $params);
 			$field->run($method, $params);
@@ -220,7 +234,7 @@ abstract class Container_Core {
 	{
 		if ($this instanceof Formo)
 			return $this->get('model');
-			
+		
 		return $this->parent()->get('model');
 	}
 	
@@ -228,7 +242,7 @@ abstract class Container_Core {
 	public function append($field)
 	{
 		// Set the field's parent
-		$field->defaults('parent', $this);
+		$field->set('parent', $this);
 		$this->_defaults['fields'][] = $field;
 
 		// Look for order and process it for ordering this field
@@ -255,7 +269,7 @@ abstract class Container_Core {
 	// Add a field to the beginning of the form
 	public function prepend($item)
 	{
-		$item->defaults('parent', $this);
+		$item->_defaults['parent'] = $this;
 		array_unshift($this->_defaults['fields'], $item);
 	}
 	
@@ -273,7 +287,7 @@ abstract class Container_Core {
 			return $this;
 		}
 		
-		foreach ($this->defaults('fields') as $key => $item)
+		foreach ($this->_defaults['fields'] as $key => $item)
 		{
 			if ($item->alias() == $alias)
 			{
@@ -309,14 +323,14 @@ abstract class Container_Core {
 	{
 		// Create the empty array to fill
 		$array = array();
-		foreach ($this->defaults('fields') as $field)
+		foreach ($this->_defaults['fields'] as $field)
 		{
 			$alias = $field->alias();
 			
 			// By default, return name => element
 			$array[$field->alias()] = ($value !== NULL)
 				? $field->get($value)
-				: $field;				
+				: $field;
 		}
 		
 		return $array;
@@ -325,7 +339,7 @@ abstract class Container_Core {
 	// Retrieve's an item's parent
 	public function parent($search = NULL)
 	{
-		$this_parent = $this->defaults('parent');
+		$this_parent = $this->_defaults['parent'];
 				
 		// If not searching, return this parent
 		if ($search === NULL)
@@ -350,24 +364,13 @@ abstract class Container_Core {
 	// Convenience method for fetching/setting alias
 	public function alias($alias = NULL)
 	{
-		if (func_num_args() == 1)
-			return $this->defaults('alias', $alias);
-		
-		return $this->defaults('alias');
-	}
-		
-	// Set or get items from the _defaults array
-	public function defaults($name, $value = NULL)
-	{
-		// If second arg wasn't entered, return the array
-		if (func_num_args() < 2)
-			return $this->_defaults[$name];
-		
-		$this->_defaults[$name] = $value;
-		
+		if (func_num_args() == 0)
+			return $this->_defaults['alias'];
+
+		$this->_defaults['alias'] = $alias;
 		return $this;
 	}
-	
+			
 	// Look through a form object for a formo or ffield objeect
 	// by alias
 	public function find($alias)
@@ -380,7 +383,7 @@ abstract class Container_Core {
 				return $field;
 			
 			// Recursively look as deep as necessary
-			foreach ($this->defaults('fields') as $field)
+			foreach ($this->_defaults['fields'] as $field)
 			{
 				if ($found_field = $field->find($alias))
 					return $found_field;
@@ -405,7 +408,7 @@ abstract class Container_Core {
 	protected function find_order($search)
 	{
 		$i = 0;
-		foreach ($this->defaults('fields') as $field)
+		foreach ($this->_defaults['fields'] as $field)
 		{
 			// Return the order if we just found it
 			if ($field->alias() == $search)
@@ -421,7 +424,7 @@ abstract class Container_Core {
 	// Get the key of a specific field
 	protected function find_fieldkey($field)
 	{
-		foreach ($this->defaults('fields') as $key => $value)
+		foreach ($this->_defaults['fields'] as $key => $value)
 		{
 			if ($value->alias() == $field)
 				return $key;
@@ -437,7 +440,7 @@ abstract class Container_Core {
 		$field = (is_object($field) === FALSE) ? $this->find($field) : $field;
 		
 		// Pull out all the fields
-		$fields = $field->parent()->defaults('fields');
+		$fields = $field->parent()->get('fields');
 		
 		// Delete the current place
 		unset($fields[$this->find_fieldkey($field->alias())]);
@@ -465,7 +468,7 @@ abstract class Container_Core {
 		// Make the insertion
 		array_splice($fields, $new_order, 0, array($field));
 		// Save the new order
-		$field->parent()->defaults('fields', $fields);
+		$field->parent()->set('fields', $fields);
 		
 		return $this;
 	}

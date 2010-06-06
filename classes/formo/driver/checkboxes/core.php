@@ -4,14 +4,14 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 
 	protected $view = 'checkboxes';
 
-	public function pre_render_html($field)
+	public function html()
 	{
-		foreach ($field->options as $label => $options)
+		foreach ($this->render_field->options as $label => $options)
 		{
 			$options = is_array($options) ? $options : array('value' => $options);
 			$checkbox = Ffield::factory($label, 'checkbox', $options);
 			
-			$field->append($checkbox);
+			$this->render_field->append($checkbox);
 		}
 	}
 

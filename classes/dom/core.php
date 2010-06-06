@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Render_html_Core extends Formo_Render {
-	
+class DOM_Core extends Formo_Render {
+
 	// HTML tag
 	public $tag;
 	// Array of attributes
@@ -31,7 +31,7 @@ class Formo_Render_html_Core extends Formo_Render {
 
 	public static function factory($object)
 	{
-		return new Formo_Render_html($object);
+		return new DOM($object);
 	}
 	
 	public function __construct($object)
@@ -137,24 +137,10 @@ class Formo_Render_html_Core extends Formo_Render {
 		return $this;
 	}
 	
-	// Generate a label object on the fly
+	// Return the correct label
 	public function label(array $options = NULL)
 	{
-		if (func_num_args() === 0)
-		{	
-			// Convert _label to object
-			$options = is_array($this->label)
-				? $field->label
-				: array
-				  (
-				  	'text' => $this->label ? $this->label : $this->alias(),
-				  	'tag'	=> 'label',
-				  	'attr'	=> array('for' => $this->attr('id')),
-				  );
-		}
-		
-		// Return the generated object
-		return self::factory($options);
+		return $this->label ? $this->label : $this->alias();
 	}
 
 	// Set or return the text
@@ -260,7 +246,7 @@ class Formo_Render_html_Core extends Formo_Render {
 	// Convenience method for finding all fields
 	public function fields()
 	{
-		return $this->defaults('fields');
+		return $this->get('fields');
 	}
 	
 	// Render fields as html

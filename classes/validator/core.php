@@ -76,6 +76,8 @@ abstract class Validator_Core extends Container {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
+		
+		$this->driver->pre_validate();
 						
 		if ($values != TRUE
 			AND (method_exists($this, 'sent') AND ! $this->sent())
@@ -110,7 +112,7 @@ abstract class Validator_Core extends Container {
 		}
 		
 		// Validate through each of the field's fields
-		foreach ($this->defaults('fields') as $field)
+		foreach ($this->get('fields') as $field)
 		{
 			// Don't do anything if it's ignored
 			if ($field->get('ignore') === TRUE)
@@ -142,6 +144,7 @@ abstract class Validator_Core extends Container {
 			Profiler::stop($benchmark);
 		}
 		
+		$this->driver->post_validate();
 				
 		// What to return depends on if it's a field or form object
 		if ($this instanceof Formo)
@@ -205,7 +208,7 @@ abstract class Validator_Core extends Container {
 	public function rule($field, $callback, array $args = NULL)
 	{
 		$context = $field = ($field === NULL) ? $this : $this->find($field);
-		$this->make_context($context, $callback);
+		$this->make_context($context, $callback, $args);
 		
 		// Add the rule
 		$field->add_validator('rules', Rule::factory($field, $context, $callback, $args));
@@ -248,7 +251,7 @@ abstract class Validator_Core extends Container {
 		return $this;
 	}
 	
-	protected function make_context( & $context, & $callback)
+	protected function make_context( & $context, & $callback, & $args = array())
 	{
 		$regex = '/:([a-zA-Z_0-9]+)::/';
 		
@@ -278,10 +281,24 @@ abstract class Validator_Core extends Container {
 		{
 			$context = NULL;
 		}
+		elseif (method_exists($this, $callback))
+		{
+			// Context stays the same
+		}
 		elseif (is_callable(array('Validate', $callback)))
 		{
 			$callback = 'Validate::'.$callback;
 			$context = NULL;
+			
+			// Check to see if backwards compatibility for validate is set
+			if (Kohana::config('formo')->validate_compatible === TRUE)
+			{
+				$args = (array) $args;
+				if ( ! in_array(':value', $args))
+				{
+					array_unshift($args, ':value');
+				}
+			}
 		}
 	}
 	
@@ -361,6 +378,11 @@ abstract class Validator_Core extends Container {
 			$new_params[$key] = $this;
 		}
 		
+		if (($key = array_search(':alias', $params)) !== FALSE)
+		{
+			$new_params[$key] = $this->alias();
+		}
+		
 		if (($key = array_search(':parent', $params)) !== FALSE)
 		{
 			$new_params[$key] = $this->parent();
@@ -390,7 +412,12 @@ abstract class Validator_Core extends Container {
 	
 	public function not_empty()
 	{
-		return (bool) $this->val();
+		$new_value = $this->get('new_value');
+		
+		if ($new_value === Container::NOTSET)
+			return FALSE;
+			
+		return (bool) $new_value;
 	}
 	
 	// return whether a field is checked

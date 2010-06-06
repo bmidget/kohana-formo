@@ -4,12 +4,12 @@ class Formo_Driver_Submit_Core extends Formo_Driver {
 
 	protected $view = 'submit';
 
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field
+		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'submit')
-			->attr('name', $field->_alias)
+			->attr('name', $this->render_field->alias())
 			->attr('value', htmlentities($field->val()));
 	}
 

@@ -4,16 +4,16 @@ class Formo_Driver_Option_Core extends Formo_Driver {
 
 	protected $view = 'option';
 
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field
+		$this->render_field
 			->set('tag', 'option')
-			->text($field->alias())
-			->attr('value', htmlentities($field->val()));
+			->text($this->render_field->alias())
+			->attr('value', htmlentities($this->render_field->val()));
 			
-		if ($field->parent()->val() == $field->val())
+		if ($this->render_field->parent()->val() == $this->render_field->val())
 		{
-			$field->attr('selected', 'selected');
+			$this->render_field->attr('selected', 'selected');
 		}
 	}
 

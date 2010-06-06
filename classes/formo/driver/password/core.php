@@ -4,12 +4,12 @@ class Formo_Driver_Password_Core extends Formo_Driver {
 
 	protected $view = 'text';
 
-	public function pre_render_html($field)
+	public function html()
 	{
-		$field
+		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'password')
-			->attr('name', $field->alias());
+			->attr('name', $this->render_field->alias());
 	}
 
 }

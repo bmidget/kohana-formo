@@ -1,6 +1,6 @@
 <?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
 <p<?=$class?>>
-	<?=$field->label()->text('callback', 'ucfirst')->text('.=', ':')?>
+	<label><?=ucfirst($field->label())?>:</label>
 	<?php if ($field->get('editable') === TRUE): ?>
 		<?=$field->render('html')?>
 	<?php else: ?>

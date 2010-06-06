@@ -26,6 +26,8 @@ class Ffield_Core extends Validator {
 		$options = Container::args(__CLASS__, __FUNCTION__, $options);
 				
 		$this->load_options($options);
+				
+		$this->driver->post_construct();
 	}
 	
 	public function __toString()
@@ -38,19 +40,8 @@ class Ffield_Core extends Validator {
 		if ($this->get('render') === FALSE)
 			return;
 			
-		$render_type = $this->parent()->get('render_type');
-		$this->set('render_type', $render_type);
-
-		$this->driver->pre_render();
-
-		$class = 'Formo_Render_'.$render_type;
-		$method = 'pre_render_'.$render_type;
-		$render_obj = new $class($this);
-		
-		$this->driver->$method($render_obj);
-		
-		$view = View::factory($this->driver->view())
-			->bind('field', $render_obj);
+		$this->driver->pre_render($render_type);
+		$view = $this->driver->view();
 		
 		return $view;
 	}
