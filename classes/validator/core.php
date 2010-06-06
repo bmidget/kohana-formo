@@ -78,7 +78,7 @@ abstract class Validator_Core extends Container {
 		}
 		
 		$this->driver->pre_validate();
-						
+		
 		if ($values != TRUE
 			AND (method_exists($this, 'sent') AND ! $this->sent())
 			AND ! $this->parent(Container::PARENT)->sent())
@@ -287,8 +287,7 @@ abstract class Validator_Core extends Container {
 		}
 		elseif (is_callable(array('Validate', $callback)))
 		{
-			$callback = 'Validate::'.$callback;
-			$context = NULL;
+			$context = 'Validate';
 			
 			// Check to see if backwards compatibility for validate is set
 			if (Kohana::config('formo')->validate_compatible === TRUE)
@@ -305,11 +304,21 @@ abstract class Validator_Core extends Container {
 	public static function param_names($rule)
 	{
 		// Make the array
-		$array = array();
+		$array = array();		
 		
-		$i = 1;
+		$i = 0;
 		foreach ($rule->args as $pretty_name => $arg)
 		{
+			if ($i === 0 AND Kohana::config('formo')->validate_compatible === TRUE
+				AND ! (is_object($rule->context))
+				AND $rule->context == 'Validate')
+			{
+				$i++;
+				continue;
+			}
+			
+			($i === 0 AND $i++);
+				
 			$next = ':param'.$i;
 			if (is_string($pretty_name))
 			{
@@ -324,7 +333,7 @@ abstract class Validator_Core extends Container {
 			$array[$next] = ($arg instanceof Container)
 				? $arg->alias()
 				: $arg;
-			
+				
 			$i++;
 		}
 		

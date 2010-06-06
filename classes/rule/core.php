@@ -42,11 +42,16 @@ class Rule_Core {
 	{
 		$this->field->pseudo_args($this->args);
 		
-		if ($this->context !== NULL)
+		if ($this->context !== NULL AND is_object($this->context))
 		{
 			// If context is set, run the method on the context object
 			$method = new ReflectionMethod($this->context, $this->callback);
 			if ((bool) $method->invokeArgs($this->context, array_values($this->args)) === FALSE)
+				return $this->error = $this->name;
+		}
+		elseif ($this->context !== NULL)
+		{
+			if ((bool) call_user_func_array(array($this->context, $this->callback), array_values($this->args)) === FALSE)
 				return $this->error = $this->name;
 		}
 		else
