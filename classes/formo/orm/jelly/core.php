@@ -55,12 +55,12 @@ class Formo_ORM_Jelly_Core {
 			$options['driver'] = $this->determine_driver($options, get_class($field));
 			
 			// Add the value
-			$value = ($model->get($column))
+			$options['value'] = ($model->get($column))
 				? $model->get($column)
 				: $options['default'];
 						
 			// Add the field to its parent
-			$this->form->add($column, 'textarea', $value, $options);
+			$this->form->add($column, $options);
 			
 			$field = $this->form->{$column};
 			
