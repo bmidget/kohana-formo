@@ -91,35 +91,35 @@ Here's an example of a login form and how clean and obvious this tight integrati
 	$user->subform(array('username', 'password'))
 		->add('submit', 'submit');
 		
-	$this->template->content = $user->form->render('html');
+	$this->template->content = $user->subform->render('html');
 	
 	// Notice here we are working with just the user form object and not
 	// just $user->load()->validate. This is because we are working with
 	// a couple fields and not the entire user model
-	if ($user->form->load()->validate())
+	if ($user->subform->load()->validate())
 	{
 		if ($user->login())
 			$this->request->redirect('admin');
 			
-		$user->form->error('invalid_login');
+		$user->subform->error('invalid_login');
 	}
 	
 If you set up your model correctly, the following would always fail at $user->save()
 
 	$user = Jelly::factory('user');
 	
-	$user->subq array('email'))
+	$user->subform(array('email'))
 		->add('submit', 'submit');
 		
-	$this->template->content = $user->form->render('html');
+	$this->template->content = $user->subform->render('html');
 	
 	// Notice loading and validating against the form and not user
-	if ($user->form->load()->validate())
+	if ($user->subform->load()->validate())
 	{
 		// This would fail because in a typical user model,
 		// username and password would at least be required
 		// for a new record
-		$user->savew();
+		$user->save();
 	}
 	
 Therefore validation takes place at two levels: the form level, and the model level. This preserves data integrity and allows for separate form logic from model logic.
