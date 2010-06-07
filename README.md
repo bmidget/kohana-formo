@@ -1,6 +1,6 @@
 Formo is a form module for Kohana 3 that lets you work with forms as objects.
 
-_Note that for full Jelly integration, you must download the integration files from the downloads section_
+_For full Jelly Integration, use the [Formo-Jelly](http://github.com/bmidget/kohana-formo-jelly)_
 
 # Features
 
