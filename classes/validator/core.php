@@ -423,16 +423,16 @@ abstract class Validator_Core extends Container {
 	{
 		$new_value = $this->get('new_value');
 		
-		if ($new_value === Container::NOTSET)
+		if ($new_value === Container::NOTSET AND ! $this->get('value'))
 			return FALSE;
 			
 		return (bool) $new_value;
 	}
 	
 	// return whether a field is checked
-	public function is_checked()
+	public function checked()
 	{
-		return (bool) $this->val();
+		return $this->get('value') == $this->get('new_value');
 	}
 	
 	public function matches($match_against)

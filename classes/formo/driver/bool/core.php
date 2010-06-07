@@ -20,7 +20,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 		
 		$parent_value = $this->render_field->parent()->val();
 				
-		if ($this->field->get('new_value') == $this->field->get('value'))
+		if ($this->field->checked())
 		{
 			$this->render_field->attr('checked', 'checked');
 		}

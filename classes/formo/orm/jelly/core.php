@@ -58,7 +58,10 @@ class Formo_ORM_Jelly_Core {
 			$options['value'] = ($model->get($column))
 				? $model->get($column)
 				: $options['default'];
-						
+			
+			// Convert value to at a string if it was an object	
+			(is_object($options['value']) AND $options['value'] = (string) $options['value']);
+										
 			// Add the field to its parent
 			$this->form->add($column, $options);
 			
@@ -94,7 +97,6 @@ class Formo_ORM_Jelly_Core {
 			if ($check_value instanceof Closure)
 			{
 				$check_value = $check_value($field);
-				echo Kohana::debug($check_value);
 			}
 			
 			// Check if the parameter indeed matches what it's supposed to

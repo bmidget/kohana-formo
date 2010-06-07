@@ -327,8 +327,15 @@ abstract class Container_Core {
 		{
 			$alias = $field->alias();
 			
+			// Make concession for grabbing 'value' as that one characteristic
+			if ($value == 'value')
+			{
+				$array[$alias] = $field->val();
+				continue;
+			}
+			
 			// By default, return name => element
-			$array[$field->alias()] = ($value !== NULL)
+			$array[$alias] = ($value !== NULL)
 				? $field->get($value)
 				: $field;
 		}

@@ -1,5 +1,5 @@
 <?php if ($error = $form->error() AND $error !== TRUE): ?>
-<div class=""><?=ucfirst($form->error())?></div>
+<span class="error-message"><?=ucfirst($form->error())?></span>
 <?php endif; ?>
 
 <?=$form->open()?>

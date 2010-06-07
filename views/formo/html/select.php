@@ -6,5 +6,5 @@
 	<?php else: ?>
 		<span><?=$field->val()?></span>
 	<?php endif; ?>
-	<span class="errorMessage"><?=ucfirst($field->error())?></span>
+	<span class="error-message"><?=ucfirst($field->error())?></span>
 </p>
