@@ -6,12 +6,12 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->render_field->append(Ffield::factory('', 'option'));
+		$this->render_field->append(Formo_Field::factory('', 'option'));
 		
 		foreach ($this->render_field->options as $label => $options)
 		{
 			$options = is_array($options) ? $options : array('value' => $options);
-			$checkbox = Ffield::factory($label, 'option', $options);
+			$checkbox = Formo_Field::factory($label, 'option', $options);
 			
 			$this->render_field->append($checkbox);
 		}

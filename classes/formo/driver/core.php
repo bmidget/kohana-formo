@@ -91,7 +91,7 @@ abstract class Formo_Driver_Core {
 		foreach ($fields as $field)
 		{
 			// Find each field
-			$field = $this->find($field);
+			$field = $this->field->find($field);
 			// Remember the field's original parent
 			$last_parent = $field->parent();
 			
@@ -103,13 +103,13 @@ abstract class Formo_Driver_Core {
 		}
 		
 		// If the parent has a model, copy it to the new subform
-		$subform->set('model', $this->get('model'));
+		$subform->set('model', $this->field->get('model'));
 		
 		// Add the order if applicable
 		($order AND $subform->set('order', $order));
 		
 		// Append the new subform		
-		$this->append($subform);
+		$this->field->append($subform);
 		
 		return $this;
 	}

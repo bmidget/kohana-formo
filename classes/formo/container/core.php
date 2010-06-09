@@ -29,25 +29,25 @@ abstract class Formo_Container_Core {
 		$method = new ReflectionMethod($class, $method);
 		
 		$options = array();
-		$original_options = array();
+ 		$original_options = array();
 				
 		$i = 0;
 		foreach ($method->getParameters() as $param)
 		{
 			if ( ! isset($args[$i]))
 				continue;
-
-	        $new_options = (is_array($args[$i]))
-	            // If the arg was an array, use it as the set of options
-	            ? $args[$i]
+																		
+			$new_options = (is_array($args[$i]))
+	            // If the arg was an array and the last param, use it as the set of options
+				? $args[$i]
 	            // If not, add it to the options by parameter name
-	            : array($param->name => $args[$i]);
-	
+				: array($param->name => $args[$i]);
+				
 	        $options = Arr::merge($options, $new_options);
 			
 			$i++;
 		}
-		
+				
 		return $options;		
 	}
 	
@@ -321,7 +321,7 @@ abstract class Formo_Container_Core {
 		return $this;
 	}
 			
-	// Look through a form object for a formo or ffield objeect
+	// Look through a form object for a formo or formo_field objeect
 	// by alias
 	public function find($alias)
 	{

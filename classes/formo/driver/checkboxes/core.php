@@ -14,32 +14,31 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 		}		
 	}
 	
-	// Make checkboxes checked
 	public function check(array $aliases)
 	{
+		$new_value = (array) $this->field->get('value');
 		foreach ($aliases as $alias)
 		{
-			// You can't check an option that doesn't exist
-			if (empty($this->field->options[$alias]))
-				continue;
-			
-			// Mark the option as checked
-			$this->field->options[$alias]['checked'] = TRUE;
-		}		
+			$value = $this->field->options[$alias]['value'];
+			if ( ! in_array($value, $new_value))
+			{
+				$new_value[] = $value;
+			}
+		}
+		
+		$this->field->set('value', $new_value);
 	}
-	
-	// Uncheck checkboxes
+
 	public function uncheck(array $aliases)
 	{
+		$new_value = (array) $this->field->get('value');
 		foreach ($aliases as $alias)
 		{
-			// You can't check an option that doesn't exist
-			if (empty($this->field->options[$alias]))
-				continue;
-				
-			// Mark the option as not checked
-			$this->field->options[$alias]['checked'] = FALSE;
+			$value = $this->field->options[$alias]['value'];
+			unset($new_value[array_search($value, $new_value)]);
 		}
+		
+		$this->field->set('value', $new_value);
 	}
 
 	public function html()

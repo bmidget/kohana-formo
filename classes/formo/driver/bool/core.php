@@ -4,29 +4,24 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 
 	protected $view = 'bool';
 		
-	public function getval()
-	{
-		// The value is always the same
-		return $this->field->get('value');
-	}
-
 	public function checked()
 	{
-		if ( ! $this->field->parent(Formo_Container::PARENT)->sent() AND $this->field->get('new_value') === Formo_Container::NOTSET)
-			return (bool) $this->field->get('checked');
-		
-		return $this->field->get('new_value') == 'on';
+		if ($this->field->parent(Formo_Container::PARENT)->sent() AND $this->field->get('new_value') == Formo_Container::NOTSET)
+			return FALSE;
+						
+		return $this->val() == 1;
 	}
 	
 	// Make the field checked
 	public function check()
 	{
-		$this->field->set('checked', TRUE);
+		// Set this value to 1
+		$this->field->set('value', 1);
 	}
 	
 	public function uncheck()
 	{
-		$this->field->set('checked', FALSE);
+		$this->field->set('value', 0);
 	}
 	
 	protected function html()
@@ -35,7 +30,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
 			->attr('name', $this->render_field->alias())
-			->attr('value', htmlentities($this->render_field->val()));
+			->attr('value', 1);
 		
 		$parent_value = $this->render_field->parent()->val();
 				

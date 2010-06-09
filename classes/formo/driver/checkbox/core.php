@@ -6,14 +6,15 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 	
 	public function checked()
 	{
-		if ( ! $this->field->parent(Formo_Container::PARENT)->sent() AND $this->field->parent()->get('new_value') === Formo_Container::NOTSET)
-			return (bool) $this->field->get('checked');
-			
-		$parent_value = $this->field->parent()->val();
+		$parent_newval = $this->field->parent()->get('new_value');
+		$parent_value = $this->field->parent()->get('value');
 		
-		return (is_array($parent_value) AND in_array($this->field->val(), $parent_value));
+		if ($parent_newval === Formo_Container::NOTSET AND ! $this->field->parent(Formo_Container::PARENT)->sent())
+			return in_array($this->val(), (array) $parent_value);
+		
+		return (in_array($this->field->val(), (array) $parent_newval));
 	}
-		
+			
 	// Setup the html field
 	protected function html()
 	{

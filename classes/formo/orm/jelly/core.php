@@ -88,7 +88,7 @@ class Formo_ORM_Jelly_Core {
 	}
 	
 	// Add any auto_rules
-	protected function add_auto_rules(Container $field)
+	protected function add_auto_rules(Formo_Container $field)
 	{
 		foreach (Formo_ORM_Factory::$config->auto_rules as $parameter => $values)
 		{
