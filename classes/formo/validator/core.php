@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-abstract class Validator_Core extends Container {
+abstract class Formo_Validator_Core extends Formo_Container {
 
 	protected $_errors = array
 	(
@@ -69,7 +69,7 @@ abstract class Validator_Core extends Container {
 	}
 	
 	// Run validation
-	public function validate($values = NULL)
+	public function validate($validate_if_not_sent = FALSE)
 	{
 		if (Kohana::$profiling === TRUE)
 		{
@@ -79,9 +79,9 @@ abstract class Validator_Core extends Container {
 		
 		$this->driver->pre_validate();
 		
-		if ($values != TRUE
+		if ($validate_if_not_sent === FALSE
 			AND (method_exists($this, 'sent') AND ! $this->sent())
-			AND ! $this->parent(Container::PARENT)->sent())
+			AND ! $this->parent(Formo_Container::PARENT)->sent())
 			return FALSE;
 			
 		if ($this->error() !== FALSE)
@@ -98,16 +98,13 @@ abstract class Validator_Core extends Container {
 			foreach ($rules as $rule)
 			{
 				// Run the rule
-				$rule->execute();
-
-				if (isset($rule->error) AND $rule->error !== FALSE)
+				if ($rule->execute() === FALSE)
 				{
 					// Set this error
-					$this->error($rule->error, TRUE, self::param_names($rule));					
-
-					// Do not continue if there was an error
+					$this->error($rule->error, TRUE, self::param_names($rule));
+					// No need to continue if there was an error
 					break;
-				}				
+				}
 			}
 		}
 		
@@ -167,7 +164,7 @@ abstract class Validator_Core extends Container {
 	{
 		$context = $field === NULL ? $this : $this->find($field);
 		// Add the filter
-		$context->add_validator('filters', Filter::factory($context, $callback, $args));
+		$context->add_validator('filters', Formo_Filter::factory($context, $callback, $args));
 		
 		return $this;
 	}
@@ -188,7 +185,7 @@ abstract class Validator_Core extends Container {
 		$context = $field === NULL ? $this : $this->find($field);
 		
 		// Add the post filter
-		$context->add_validator('post_filters', Filter::factory($field, $context, $callback, $args));
+		$context->add_validator('post_filters', Formo_Filter::factory($field, $context, $callback, $args));
 		
 		return $this;
 	}
@@ -211,7 +208,7 @@ abstract class Validator_Core extends Container {
 		$this->make_context($context, $callback, $args);
 		
 		// Add the rule
-		$field->add_validator('rules', Rule::factory($field, $context, $callback, $args));
+		$field->add_validator('rules', Formo_Rule::factory($field, $context, $callback, $args));
 		
 		return $this;
 	}
@@ -228,7 +225,7 @@ abstract class Validator_Core extends Container {
 	}
 
 	// Add a trigger to an item in the container object
-	public function trigger($field, Trigger $trigger)
+	public function trigger($field, Formo_Trigger $trigger)
 	{
 		// Allow the context to be this field
 		$context = $field !== NULL ? $this->find($field) : $this;
@@ -251,11 +248,12 @@ abstract class Validator_Core extends Container {
 		return $this;
 	}
 	
+	// Determine the proper context for the rule to run against
 	protected function make_context( & $context, & $callback, & $args = array())
 	{
 		$regex = '/:([a-zA-Z_0-9]+)::/';
 		
-		// Determine the context of the rule
+		// Pseudo context is present
 		if (preg_match($regex, $callback, $matches))
 		{
 			switch ($matches[1])
@@ -264,31 +262,34 @@ abstract class Validator_Core extends Container {
 					$context = $this->parent();
 					break;
 				case 'form':
-					$context = $this->parent(Container::PARENT);
+					$context = $this->parent(Formo_Container::PARENT);
 					break;
 				case 'model':
 					$context = $this->model();
 					break;
 			}
 			
-			$callback = preg_replace($regex, '', $callback);
+			// Set the callback to the second part of the rule
+			return $callback = preg_replace($regex, '', $callback);			
 		}
-		elseif (preg_match('/::/', $callback))
-		{
-			$context = NULL;
-		}
-		elseif (function_exists($callback))
-		{
-			$context = NULL;
-		}
-		elseif (method_exists($this, $callback))
-		{
-			// Context stays the same
-		}
-		elseif (is_callable(array('Validate', $callback)))
-		{
-			$context = 'Validate';
+		
+		if (preg_match('/::/', $callback))
+			// Separate the context from the callback
+			return list($context, $callback) = explode('::', $callback);
 			
+		if (function_exists($callback))
+			// Set context to NULL if it's a stand-alone function
+			return $context = NULL;
+			
+		if (method_exists($this, $callback))
+			// Allow simple declarations of field rules
+			return;
+			
+		if (is_callable(array('Validate', $callback)))
+		{
+			// Set the context to Validate
+			$context = 'Validate';
+
 			// Check to see if backwards compatibility for validate is set
 			if (Kohana::config('formo')->validate_compatible === TRUE)
 			{
@@ -298,7 +299,9 @@ abstract class Validator_Core extends Container {
 					array_unshift($args, ':value');
 				}
 			}
-		}
+			
+			return;
+		}				
 	}
 	
 	public static function param_names($rule)
@@ -330,7 +333,7 @@ abstract class Validator_Core extends Container {
 			}
 			
 			// Use a Container object's alias
-			$array[$next] = ($arg instanceof Container)
+			$array[$next] = ($arg instanceof Formo_Container)
 				? $arg->alias()
 				: $arg;
 				
@@ -362,7 +365,7 @@ abstract class Validator_Core extends Container {
 			$message = $file.'.'.$this->alias().'.'.$error_name;
 		}
 		
-		$values = Arr::merge(array(':field' => $this->alias()), (array) $param_names);
+		$values = Arr::merge(array(':value' => $this->val(), ':field' => $this->alias()), (array) $param_names);
 		
 		$message = strtr($message, $values);
 		
@@ -423,21 +426,15 @@ abstract class Validator_Core extends Container {
 	{
 		$new_value = $this->get('new_value');
 		
-		if ($new_value === Container::NOTSET AND ! $this->get('value'))
+		if ($new_value === Formo_Container::NOTSET AND ! $this->get('value'))
 			return FALSE;
 			
 		return (bool) $new_value;
 	}
-	
-	// return whether a field is checked
-	public function checked()
-	{
-		return $this->get('value') == $this->get('new_value');
-	}
-	
+		
 	public function matches($match_against)
 	{
-		return $this->val() === $this->parent(Container::PARENT)
+		return $this->val() === $this->parent(Formo_Container::PARENT)
 			->find($match_against)
 			->val();
 	}

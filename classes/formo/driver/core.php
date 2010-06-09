@@ -12,13 +12,13 @@ abstract class Formo_Driver_Core {
 	protected $render_type;
 	// Render object name passed to view
 	protected $alias = 'field';
-	
-	public static function factory(Container $field)
+		
+	public static function factory(Formo_Container $field)
 	{
 		return new Formo_Driver($field);
 	}
 	
-	public function __construct(Container $field)
+	public function __construct(Formo_Container $field)
 	{
 		// Load the field instance
 		$this->field = $field;
@@ -30,20 +30,30 @@ abstract class Formo_Driver_Core {
 	public function pre_validate(){}
 	// Called just after running validate()
 	public function post_validate(){}
+
+	// Run when loading input data
+	public function load($value)
+	{
+		// Just set the value to what was passed
+		$this->val($value);
+	}
 	
 	// Retrieve a field's value
 	public function getval()
 	{
 		$new_value = $this->field->get('new_value');
 		
-		return ($new_value !== Container::NOTSET)
+		return ($new_value !== Formo_Container::NOTSET)
 			? $new_value
 			: $this->field->get('value');
 	}
 					
-	// Set a field's value
-	public function val($value)
+	// Set and retrieve a field's value
+	public function val($value = NULL)
 	{
+		if (func_num_args() === 0)
+			return $this->getval();
+
 		// Set the value
 		$this->field->set('new_value', $value);
 		
@@ -52,6 +62,56 @@ abstract class Formo_Driver_Core {
 			// If the value needs to be set in the model, do that too
 			$model->{$this->field->alias()} = $value;
 		}
+		
+		return $this;
+	}
+	
+	// Make every option an array of options
+	public function set_options($options)
+	{
+		// Create the new array
+		$array = array();
+		foreach ($options as $alias => $value)
+		{
+			$array[$alias] = ( ! is_array($value))
+				// Make the value part of an array 
+				? array('value' => $value)
+				: $value;
+		}
+		
+		return $array;
+	}
+
+	// Create a subform from fields already in the Container object
+	public function create_sub($alias, $driver, array $fields, $order = NULL)
+	{
+		// Create the empty subform object
+		$subform = Formo::factory($alias, $driver);
+		
+		foreach ($fields as $field)
+		{
+			// Find each field
+			$field = $this->find($field);
+			// Remember the field's original parent
+			$last_parent = $field->parent();
+			
+			// Add the field to the new subform
+			$subform->append($field);
+			
+			// Remove the field from its original parent
+			$last_parent->remove($field->alias());
+		}
+		
+		// If the parent has a model, copy it to the new subform
+		$subform->set('model', $this->get('model'));
+		
+		// Add the order if applicable
+		($order AND $subform->set('order', $order));
+		
+		// Append the new subform		
+		$this->append($subform);
+		
+		return $this;
 	}
 	
 	public function pre_render($type)
@@ -75,7 +135,10 @@ abstract class Formo_Driver_Core {
 	{
 		$prefix = ($_prefix = $this->field->get('view_prefix'))
 			? $_prefix
-			: $this->field->parent(CONTAINER::PARENT)->get('view_prefix');
+			: $this->field->parent(Formo_Container::PARENT)->get('view_prefix');
+			
+		return View::factory("formo/html/$this->view")
+			->bind($this->alias, $this->render_field);
 		
 		return View::factory("$prefix$this->render_type/$this->view")
 			->bind($this->alias, $this->render_field);

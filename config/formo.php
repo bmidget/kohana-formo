@@ -29,7 +29,7 @@ return array
 	// Classes for objects that are passed to render view files
 	'render_classes'			=> array
 	(
-		'html'					=> 'DOM',
+		'html'					=> 'Formo_Render_HTML',
 		'json'					=> 'Formo_Render_Json',
 		'xml'					=> 'Formo_Render_XML',
 	),

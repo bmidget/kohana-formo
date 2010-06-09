@@ -10,7 +10,7 @@ class Formo_Driver_Hidden_Core extends Formo_Driver {
 			->set('tag', 'input')
 			->attr('type', 'hidden')
 			->attr('name', $this->render_field->alias())
-			->attr('value', htmlentities($this->render_field->val()));
+			->attr('value', htmlentities($this->field->val()));
 	}
 
 }

@@ -1,11 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Trigger_Core {
-
-	public $context;
-
-	protected $callback;
-	public $args = array();
+class Formo_Trigger_Core extends Formo_Validator_Rule {
 	
 	protected $action_fields = array();
 	protected $action_callbacks = array();
@@ -13,13 +8,13 @@ class Trigger_Core {
 	
 	public static function factory($callback, array $args = NULL, $check_against = TRUE)
 	{
-		return new Trigger($callback, $args, $check_against = TRUE);
+		return new Formo_Trigger($callback, $args, $check_against = TRUE);
 	}
 	
 	public function __construct($callback, array $args = NULL, $check_against = TRUE)
 	{
 		$this->callback = $callback;
-		$this->args = $args !== NULL ? $args : array();
+		$this->args = (array) $args;
 		$this->check_against = $check_against === FALSE;
 	}
 	

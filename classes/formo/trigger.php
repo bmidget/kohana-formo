@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Ffield extends Ffield_Core {}
+class Formo_Trigger extends Formo_Trigger_Core {}

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Render_Core extends Container
+class Formo_Render_Core extends Formo_Container
 {
 	// Allow error to be returned
 	public function error()

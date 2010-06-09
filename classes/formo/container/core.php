@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 // This class simply makes storing and retrieving objects neat
-abstract class Container_Core {
+abstract class Formo_Container_Core {
 
 	// The topmost parent
 	const PARENT = '__PARENT';
@@ -10,27 +10,18 @@ abstract class Container_Core {
 
 	// Other settings
 	protected $_settings = array();
+	// Where custom vars are stored
+	protected $_customs = array();
 	
 	// Container settings
 	protected $_defaults = array
 	(
-		'alias'				=> 'item',
+		'alias'				=> NULL,
 		'parent'			=> NULL,
 		'fields'			=> array(),
-		'value'				=> NULL,
-		'new_value'			=> self::NOTSET,
 		'driver_instance'	=> NULL,
 	);
-		
-	// Validation arrays
-	protected $_validators = array
-	(
-		'filters'			=> array(),
-		'rules'				=> array(),
-		'triggers'			=> array(),
-		'post_filters'		=> array(),
-	);
-	
+				
 	// Simplifies taking function arguments
 	// Turn all arguments into one nice $options array
 	public static function args($class, $method, $args)
@@ -95,21 +86,28 @@ abstract class Container_Core {
 	public function __get($alias)
 	{
 		if ($alias == 'driver' AND $driver = $this->get('driver'))
-		{			
+		{									
 			// Make sure the current driver is the correct driver
 			if ($instance = $this->get('driver_instance') AND Formo_Driver_Factory::is_driver($instance, $driver))
 				return $instance;
 			
 			// Create a new driver instance
 			$instance = Formo_Driver_Factory::factory($this, $driver);
-						
+									
 			// Store the driver instance
 			$this->set('driver_instance', $instance);
-						
+
 			return $instance;
 		}
 
 		return $this->field($alias);
+	}
+	
+	// Runs the method through the driver
+	public function __call($func, $args)
+	{
+		$method = new ReflectionMethod($this->driver, $func);
+		return $method->invokeArgs($this->driver, $args);
 	}
 
 	// Allow setting of variables with __set
@@ -132,103 +130,48 @@ abstract class Container_Core {
 			return $this;
 		}
 		
+		// Allow the driver to alter the variable beforehand
+		// but obviously it can't happen when setting the driver instance
+		if ($variable != 'driver_instance' AND method_exists($this->driver, 'set_'.$variable))
+		{
+			$value = $this->driver->{'set_'.$variable}($value);
+		}
+				
 		if (array_key_exists($variable, $this->_defaults))
 		{
 			$this->_defaults[$variable] = $value;
+			return $this;
 		}
-		elseif (array_key_exists($variable, $this->_settings))
+		
+		if (array_key_exists($variable, $this->_settings))
 		{
 			// First look for variables in $_settings
 			$this->_settings[$variable] = $value;
+			return $this;
 		}
-		else
-		{
-			// Otherwise just set the variable
-			$this->$variable = $value;
-		}
-				
+		
+		// Otherwise just set the variable
+		$this->$variable = $value;
 		return $this;
 	}
 		
 	// Fetch variables
 	public function get($variable, $default = FALSE)
 	{
-		// Look for variable in $_defaults first
-		if (array_key_exists($variable, $this->_defaults))
-			return $this->_defaults[$variable];
-
-		// Next look for variable in $_settings
-		if (array_key_exists($variable, $this->_settings))
-			return $this->_settings[$variable];
-
+		$arrays = array('_defaults', '_settings', '_customs');
+		
+		foreach ($arrays as $array)
+		{
+			if (array_key_exists($variable, $this->$array))
+			{
+				return $this->{$array}[$variable];
+			}
+		}
+		
 		// Return default if variable doesn't exist
 		return (isset($this->$variable)) ? $this->$variable : $default;
 	}
-	
-	// Convenience method for getting and setting the value
-	public function val($value = NULL)
-	{
-		if (func_num_args() === 0)
-			return $this->driver->getval();
-			
-		$this->driver->val($value);
-		
-		return $this;
-	}
-	
-	// Recursively run a method on every field in the form
-	public function run($method, $params)
-	{
-		foreach ($this->_defaults['fields'] as $field)
-		{
-			call_user_func_array(array($field, $method), $params);
-			$field->run($method, $params);
-		}
-	}
-	
-	// Convenience method for getting and setting load_value
-	public function load_val($value = NULL)
-	{
-		if (func_num_args() === 0)
-			return $this->_defaults['load_value'];
-			
-		$this->_defaults['load_value'] = $value;
-		
-		return $this;
-	}
-	
-	// Create a subform from fields already in the Container object
-	public function create_sub($alias, $driver, array $fields, $order = NULL)
-	{
-		// Create the empty subform object
-		$subform = Formo::factory($alias, $driver);
-		
-		foreach ($fields as $field)
-		{
-			// Find each field
-			$field = $this->find($field);
-			// Remember the field's original parent
-			$last_parent = $field->parent();
-			
-			// Add the field to the new subform
-			$subform->append($field);
-			
-			// Remove the field from its original parent
-			$last_parent->remove($field->alias());
-		}
-		
-		// If the parent has a model, copy it to the new subform
-		$subform->set('model', $this->get('model'));
-		
-		// Add the order if applicable
-		($order AND $subform->set('order', $order));
-		
-		// Append the new subform		
-		$this->append($subform);
-		
-		return $this;
-	}
-	
+				
 	// Return the model
 	public function model()
 	{

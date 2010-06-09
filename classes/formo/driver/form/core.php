@@ -8,7 +8,7 @@ class Formo_Driver_Form_Core extends Formo_Driver {
 	// Setup the html object
 	public function html()
 	{
-		$hidden_field = Ffield::factory('_formo', 'hidden', array('value' => $this->render_field->alias()));
+		$hidden_field = Formo_Field::factory('_formo', 'hidden', array('value' => $this->field->alias()));
 
 		// A a special hidden fielm just to the HTML form
 		$this->render_field->prepend($hidden_field);

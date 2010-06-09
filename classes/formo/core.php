@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Core extends Validator {
+class Formo_Core extends Formo_Validator {
 	
 	protected $_settings = array
 	(
@@ -39,7 +39,7 @@ class Formo_Core extends Validator {
 	{
 		// Setup options array
 		$options = func_get_args();
-		$options = Container::args(__CLASS__, __FUNCTION__, $options);
+		$options = Formo_Container::args(__CLASS__, __FUNCTION__, $options);
 				
 		// Load the config file
 		$this->set('config', Kohana::config('formo'));
@@ -114,7 +114,7 @@ class Formo_Core extends Validator {
 		}
 								
 		// Create the new field
-		$field = Ffield::factory($options);
+		$field = Formo_Field::factory($options);
 		
 		$this->append($field);
 		
@@ -190,13 +190,13 @@ class Formo_Core extends Validator {
 		{
 			if ($field = $this->find($name))
 			{
-				$field->driver->val($value);
+				$field->driver->load($value);
 				continue;
 			}
 			
 			if ($field = $this->find(str_replace('_', ' ', $name)))
 			{
-				$field->driver->val($value);
+				$field->driver->load($value);
 			}
 		}
 		

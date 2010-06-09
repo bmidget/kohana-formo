@@ -9,10 +9,10 @@ class Formo_Driver_Factory_Core {
 	{
 		// Setup options array
 		$options = func_get_args();
-		$options = Container::args(__CLASS__, __FUNCTION__, $options);
+		$options = Formo_Container::args(__CLASS__, __FUNCTION__, $options);
 		
 		$driver_name = self::$prefix.$options['driver'];
-				
+						
 		return new $driver_name($form);
 	}
 	

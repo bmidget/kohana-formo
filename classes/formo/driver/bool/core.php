@@ -9,6 +9,25 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 		// The value is always the same
 		return $this->field->get('value');
 	}
+
+	public function checked()
+	{
+		if ( ! $this->field->parent(Formo_Container::PARENT)->sent() AND $this->field->get('new_value') === Formo_Container::NOTSET)
+			return (bool) $this->field->get('checked');
+		
+		return $this->field->get('new_value') == 'on';
+	}
+	
+	// Make the field checked
+	public function check()
+	{
+		$this->field->set('checked', TRUE);
+	}
+	
+	public function uncheck()
+	{
+		$this->field->set('checked', FALSE);
+	}
 	
 	protected function html()
 	{

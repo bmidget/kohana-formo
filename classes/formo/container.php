@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Trigger extends Trigger_Core {}
+abstract class Formo_Container extends Formo_Container_Core {}

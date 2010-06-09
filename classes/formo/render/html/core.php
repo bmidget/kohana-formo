@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class DOM_Core extends Formo_Render {
+class Formo_Render_HTML_Core extends Formo_Render_Core {
 
 	// HTML tag
 	public $tag;
@@ -31,7 +31,7 @@ class DOM_Core extends Formo_Render {
 
 	public static function factory($object)
 	{
-		return new DOM($object);
+		return new Formo_Render_HTML($object);
 	}
 	
 	public function __construct($object)
@@ -42,7 +42,7 @@ class DOM_Core extends Formo_Render {
 		}
 		
 		// Copy settings and defaults and error messages
-		if ($object instanceof Container)
+		if ($object instanceof Formo_Container)
 		{
 			$this->_settings = $object->get('_settings');
 			$this->_defaults = $object->get('_defaults');

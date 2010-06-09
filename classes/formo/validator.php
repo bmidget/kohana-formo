@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Filter extends Filter_Core {}
+abstract class Formo_Validator extends Formo_Validator_Core {}
