@@ -13,6 +13,25 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 			$values = array($values);
 		}		
 	}
+
+	public function getval()
+	{
+		// If the form was sent but the field wasn't set, return empty array as value
+		if ($this->field->sent() AND Formo::notset($this->field->get('new_value')))
+			return array();
+		
+		// Otherwise return the value that's set
+		return ( ! Formo::notset($this->field->get('new_value')))
+			? (array) $this->field->get('new_value')
+			: (array) $this->field->get('value');
+	}
+
+	public function not_empty()
+	{
+		$value = $this->val();
+		// If the value is empty, it doesn't pass
+		return empty($value) === FALSE;
+	}
 	
 	public function check(array $aliases)
 	{
