@@ -15,9 +15,9 @@ class Formo_Core extends Formo_Validator {
 		// A model associated with this form
 		'model'					=> NULL,
 		// Whether the form was sent
-		'sent'					=> FALSE,
+		'sent'					=> Formo::NOTSET,
 		// The input object ($_GET/$_POST/etc)
-		'input'					=> NULL,
+		'input'					=> array(),
 		// If the object should be namespaces
 		'namespace'				=> FALSE,
 		// The view path prefix
@@ -139,17 +139,6 @@ class Formo_Core extends Formo_Validator {
 		return $this;
 	}
 		
-	// Determine whether data was sent
-	public function sent()
-	{
-		if ($val = Arr::get($this->get('input'), '_formo') AND $val == $this->alias())
-		{
-			$this->set('sent', TRUE);
-		}
-
-		return $this->get('sent');
-	}
-
 	// Return all fields in order
 	public function fields($field = NULL)
 	{
@@ -205,6 +194,12 @@ class Formo_Core extends Formo_Validator {
 		$this->sent();
 		
 		return $this;
+	}
+	
+	public static function notset($var, & $return_var = NULL)
+	{
+		$return_var = $var;
+		return $var === Formo::NOTSET;
 	}
 	
 	// Call ORM drivers specifically. This requires ORM settings in the config file

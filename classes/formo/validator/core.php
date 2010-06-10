@@ -68,6 +68,25 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		return $this;
 	}
 	
+	// Determine whether data was sent
+	public function sent(array $input = NULL)
+	{
+		if ( ! Formo::notset($this->get('sent'), $sent))
+			return $sent;
+		
+		$input = ($input !== NULL) ? $input : $this->get('input');
+		foreach ($input as $alias => $value)
+		{
+			if ($this->find($alias) !== TRUE)
+			{
+				$this->set('sent', TRUE);
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+		
 	// Run validation
 	public function validate($validate_if_not_sent = FALSE)
 	{
@@ -81,7 +100,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		
 		if ($validate_if_not_sent === FALSE
 			AND (method_exists($this, 'sent') AND ! $this->sent())
-			AND ! $this->parent(Formo_Container::PARENT)->sent())
+			AND ! $this->parent(Formo::PARENT)->sent())
 			return FALSE;
 			
 		if ($this->error() !== FALSE)
@@ -262,7 +281,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 					$context = $this->parent();
 					break;
 				case 'form':
-					$context = $this->parent(Formo_Container::PARENT);
+					$context = $this->parent(Formo::PARENT);
 					break;
 				case 'model':
 					$context = $this->model();
@@ -426,7 +445,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	{
 		$new_value = $this->get('new_value');
 		
-		if ($new_value === Formo_Container::NOTSET AND ! $this->get('value'))
+		if ($new_value === Formo::NOTSET AND ! $this->get('value'))
 			return FALSE;
 			
 		return (bool) $new_value;
@@ -434,7 +453,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		
 	public function matches($match_against)
 	{
-		return $this->val() === $this->parent(Formo_Container::PARENT)
+		return $this->val() === $this->parent(Formo::PARENT)
 			->find($match_against)
 			->val();
 	}

@@ -10,7 +10,7 @@ class Formo_Field_Core extends Formo_Validator {
 		'render'		=> TRUE,
 		'editable'		=> TRUE,
 		'value'			=> NULL,
-		'new_value'		=> Formo_Container::NOTSET,
+		'new_value'		=> Formo::NOTSET,
 	);
 	
 	public static function factory($alias, $driver = NULL, array $options = NULL)
@@ -32,6 +32,11 @@ class Formo_Field_Core extends Formo_Validator {
 	public function __toString()
 	{
 		return $this->render(TRUE);
+	}
+	
+	public function sent(array $input = NULL)
+	{
+		return $this->parent()->sent();
 	}
 	
 	public function render($render_type)

@@ -9,7 +9,7 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 		$parent_newval = $this->field->parent()->get('new_value');
 		$parent_value = $this->field->parent()->get('value');
 		
-		if ($parent_newval === Formo_Container::NOTSET AND ! $this->field->parent(Formo_Container::PARENT)->sent())
+		if ($parent_newval === Formo::NOTSET AND ! $this->field->parent(Formo::PARENT)->sent())
 			return in_array($this->val(), (array) $parent_value);
 		
 		return (in_array($this->field->val(), (array) $parent_newval));

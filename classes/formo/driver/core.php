@@ -43,7 +43,7 @@ abstract class Formo_Driver_Core {
 	{
 		$new_value = $this->field->get('new_value');
 		
-		return ($new_value !== Formo_Container::NOTSET)
+		return ($new_value !== Formo::NOTSET)
 			? $new_value
 			: $this->field->get('value');
 	}
@@ -64,6 +64,11 @@ abstract class Formo_Driver_Core {
 		}
 		
 		return $this;
+	}
+	
+	public function newval_set()
+	{
+		return $this->field->get('new_value') !== Formo::NOTSET;
 	}
 	
 	// Make every option an array of options
@@ -135,7 +140,7 @@ abstract class Formo_Driver_Core {
 	{
 		$prefix = ($_prefix = $this->field->get('view_prefix'))
 			? $_prefix
-			: $this->field->parent(Formo_Container::PARENT)->get('view_prefix');
+			: $this->field->parent(Formo::PARENT)->get('view_prefix');
 			
 		return View::factory("formo/html/$this->view")
 			->bind($this->alias, $this->render_field);
