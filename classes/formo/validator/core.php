@@ -443,14 +443,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	
 	public function not_empty()
 	{
-		$new_value = $this->get('new_value');
-		
-		if ($new_value === Formo::NOTSET AND ! $this->get('value'))
-			return FALSE;
-			
-		return (bool) $new_value;
+		// The driver handles whether the field is empty
+		return $this->driver->not_empty();
 	}
-		
+			
 	public function matches($match_against)
 	{
 		return $this->val() === $this->parent(Formo::PARENT)

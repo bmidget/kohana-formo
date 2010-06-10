@@ -40,7 +40,7 @@ abstract class Formo_Driver_Core {
 	
 	// Retrieve a field's value
 	public function getval()
-	{
+	{		
 		$new_value = $this->field->get('new_value');
 		
 		return ($new_value !== Formo::NOTSET)
@@ -147,5 +147,15 @@ abstract class Formo_Driver_Core {
 		
 		return View::factory("$prefix$this->render_type/$this->view")
 			->bind($this->alias, $this->render_field);
-	}	
+	}
+	
+	public function not_empty()
+	{
+		$new_value = $this->field->get('new_value');
+		
+		if (Formo::notset($new_value) AND ! $this->field->get('value'))
+			return FALSE;
+			
+		return (bool) $new_value;
+	}
 }
