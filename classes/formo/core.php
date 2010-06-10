@@ -28,6 +28,8 @@ class Formo_Core extends Formo_Validator {
 		'render'				=> TRUE,
 		// Whether the field is editable
 		'editable'				=> TRUE,
+		// A custom message file
+		'message_file'			=> NULL,
 	);
 	
 	public static function factory($alias = NULL, $driver = NULL)

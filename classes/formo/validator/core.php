@@ -9,7 +9,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		// Error messages for fields inside
 		'errors'	=> array(),
 	);
-
+	
 	protected $_validators = array
 	(
 		// Pre filters
@@ -362,9 +362,17 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		return $array;
 	}
 	
+	// Determine which message file to use
+	protected function message_file()
+	{
+		return $this->get('message_file')
+			? $this->get('message_file')
+			: Kohana::config('formo')->message_file;
+	}
+	
 	public function make_message($error_name, array $param_names = NULL)
 	{
-		$file = Kohana::config('formo')->validate_messages_file;
+		$file = $this->message_file();
 		
 		if ($message = Kohana::message($file, $this->alias().'.'.$error_name))
 		{
@@ -374,7 +382,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			// Found a default message for this field
 		}
-		elseif ($message = Kohana::message('validate', $error_name))
+		elseif ($message = Kohana::message($file, $error_name))
 		{
 			// Found a default message for this error
 		}
