@@ -404,15 +404,7 @@ abstract class Formo_Container_Core {
 			if ($position === FALSE)
 				return $this;
 				
-			switch ($new_order)
-			{
-				case 'after':
-					$new_order = $position + 1;
-					break;
-				case 'before':
-				default:
-					$new_order = $position;
-			}
+			$new_order = ($new_order == 'after') ? $position + 1 : $position;
 		}
 
 		// Make the insertion
