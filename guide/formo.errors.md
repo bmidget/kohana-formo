@@ -28,11 +28,11 @@ The error messages are hierarchal. Let's explore a form with a subform.
 
 In this example, assume every field has the rule 'not_empty'.
 
-	$address = Formo::factory()
+	$address = Formo::form()
 		->add('street')
 		->add('zip');
 		
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('car', 'select', $hobbies)
 		->add('address', $address);
 		

@@ -13,7 +13,7 @@ The following example will pull an entire model and create a form from it:
 
 	$user = Jelly::select('user', 25);
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->orm('load', $user);
 		
 	if ($form->load()->validate())
@@ -38,7 +38,7 @@ You can also pull pieces of a model when you don't need to work with every field
 
 	$user = Jelly::select('user', 25);
 	
-	$form = Formo::factory()
+	$form = Formo::form()
 		->orm('load', $user, array('username, 'password'));
 		
 	if ($form->load()->validate())

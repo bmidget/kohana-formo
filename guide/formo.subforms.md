@@ -9,7 +9,7 @@ Doing this always appends your subform to the bottom of its parent.
 
 To do this, use `create_sub`:
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('username')
 		->add('email')
 		->add('password')

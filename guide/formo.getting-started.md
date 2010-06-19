@@ -1,13 +1,13 @@
 Getting Started
 ===============
 
-Create a form using the `factory` method:
+Create a form using the `form` method:
 
-	$form = Formo::factory();
+	$form = Formo::form();
 	
 Generally you will create a form object and `add` fields to it:
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('username')
 		->add('email');
 		
@@ -97,14 +97,14 @@ For more about subforms, see the [subform section](formo.subforms).
 
 This method searches through multi-layered forms and returns a field or subfield by its alias. Or you can specify exactly where the field is by using an array that specifies exactly where the item you're looking for is.
 
-$subform2 = Formo::factory()
+$subform2 = Formo::form()
 	->add('bar', 'text');
 
-$subform = Formo::factory()
+$subform = Formo::form()
 	->add('foo', 'text')
 	->add('subform2', $subform2);
 	
-$form = Formo::factory()
+$form = Formo::form()
 	->add('subform', $subform);
 	
 // These will return the same 'bar' field

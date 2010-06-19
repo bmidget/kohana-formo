@@ -11,7 +11,7 @@ The option that describes a special place for your new field to be appended at i
 
 The following example adds 'email' at a specific place:
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('username')
 		->add('password')
 		->add('email', array('order' => 1));
@@ -24,7 +24,7 @@ Ordering begins at 0, therefore the above form adds the fields in the following 
 
 You can also choose a place relative to another field. The options are "before" and "after".
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('username')
 		->add('password')
 		->add('email', array('order' => array('before' => 'password')))

@@ -6,7 +6,7 @@ Rendering any field is view-based, but it's your choice whether to work with ite
 
 At times it makes the most sense to pass an entire form object to a page's view file where it is rendered.
 
-	$form = Formo::factory()
+	$form = Formo::form()
 		->add('username')
 		->add('email');
 	
