@@ -21,7 +21,7 @@ Parameter string	|	What is passed
 
 Note that if you define any parameter, value is no longer passed by default and has to be specified. For example:
 
-	$form->rule('myfield', 'preg_match', array('/[a-z]+/', ':value'));
+	$form->rules('myfield', 'preg_match', array('/[a-z]+/', ':value'));
 	
 The in the validation messages, the names of additional parameters follows the same rules as Kohana's Validate. That is, the name of the parameter is the value of the parameter.
 
@@ -29,7 +29,7 @@ If, like in the example with preg_match above, the :param replacement doesn't fi
 
 Like this:
 
-	$form->rule('name', 'preg_match', array('all lowercase' => '/[a-z]+/', ':value'));
+	$form->rules('name', 'preg_match', array('all lowercase' => '/[a-z]+/', ':value'));
 	
 And then the message file could say
 
