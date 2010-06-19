@@ -95,8 +95,11 @@ abstract class Formo_Driver_Core {
 		
 		foreach ($fields as $field)
 		{
+			
 			// Find each field
 			$field = $this->field->find($field);
+			
+			
 			// Remember the field's original parent
 			$last_parent = $field->parent();
 			

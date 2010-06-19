@@ -61,6 +61,12 @@ class Formo_Form_Core extends Formo_Validator {
 		// If Formo instnace was passed
 		if ($alias instanceof Formo)
 			return $this->add_object($alias);
+			
+		if ($driver instanceof Formo)
+			return $this->add_object($driver->alias($alias));
+			
+		if ($value instanceof Formo)
+			return $this->add_object($value->set('driver', $driver)->alias($alias));
 					
 		$orig_options = $options;
 		$options = func_get_args();
@@ -118,6 +124,8 @@ class Formo_Form_Core extends Formo_Validator {
 	// Add a subform to the form
 	protected function add_object(Formo $subform)
 	{
+		($subform instanceof Formo_Form AND $subform->bind('_settings', 'input', $this->_settings['input']));
+		
 		$this->append($subform);
 		
 		return $this;

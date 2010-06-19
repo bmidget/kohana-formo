@@ -79,7 +79,8 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			return $sent;
 		
 		$input = ($input !== NULL) ? $input : $this->get('input');
-		foreach ($input as $alias => $value)
+
+		foreach ((array) $input as $alias => $value)
 		{
 			if ($this->find($alias) !== TRUE)
 			{
@@ -101,7 +102,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}
 		
 		$this->driver->pre_validate();
-			
+					
 		if ($validate_if_not_sent === FALSE AND ! $this->sent())
 			return FALSE;
 
@@ -146,7 +147,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Don't do anything if it's ignored
 			if ($field->get('ignore') === TRUE)
 				continue;
-			
+							
 			// Validate everything else
 			if ($field->validate($validate_if_not_sent) === FALSE)
 			{

@@ -125,6 +125,21 @@ abstract class Formo_Container_Core extends Formo {
 		$this->$variable = $value;
 		return $this;
 	}
+	
+	// Pass variable by reference
+	public function bind($variable, $key, & $value)
+	{
+		if ($key)
+		{
+			$this->{$variable}[$key] &= $value;
+		}
+		else
+		{
+			$this->{$variable} &= $key;
+		}
+		
+		return $this;
+	}
 		
 	// Fetch variables
 	public function get($variable, $default = FALSE)
