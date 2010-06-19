@@ -1,241 +1,162 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Core extends Formo_Validator {
+class Formo_Core {
 	
-	protected $_settings = array
-	(
-		// The config array
-		'config'				=> array(),
-		// The orm config array
-		'orm_config'			=> array(),
-		// Driver name for handling validation/rendering
-		'driver'				=> 'form',
-		// Driver instance that handles orm comm
-		'orm_driver_instance'	=> NULL,
-		// A model associated with this form
-		'model'					=> NULL,
-		// Whether the form was sent
-		'sent'					=> Formo::NOTSET,
-		// The input object ($_GET/$_POST/etc)
-		'input'					=> array(),
-		// If the object should be namespaces
-		'namespace'				=> FALSE,
-		// The view path prefix
-		'view_prefix'			=> 'formo/',
-		// Whether the form is 'post' or 'get'
-		'type'					=> 'post',
-		// Whether the field should render
-		'render'				=> TRUE,
-		// Whether the field is editable
-		'editable'				=> TRUE,
-		// A custom message file
-		'message_file'			=> NULL,
-	);
+	const NOTSET = '__NOTSET';
+	const PARENT = '__PARENT';
 	
-	public static function factory($alias = NULL, $driver = NULL)
+	// Return a form object
+	public static function form($alias = NULL, $driver = NULL, array $options = NULL)
 	{
-		return new Formo($alias, $driver);
+		return new Formo_Form($alias, $driver, $options);
 	}
 	
-	public function __construct($alias = NULL, $driver = NULL)
+	// Return a field object
+	public static function field($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
-		// Setup options array
-		$options = func_get_args();
-		$options = Formo_Container::args(__CLASS__, __FUNCTION__, $options);
-				
-		// Load the config file
-		$this->set('config', Kohana::config('formo'));
+		return new Formo_Field($alias, $driver, $value, $options);
+	}
+	
+	// For radios, checkboxes, select, etc.
+	public static function group($alias, $driver, $options, $values, array $settings = NULL)
+	{
+		$settings['values'] = $values;
+		$settings['options'] = $options;
+		$settings['driver'] = $driver;
+		$settings['alias'] = $alias;
 		
-		// Set the default alias and driver if necessary
-		(empty($options['alias']) AND $options['alias'] = $this->get('config')->form_alias);
-		(empty($options['driver']) AND $options['driver'] = $this->get('config')->form_driver);
-				
-		// Load the orm config file
-		if ($orm_file = Arr::get($this->get('config'), 'ORM') !== NULL)
-		{
-			$this->set('orm_config', $orm_file);
-		}
-
-		// Load the options
-		$this->load_options($options);
+		return new Formo_Field($settings);
 	}
 	
-	public function __get($value)
+	// Return a new render object
+	public static function render_obj($type, $options)
 	{
-		if ($value == 'orm')
-		{
-			// If the driver's already been created, retrieve it
-			if ($instance = $this->get('orm_driver_instance'))
-				return $instance;
-				
-			$instance = Formo_ORM_Factory::factory($this);
-			$this->set('orm_driver_instance', $instance);
-			
+		$class = Kohana::config('formo')->render_classes[$type];
+		return new $class($options);
+	}
+	
+	// Return a new rule object
+	public static function rule()
+	{
+		$args = func_get_args();
+		return call_user_func_array(array('Formo_Validator_Rule', 'factory'), $args);
+	}
+	
+	// Return a new trigger object
+	public static function trigger()
+	{
+	
+	}
+	
+	// Return a new filter object
+	public static function filter()
+	{
+		$args = func_get_args();
+		return call_user_func_array(array('Formo_Validator_Filter', 'factory'), $args);
+	}
+	
+	// Return or create a new driver instance
+	public function load_driver($save_instance = FALSE)
+	{
+		// Fetch the current settings
+		$driver = $this->get('driver');
+		$instance = $this->get('driver_instance');
+		
+		// If the instance is the correct driver for the field, return it
+		if ($instance AND get_class($instance) == $driver)
 			return $instance;
-		}
 		
-		return parent::__get($value);
-	}
-	
-	// Add a field to the form
-	public function add($alias, $driver = NULL, $value = NULL, array $options = NULL)
-	{
-		// If Formo object was passed, add it as a subform
-		if ($driver instanceof Formo)
-			return $this->add_subform($driver);
-			
-		if ($alias instanceof Formo)
-			return $this->add_subform($alias->alias($driver));
-			
-		if ($value instanceof Formo)
-			return $this->add_subform($value->alias($alias)->set('driver', $driver));
-		
-		$orig_options = $options;
-		$options = func_get_args();
-		$options = self::args(__CLASS__, __FUNCTION__, $options);
-
-		// If a driver is named but not an alias, make the driver text and the alias the driver
-		if (empty($options['driver']))
-		{
-			$options['driver'] = Arr::get($this->config, 'default_driver', 'text');
-		}
-		
-		// Allow loading rules, callbacks, filters upon adding a field
-		$validate_options = array('rule', 'trigger', 'filter');
-		// Create the array
-		$validate_settings = array();
+		// Build the class name
+		$driver_class_name = Kohana::config('formo')->driver_prefix.ucfirst($driver);
 				
-		foreach ($validate_options as $option)
+		// Create the new instance
+		$instance = new $driver_class_name($this);
+		
+		if ($save_instance === TRUE)
 		{
-			$option_name = Inflector::plural($option);
-			if ( ! empty($options[$option_name]))
-			{
-				$validate_settings[$option] = $options[$option_name];
-				unset($options[$option_name]);
-			}
+			// Save the instance if asked to
+			$this->set('driver_instance', $instance);
 		}
-								
-		// Create the new field
-		$field = Formo_Field::factory($options);
 		
-		$this->append($field);
-		
-		// Add the validation rules
-		foreach ($validate_settings as $method => $array)
-		{
-			foreach ($array as $callback => $opts)
-			{
-				$args = array(NULL, $callback, $opts);
-				call_user_func_array(array($field, $method), $args);
-			}
-		}		
-		
-		return $this;
-	}
-	
-	// Add a subform to the form
-	protected function add_subform(Formo $subform)
-	{
-		$this->append($subform);
-		
-		return $this;
+		// Return the new driver instance
+		return $instance;
 	}
 		
-	// Return all fields in order
-	public function fields($field = NULL)
+	public function load_orm($save_instance = FALSE)
 	{
-		if (func_num_args() === 1)
-			return $this->field($field);
-			
-		$unordered = array();
-		$ordered = array();
+		if ($instance = $this->get('orm_driver_instance'))
+			// If the instance exists, return it
+			return $instance;
 		
-		foreach ($this->defaults('fields') as $field)
+		// Get the driver neame
+		$driver = Kohana::config('formo')->orm_driver;
+		
+		// Create the new instance
+		$instance = new $driver($this);
+		
+		if ($save_instance === TRUE)
 		{
-			$alias = $field->alias();
-			$ordered[$alias] = $field;
+			// Save the instance if asked to
+			$this->set('orm_driver_instance', $instance);
 		}
+		
+		// REturn the new orm driver instance
+		return $instance;
+	}
 				
-		return $ordered;
-	}
-	
-	// Load data, auto-works with get/post
-	public function load(array $input = NULL)
-	{		
-		($input === NULL AND $input = Arr::get($this->config, 'type', 'post'));
+	// Simplifies taking function arguments
+	// Turn all arguments into one nice $options array
+	public static function args($class, $method, $args)
+	{
+		$method = new ReflectionMethod($class, $method);
 		
-		if (is_string($input))
+		$options = array();
+ 		$original_options = array();
+				
+		$i = 0;
+		foreach ($method->getParameters() as $param)
 		{
-			switch ($input)
-			{
-				case 'get':
-					$input = $_GET;
-					break;
-				case 'post':
-				default:
-					$input = $_POST;
-			}
-		}
-		
-		foreach ($input as $name => $value)
-		{
-			if ($field = $this->find($name))
-			{
-				$field->driver->load($value);
+			if ( ! isset($args[$i]))
 				continue;
-			}
-			
-			if ($field = $this->find(str_replace('_', ' ', $name)))
-			{
-				$field->driver->load($value);
-			}
-		}
-		
-		$this->input = $input;
-		
-		$this->sent();
-		
-		return $this;
-	}
-	
-	public static function notset($var, & $return_var = NULL)
-	{
-		$return_var = $var;
-		return $var === Formo::NOTSET;
-	}
-	
-	// Call ORM drivers specifically. This requires ORM settings in the config file
-	public function orm($method, & $model, $data = NULL)
-	{
-		$this->set('model', $model);
-		$this->orm->$method($model, $data);
-		
-		return $this;
-	}
-	
-	// Render
-	public function render($type, $view_prefix = FALSE)
-	{
-		if ($this->get('render') === FALSE)
-			return;
-			
-		if (Kohana::$profiling === TRUE)
-		{
-			// Start a new benchmark
-			$benchmark = Profiler::start('Formo', __FUNCTION__);
-		}
-						
-		$this->driver->pre_render($type);
-		$view = $this->driver->view();
-		
-		if (Kohana::$profiling === TRUE)
-		{
-			// Start a new benchmark
-			$benchmark = Profiler::start('Formo', __FUNCTION__);
-		}
-		
-		return $view;
+																		
+			$new_options = (is_array($args[$i]))
+	            // If the arg was an array and the last param, use it as the set of options
+				? $args[$i]
+	            // If not, add it to the options by parameter name
+				: array($param->name => $args[$i]);
 				
+	        $options = Arr::merge($options, $new_options);
+			
+			$i++;
+		}
+				
+		return $options;		
 	}
 	
+	public static function notset($val, & $var = NULL)
+	{
+		$var = $val;
+		return $val === Formo::NOTSET;
+	}
+	
+	// Load construct options
+	public function load_options($option, $value = NULL)
+	{
+		// Support array of options
+		if (is_array($option))
+		{
+			foreach ($option as $_option => $_value)
+			{
+				$this->load_options($_option, $_value);
+			}
+			
+			return $this;
+		}
+		
+		// Otherwise just set the variable
+		$this->set($option, $value);
+		
+		return $this;
+	}	
+
 }

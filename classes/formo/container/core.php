@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 // This class simply makes storing and retrieving objects neat
-abstract class Formo_Container_Core {
+abstract class Formo_Container_Core extends Formo {
 
 	// The topmost parent
 	const PARENT = '__PARENT';
@@ -22,44 +22,42 @@ abstract class Formo_Container_Core {
 		'driver_instance'	=> NULL,
 	);
 				
-	// Simplifies taking function arguments
-	// Turn all arguments into one nice $options array
-	public static function args($class, $method, $args)
+	// Simplifies 	// Fetch a field or return a driver object
+	public function __get($variable)
 	{
-		$method = new ReflectionMethod($class, $method);
-		
-		$options = array();
- 		$original_options = array();
-				
-		$i = 0;
-		foreach ($method->getParameters() as $param)
-		{
-			if ( ! isset($args[$i]))
-				continue;
-																		
-			$new_options = (is_array($args[$i]))
-	            // If the arg was an array and the last param, use it as the set of options
-				? $args[$i]
-	            // If not, add it to the options by parameter name
-				: array($param->name => $args[$i]);
-				
-	        $options = Arr::merge($options, $new_options);
+		if ($variable == 'driver' AND $variable = $this->get('driver'))
+			return $this->load_driver(TRUE);
+
+		if ($variable == 'orm')
+			return $this->load_orm(TRUE);
 			
-			$i++;
-		}
-				
-		return $options;		
+		return $this->get_field($variable);
 	}
 	
+	// Return all fields in order
+	public function fields($field = NULL)
+	{
+		$unordered = array();
+		$ordered = array();
+		
+		foreach ($this->get('fields') as $field)
+		{
+			$alias = $field->alias();
+			$ordered[$alias] = $field;
+		}
+				
+		return $ordered;
+	}
+
 	// Fetch a field directly within its container
-	public function field($search, $option = FALSE)
+	public function get_field($search, $option = FALSE)
 	{			
 		if (is_array($search))
 		{
 			$fields = array();
 			foreach ($search as $_search)
 			{
-				$field = $this->field($_search);
+				$field = $this->get_field($_search);
 				$fields[$field->alias()] = $field;
 			}
 			
@@ -81,39 +79,12 @@ abstract class Formo_Container_Core {
 				return $field;
 		}
 	}
-	
-	// Fetch a field or return a driver object
-	public function __get($alias)
-	{
-		if ($alias == 'driver' AND $driver = $this->get('driver'))
-		{									
-			// Make sure the current driver is the correct driver
-			if ($instance = $this->get('driver_instance') AND Formo_Driver_Factory::is_driver($instance, $driver))
-				return $instance;
-			
-			// Create a new driver instance
-			$instance = Formo_Driver_Factory::factory($this, $driver);
-									
-			// Store the driver instance
-			$this->set('driver_instance', $instance);
-
-			return $instance;
-		}
-
-		return $this->field($alias);
-	}
-	
+		
 	// Runs the method through the driver
 	public function __call($func, $args)
 	{
 		$method = new ReflectionMethod($this->driver, $func);
 		return $method->invokeArgs($this->driver, $args);
-	}
-
-	// Allow setting of variables with __set
-	public function __set($variable, $value)
-	{
-		$this->set($variable, $value);
 	}
 	
 	// Set variables
@@ -175,10 +146,10 @@ abstract class Formo_Container_Core {
 	// Return the model
 	public function model()
 	{
-		if ($this instanceof Formo)
-			return $this->get('model');
+		if ($this instanceof Formo_Form)
+			return $this->orm->model;
 		
-		return $this->parent()->get('model');
+		return $this->parent()->orm->model;
 	}
 	
 	// Stores an item in the container
@@ -237,26 +208,6 @@ abstract class Formo_Container_Core {
 				unset($this->_defaults['fields'][$key]);
 			}
 		}
-		
-		return $this;
-	}
-
-	// Load construct options
-	public function load_options($option, $value = NULL)
-	{
-		// Support array of options
-		if (is_array($option))
-		{
-			foreach ($option as $_option => $value)
-			{
-				$this->load_options($_option, $value);
-			}
-			
-			return $this;
-		}
-		
-		// Otherwise just set the variable
-		$this->set($option, $value);
 		
 		return $this;
 	}
@@ -329,7 +280,7 @@ abstract class Formo_Container_Core {
 		if ( ! is_array($alias))
 		{
 			// Whenever a match is found, return it
-			if ($field = $this->field($alias))
+			if ($field = $this->get_field($alias))
 				return $field;
 			
 			// Recursively look as deep as necessary
@@ -343,7 +294,7 @@ abstract class Formo_Container_Core {
 		else
 		{
 			// Start with the first item
-			$field = $this->field($alias[0]);
+			$field = $this->get_field($alias[0]);
 			// Go deeper for each item entered
 			for($i=1; $i<count($alias); $i++)
 			{

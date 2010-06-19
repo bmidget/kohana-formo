@@ -1,6 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Trigger_Core extends Formo_Validator_Rule {
+class Formo_Validator_Trigger_Core extends Formo_Validator_Item {
+	
+	public $type = 'trigger';
 	
 	protected $action_fields = array();
 	protected $action_callbacks = array();

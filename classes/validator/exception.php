@@ -5,11 +5,11 @@ class Validator_Exception extends Kohana_Exception {
 	/**
 	 * @var  object  Validate instance
 	 */
-	public $array;
+	public $errors;
 
-	public function __construct($array, $message = 'Failed to validate array', array $values = NULL, $code = 0)
+	public function __construct($errors, $message = 'Failed to validate array', array $values = NULL, $code = 0)
 	{
-		$this->array = $array;
+		$this->errors = $errors;
 
 		parent::__construct($message, $values, $code);
 	}

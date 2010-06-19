@@ -63,10 +63,8 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 	public function html()
 	{
 		foreach ($this->render_field->options as $alias => $options)
-		{
-			$checkbox = Formo_Field::factory($alias, 'checkbox', $options);
-			
-			$this->render_field->append($checkbox);
+		{	
+			$this->render_field->append(Formo::field($alias, 'checkbox', $options));
 		}
 	}
 

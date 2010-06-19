@@ -91,7 +91,7 @@ abstract class Formo_Driver_Core {
 	public function create_sub($alias, $driver, array $fields, $order = NULL)
 	{
 		// Create the empty subform object
-		$subform = Formo::factory($alias, $driver);
+		$subform = Formo::form($alias, $driver);
 		
 		foreach ($fields as $field)
 		{
@@ -128,24 +128,28 @@ abstract class Formo_Driver_Core {
 			$filter->execute();
 		}
 		
-		$render_field_class = Kohana::config('formo')->render_classes[$type];
-		$this->render_field = new $render_field_class($this->field);
-		$this->render_field->set('fields', $this->field->get('fields'));
+		$this->render_field = Formo::render_obj($type, $this->field);
+		$this->render_field->set('fields', $this->field->fields());
 		
-		if (method_exists($this, $type))
-			return $this->$type();
+		if ($this->field->orm)
+		{
+			$this->field->orm->pre_render();
+		}
+		
+		// Run the type-specific method for further setup, ex: $this->html()
+		(method_exists($this, $type) AND $this->$type());
 	}
 
-	public function view()
+	public function view($type)
 	{
+		// First run the pre_render method
+		$this->pre_render($type);
+		
 		$prefix = ($_prefix = $this->field->get('view_prefix'))
 			? $_prefix
 			: $this->field->parent(Formo::PARENT)->get('view_prefix');
 			
 		return View::factory("formo/html/$this->view")
-			->bind($this->alias, $this->render_field);
-		
-		return View::factory("$prefix$this->render_type/$this->view")
 			->bind($this->alias, $this->render_field);
 	}
 	

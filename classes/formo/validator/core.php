@@ -44,11 +44,15 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	}
 
 	// Add a validator item
-	public function add_validator($type, $rule, $alias = NULL)
+	public function add_validator($type, $rule)
 	{
+		$type = Inflector::plural($rule->type);
 		// Allow giving a rule an alias
-		$next = ($alias !== NULL) ? $alias : count($this->_validators[$type]);
-						
+		$next = count($this->_validators[$type]);
+		
+		// Resolve the context
+		$this->make_context($rule);
+								
 		$this->_validators[$type][$next] = $rule;
 		
 		return $this;
@@ -97,15 +101,13 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}
 		
 		$this->driver->pre_validate();
-		
-		if ($validate_if_not_sent === FALSE
-			AND (method_exists($this, 'sent') AND ! $this->sent())
-			AND ! $this->parent(Formo::PARENT)->sent())
-			return FALSE;
 			
-		if ($this->error() !== FALSE)
+		if ($validate_if_not_sent === FALSE AND ! $this->sent())
 			return FALSE;
 
+		if ($this->error() !== FALSE)
+			return FALSE;
+		
 		// Run through each validator type in order
 		foreach ($this->_validators as $name => $rules)
 		{
@@ -116,14 +118,25 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Execute each of the rules
 			foreach ($rules as $rule)
 			{
-				// Run the rule
-				if ($rule->execute() === FALSE)
+				// Make the proper parameteres
+				$this->pseudo_args($rule->args);
+
+				if ($name === 'filters')
 				{
-					// Set this error
-					$this->error($rule->error, TRUE, self::param_names($rule));
-					// No need to continue if there was an error
-					break;
+					$this->val($rule->execute());
 				}
+				
+				if ($name === 'rules')
+				{
+					// Run the rule
+					if ($rule->execute() === FALSE)
+					{
+						// Set this error
+						$this->error($rule->error, TRUE, $this->param_names($rule));
+						// No need to continue if there was an error
+						break;
+					}
+				}				
 			}
 		}
 		
@@ -133,11 +146,11 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Don't do anything if it's ignored
 			if ($field->get('ignore') === TRUE)
 				continue;
-												
+			
 			// Validate everything else
-			if ($field->validate() === FALSE)
+			if ($field->validate($validate_if_not_sent) === FALSE)
 			{
-				if ($field instanceof Formo)
+				if ($field instanceof Formo_Form)
 				{
 					// If no errors are attached to the subform, continue
 					if ( ! $field_errors = $field->errors())
@@ -163,7 +176,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		$this->driver->post_validate();
 				
 		// What to return depends on if it's a field or form object
-		if ($this instanceof Formo)
+		if ($this instanceof Formo_Form)
 		{
 			// If the form/subform has an error message, return FALSE
 			if ($this->error() !== FALSE)	
@@ -173,78 +186,68 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			return (bool) $this->errors() === FALSE;
 		}
 		else
-		{				
+		{
 			// Return whether passed validation based on field's error
 			return (bool) $this->error() === FALSE;
 		}
 	}
 	
-	public function filter($field, $callback, array $args = NULL)
+	protected function build_rule($type, $field, $rule = NULL, array $args = NULL)
 	{
-		$context = $field === NULL ? $this : $this->find($field);
-		// Add the filter
-		$context->add_validator('filters', Formo_Filter::factory($context, $callback, $args));
+		if (is_array($field))
+		{
+			foreach ($field as $_field => $_rule)
+			{
+				$this->build_rule($type, $_field, $_rule);
+			}
+			
+			return $this;
+		}
+		
+		if (is_array($rule))
+		{
+			foreach ($rule as $_rule => $_args)
+			{
+				if ($_args instanceof Formo_Validator_Item)
+				{
+					$this->build_rule($type, $field, $_args);
+				}
+				else
+				{
+					$this->build_rule($type, $field, $_rule, $_args);
+				}
+			}
+			
+			return $this;
+		}
+		
+		if ($rule instanceof Formo_Validator_Item === FALSE)
+		{
+			$rule = Formo::$type($rule, $args);
+		}
+		
+		// The field the rule is attached to
+		$field = ($field === NULL) ? $this : $this->find($field);
+		// Attach the rule to a field
+		$field->add_validator($type, $rule);
 		
 		return $this;
 	}
-	
+		
 	// Allow inputting multiple filters
-	public function filters(array $array)
+	public function filters($field, $callback = NULL, array $args = NULL)
 	{
-		foreach ($array as $options)
-		{
-			call_user_func_array(array($this, 'filter'), $options);
-		}
-		
-		return $this;
-	}
-		
-	public function post_filter($field, $callback, array $args = NULL)
-	{
-		$context = $field === NULL ? $this : $this->find($field);
-		
-		// Add the post filter
-		$context->add_validator('post_filters', Formo_Filter::factory($field, $context, $callback, $args));
-		
-		return $this;
-	}
-
-	// Allow inputting multiple post filters
-	public function post_filters(array $array)
-	{
-		foreach ($array as $options)
-		{
-			call_user_func_array(array($this, 'post_filter'), $options);
-		}
-		
-		return $this;
+		return $this->build_rule('filter', $field, $callback, $args);
 	}
 			
-	// Add a rule to an item in the container object
-	public function rule($field, $callback, array $args = NULL)
-	{
-		$context = $field = ($field === NULL) ? $this : $this->find($field);
-		$this->make_context($context, $callback, $args);
-		
-		// Add the rule
-		$field->add_validator('rules', Formo_Rule::factory($field, $context, $callback, $args));
-		
-		return $this;
+	// Attach any kind of rule to the specified field
+	public function rules($field, $callback = NULL, array $params = NULL)
+	{		
+		return $this->build_rule('rule', $field, $callback, $params);
 	}
-	
-	// Allow inputting multiple rules
-	public function rules(array $array)
-	{
-		foreach ($array as $options)
-		{
-			call_user_func_array(array($this, 'rule'), $options);
-		}
-		
-		return $this;
-	}
-
+					
 	// Add a trigger to an item in the container object
-	public function trigger($field, Formo_Trigger $trigger)
+	public function triggere($field, Formo_Trigger $trigger)
 	{
 		// Allow the context to be this field
 		$context = $field !== NULL ? $this->find($field) : $this;
@@ -257,65 +260,84 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	}
 	
 	// Allow inputting multiple triggers
-	public function triggers(array $array)
+	public function triggers($trigger)
 	{
-		foreach ($array as $options)
+		if (is_array($trigger))
 		{
-			call_user_func_array(array($this, 'trigger'), $options);
+			foreach ($trigger as $_trigger)
+			{
+				$this->triggers($_trigger);
+			}
+			
+			return $this;
 		}
+		
+		$this->add_validator($trigger);
 		
 		return $this;
 	}
 	
 	// Determine the proper context for the rule to run against
-	protected function make_context( & $context, & $callback, & $args = array())
+	protected function make_context(Formo_Validator_Item $rule)
 	{
+		if (is_array($rule->callback))
+			return list($rule->context, $rule->callback) = $rule->callback;
+
 		$regex = '/:([a-zA-Z_0-9]+)::/';
 		
 		// Pseudo context is present
-		if (preg_match($regex, $callback, $matches))
+		if (preg_match($regex, $rule->callback, $matches))
 		{
 			switch ($matches[1])
 			{
+				case 'field':
+					$rule->context = $this;
+					break;
 				case 'parent':
-					$context = $this->parent();
+					$rule->context = $this->parent();
 					break;
 				case 'form':
-					$context = $this->parent(Formo::PARENT);
+					$rule->context = $this->parent(Formo::PARENT);
 					break;
 				case 'model':
-					$context = $this->model();
+					$rule->context = $this->model();
 					break;
 			}
 			
 			// Set the callback to the second part of the rule
-			return $callback = preg_replace($regex, '', $callback);			
+			return $rule->callback = preg_replace($regex, '', $rule->callback);			
 		}
 		
-		if (preg_match('/::/', $callback))
+		if (preg_match('/::/', $rule->callback))
+		{
 			// Separate the context from the callback
-			return list($context, $callback) = explode('::', $callback);
+			return list($context, $callback) = explode('::', $rule->callback);
+			$rule->context = $context;
+			$rule->callback = $callback;
 			
-		if (function_exists($callback))
-			// Set context to NULL if it's a stand-alone function
-			return $context = NULL;
-			
-		if (method_exists($this, $callback))
-			// Allow simple declarations of field rules
 			return;
+		}
 			
-		if (is_callable(array('Validate', $callback)))
+		if (function_exists($rule->callback))
+			// Set context to NULL if it's a stand-alone function
+			return $rule->context = NULL;
+			
+		if (method_exists($this, $rule->callback))
+			// Allow simple declarations of field rules
+			return $rule->context = $this;
+			
+		if (is_callable(array('Validate', $rule->callback)))
 		{
 			// Set the context to Validate
-			$context = 'Validate';
+			$rule->context = 'Validate';
 
 			// Check to see if backwards compatibility for validate is set
 			if (Kohana::config('formo')->validate_compatible === TRUE)
 			{
-				$args = (array) $args;
-				if ( ! in_array(':value', $args))
+				$rule->args = (array) $rule->args;
+				if ( ! in_array(':value', $rule->args))
 				{
-					array_unshift($args, ':value');
+					array_unshift($rule->args, ':value');
 				}
 			}
 			
@@ -323,10 +345,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}				
 	}
 	
-	public static function param_names($rule)
+	public function param_names($rule)
 	{
 		// Make the array
-		$array = array();		
+		$array = array(':value' => $this->val());		
 		
 		$i = 0;
 		foreach ($rule->args as $pretty_name => $arg)
@@ -352,7 +374,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			}
 			
 			// Use a Container object's alias
-			$array[$next] = ($arg instanceof Formo_Container)
+			$array[$next] = ($arg instanceof Formo)
 				? $arg->alias()
 				: $arg;
 				
@@ -373,7 +395,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function make_message($error_name, array $param_names = NULL)
 	{
 		$file = $this->message_file();
-		
+				
 		if ($message = Kohana::message($file, $this->alias().'.'.$error_name))
 		{
 			// Found a message for this field and error

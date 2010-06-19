@@ -4,6 +4,8 @@ return array
 (
 	// Default path to view files
 	'view_prefix'				=> 'formo/',
+	// For determining path to driver files
+	'driver_prefix'				=> 'Formo_Driver_',
 	// Default form driver
 	'form_driver'				=> 'form',
 	// Default from alias

@@ -1,16 +1,18 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_ORM_Jelly_Core {
+class Formo_ORM_Jelly_Core extends Formo_ORM {
 
 	// A parent form or subform
 	protected $form;
+	// The model associated with the form
+	public $model;
 	
 	// Fields to load
 	protected $fields = array();
 	// Fields to skip altogether
 	protected $skip_fields = array();
 	
-	// This is instantiated from the Formo_ORM_Factory class
+	// This is instantiated from Formo::load_orm
 	public function __construct($form)
 	{
 		$this->form = $form;
@@ -19,6 +21,7 @@ class Formo_ORM_Jelly_Core {
 	// Load a model's fields
 	public function load(Jelly_Model $model, array $fields = NULL)
 	{
+		$this->model = $model;
 		$this->make_fields($fields);
 		
 		foreach ($model->meta()->fields() as $column => $field)
@@ -33,7 +36,7 @@ class Formo_ORM_Jelly_Core {
 			$options = (array) $field;
 			
 			// Fetch the validation key names from the config file
-			$validation_keys = Formo_ORM_Factory::$config->validation_keys;
+			$validation_keys = $this->config()->validation_keys;
 			
 			// Look for validation rules as defined by the config file
 			foreach ($validation_keys as $key => $value)
@@ -61,13 +64,31 @@ class Formo_ORM_Jelly_Core {
 			
 			// Convert value to at a string if it was an object	
 			(is_object($options['value']) AND $options['value'] = (string) $options['value']);
-										
+			
 			// Add the field to its parent
 			$this->form->add($column, $options);
 			
 			$field = $this->form->{$column};
 			
 			$this->add_auto_rules($field);			
+		}
+		
+		return $this->form;
+	}
+	
+	// This adds turns fills relational fields with relations to choose from
+	public function pre_render()
+	{
+		if ((bool) $this->model === FALSE)
+			return;
+			
+		foreach ($this->form->fields() as $field)
+		{
+			if ( ! $data = $this->model->meta()->fields($field->alias()))
+				continue;
+				
+			if ( ! $data instanceof Jelly_Field_Relationship)
+				continue;				
 		}
 	}
 	
@@ -90,7 +111,7 @@ class Formo_ORM_Jelly_Core {
 	// Add any auto_rules
 	protected function add_auto_rules(Formo_Container $field)
 	{
-		foreach (Formo_ORM_Factory::$config->auto_rules as $parameter => $values)
+		foreach ($this->config()->auto_rules as $parameter => $values)
 		{
 			list($check_value, $callback) = $values;
 			
@@ -114,15 +135,16 @@ class Formo_ORM_Jelly_Core {
 		if ( ! empty($options['driver']))
 			return $options['driver'];
 		
+				
 		// Check to find a default driver for a Jelly Field
-		return ( ! empty(Formo_ORM_Factory::$config->drivers[$class]))
+		return ( ! empty($this->config()->drivers[$class]))
 			// Return the default driver
-			? Formo_ORM_Factory::$config->drivers[$class]
+			? $this->config()->drivers[$class]
 			// Otherwise return the genral form default driver
 			: $this->form->get('config')->default_driver;
 	}
-	
-	// Pull a form's values into a model
+		
+	// Push a form's values into a model
 	public function pull( & $model, $model_name = NULL)
 	{
 		if ($model instanceof Jelly_Model === FALSE)
@@ -133,8 +155,11 @@ class Formo_ORM_Jelly_Core {
 		
 		foreach ($this->form->as_array('value') as $alias => $value)
 		{
-			// Add form values to the model
-			$model->$alias = $value;
+			if ($model->meta()->fields($alias) !== NULL)
+			{
+				// Add form values to the model
+				$model->$alias = $value;
+			}			
 		}
 		
 		return $model;

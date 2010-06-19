@@ -28,11 +28,6 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 		// Data for being passed into view
 		'data'				=> array(),
 	);
-
-	public static function factory($object)
-	{
-		return new Formo_Render_HTML($object);
-	}
 	
 	public function __construct($object)
 	{		
@@ -42,7 +37,7 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 		}
 		
 		// Copy settings and defaults and error messages
-		if ($object instanceof Formo_Container)
+		if ($object instanceof Formo)
 		{
 			$this->_settings = $object->get('_settings');
 			$this->_defaults = $object->get('_defaults');
@@ -242,13 +237,7 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 		
 		return $str;
 	}
-	
-	// Convenience method for finding all fields
-	public function fields()
-	{
-		return $this->get('fields');
-	}
-	
+		
 	// Render fields as html
 	public function __toString()
 	{

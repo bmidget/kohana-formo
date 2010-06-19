@@ -18,14 +18,9 @@ class Formo_Field_Core extends Formo_Validator {
 		// New values added to field
 		'new_value'		=> Formo::NOTSET,
 		// A custom message file
-		'message_file'			=> NULL,
+		'message_file'	=> NULL,
 	);
-	
-	public static function factory($alias, $driver = NULL, array $options = NULL)
-	{
-		return new Formo_Field($alias, $driver, $options);
-	}
-	
+		
 	public function __construct($alias, $driver = NULL, array $options = NULL)
 	{
 		$options = func_get_args();
@@ -66,8 +61,7 @@ class Formo_Field_Core extends Formo_Validator {
 		if ($this->get('render') === FALSE)
 			return;
 			
-		$this->driver->pre_render($render_type);
-		$view = $this->driver->view();
+		$view = $this->driver->view($render_type);
 		
 		return $view;
 	}
