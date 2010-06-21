@@ -1,3 +1,3 @@
 <span class="radio">
-	<label><?=$field?><?=ucfirst($field->label())?></label>
+	<label><?php echo $field; ?><?php echo ucfirst($field->label()); ?></label>
 </span>

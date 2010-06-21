@@ -1,1 +1,1 @@
-<div><?=$field?></div>
+<div><?php echo $field; ?></div>
