@@ -1,5 +1,5 @@
 <?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
-<p<?php echo $class; s?>>
+<p<?php echo $class; ?>>
 	<label><?php echo ucfirst($field->label()); ?>:</label>
 	<?php if ($field->get('editable') === TRUE): ?>
 		<?php echo $field->render('html'); ?>
