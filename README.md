@@ -4,7 +4,7 @@ _For full Jelly Integration, use the [Formo-Jelly](http://github.com/bmidget/koh
 
 # Features
 
-* Made for Kohana 3
+* Made for [Kohana 3](http://github.com/kohana/kohana)
 * ORM integration for [Jelly ORM](http://github.com/jonathangeiger/kohana-jelly)
 * Namespace your form elements (ie name="address['street']", name="address['city']")
 * Use formo for HTML form input, JSON, XML, anything
