@@ -53,6 +53,15 @@ abstract class Formo_Driver_Core {
 	{
 		if (func_num_args() === 0)
 			return $this->getval();
+		
+		foreach ($this->field->get_filter('pre') as $filter)
+		{
+			// Resolve pseudo args
+			$this->field->pseudo_args($filter->args, array(':value' => $value));
+			
+			// Run the filters
+			$value = $filter->execute();
+		}
 
 		// Set the value
 		$this->field->set('new_value', $value);
@@ -93,12 +102,23 @@ abstract class Formo_Driver_Core {
 		// Create the empty subform object
 		$subform = Formo::form($alias, $driver);
 		
-		foreach ($fields as $field)
+		foreach ($fields as $key => $field)
 		{
+			if (is_string($key) AND ! ctype_digit($key))
+			{
+				// Pull fields "as" a new alias
+				$new_alias = $field;
+				$field = $key;
+			}
 			
 			// Find each field
 			$field = $this->field->find($field);
 			
+			if ( ! empty($new_alias))
+			{
+				// Set the new alias
+				$field->alias($new_alias);
+			}
 			
 			// Remember the field's original parent
 			$last_parent = $field->parent();
@@ -125,7 +145,7 @@ abstract class Formo_Driver_Core {
 	public function pre_render($type)
 	{
 		$this->render_type = $type;
-		foreach ($this->field->get_validator('post_filters') as $filter)
+		foreach ($this->field->get_filter('post') as $filter)
 		{
 			// Execute every post filter
 			$filter->execute();
@@ -152,7 +172,9 @@ abstract class Formo_Driver_Core {
 			? $_prefix
 			: $this->field->parent(Formo::PARENT)->get('view_prefix');
 			
-		return View::factory("formo/html/$this->view")
+		$view = ($this->field->get('view')) ? $this->field->get('view') : $this->view;
+			
+		return View::factory("formo/html/$view")
 			->bind($this->alias, $this->render_field);
 	}
 	

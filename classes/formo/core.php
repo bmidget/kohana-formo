@@ -54,7 +54,7 @@ class Formo_Core {
 		$args = func_get_args();
 		return call_user_func_array(array('Formo_Validator_Filter', 'factory'), $args);
 	}
-	
+		
 	// Return or create a new driver instance
 	public function load_driver($save_instance = FALSE)
 	{

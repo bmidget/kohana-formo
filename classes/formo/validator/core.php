@@ -12,14 +12,16 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	
 	protected $_validators = array
 	(
-		// Pre filters
-		'filters'		=> array(),
 		// Normal validation rules
 		'rules'			=> array(),
 		// Special triggers
 		'triggers'		=> array(),
-		// Filter prior to rendering
-		'post_filters'	=> array(),
+	);
+	
+	protected $_filters = array
+	(
+		'pre'		=> array(),
+		'post'		=> array(),
 	);
 	
 	// Convenience method for setting and retrieving error
@@ -47,7 +49,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function add_validator($type, $rule)
 	{
 		$type = Inflector::plural($rule->type);
-		// Allow giving a rule an alias
+
+		if (in_array($type, array('filters', 'post_filters')))
+			return $this->add_filter(Inflector::singular($type), $rule);
+			
 		$next = count($this->_validators[$type]);
 		
 		// Resolve the context
@@ -56,6 +61,28 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		$this->_validators[$type][$next] = $rule;
 		
 		return $this;
+	}
+	
+	// Add a filter item
+	public function add_filter($type, $filter)
+	{
+		$resolved_types = array('filter' => 'pre', 'post_filter', 'post');
+		// Resolve the type
+		$type = ( ! empty($resolved_types[$type]))
+			? $resolved_types[$type]
+			: $type;
+		
+		// Resolve the context
+		$this->make_context($filter);
+		
+		$this->_filters[$type][] = $filter;
+		
+		return $this;
+	}
+	
+	public function get_filter($type)
+	{
+		return $this->_filters[$type];
 	}
 
 	// Retrieve a validator set
@@ -102,30 +129,23 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}
 		
 		$this->driver->pre_validate();
-					
+		
+		// Stop if it hasn't been sent and it needs to be sent	
 		if ($validate_if_not_sent === FALSE AND ! $this->sent())
 			return FALSE;
 
+		// Stop if an error is already set
 		if ($this->error() !== FALSE)
 			return FALSE;
 		
 		// Run through each validator type in order
 		foreach ($this->_validators as $name => $rules)
-		{
-			// Don't do post_filters right now
-			if ($name == 'post_filters')
-				continue;
-							
+		{							
 			// Execute each of the rules
 			foreach ($rules as $rule)
 			{
 				// Make the proper parameteres
 				$this->pseudo_args($rule->args);
-
-				if ($name === 'filters')
-				{
-					$this->val($rule->execute());
-				}
 				
 				if ($name === 'rules')
 				{
@@ -229,6 +249,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		
 		// The field the rule is attached to
 		$field = ($field === NULL) ? $this : $this->find($field);
+		
 		// Attach the rule to a field
 		$field->add_validator($type, $rule);
 		
@@ -431,19 +452,6 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	/*	Built-in Validation Rules	*/
 	
 	// Replace pseudo_params
-	public function pseudo_args( & $params)
-	{
-		$new_params = $params;
-
-		if (($key = array_search(':field', $params)) !== FALSE)
-		{
-			$new_params[$key] = $this;
-		}
-		
-		if (($key = array_search(':alias', $params)) !== FALSE)
-		{
-			$new_params[$key] = $this->alias();
-		}
 	public function pseudo_args( & $params, array $args = NULL)
 	{		
 		// We will cycle through these pseudo params
