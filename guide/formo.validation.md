@@ -39,18 +39,18 @@ And then the message file could say
 
 ## Filters
 
-A filter is a callback that pre-processes values for further validation and database saving. A good example of this is stripping a phone number of all non-digit characters.
+A filter is a callback that processes a value before setting it as a field's value. A good example of this is stripping a phone number of all non-digit characters.
 
 Filters attached at the form or subform level apply to every one of its fields.
 
 This adds the "trim" filter without any parameters to the form. this will be applied to all fields within the form
 	
-	$form->filter(NULL, 'trim', NULL);
+	$form->filters(NULL, 'trim', NULL);
 
 Here, "trim" will be run only on the username field
 
-	$form->filter('username', 'trim', NULL);
-	$form->username->filter(NULL, 'trim', NULL);
+	$form->filters('username', 'trim', NULL);
+	$form->username->filters(NULL, 'trim', NULL);
 
 ## Post Filters
 Post filters function exactly like filters but are run on field values only on the rendering object passed into views. Basically, these keep data pretty for the end user.
@@ -59,12 +59,12 @@ A good example of a post filter is reformatting a phone number to (xxx) xxx-xxxx
 
 This runs the function "Format::phone($field_value, '(3) 3-4')" on the all fields within $form
 
-	$form->post_filter(NULL, 'Format::phone', array('(3) 3-4'));
+	$form->post_filters(NULL, 'Format::phone', array('(3) 3-4'));
 	
 This runs the same function but only on the field 'phone'
 
-	$form->post_filter('phone', 'Format::phone', array('(3) 3-4'));
-	$form->phone->post_filter(NULL, 'Format::phone', array('(3) 304'));
+	$form->post_filters('phone', 'Format::phone', array('(3) 3-4'));
+	$form->phone->post_filters(NULL, 'Format::phone', array('(3) 304'));
 
 ## Rules
 
@@ -93,3 +93,37 @@ This is implemented so you don't always have to make your validate methods requi
 	
 	// But Formo allows you to just use preg_match
 	'preg_match'	=> array('/^[\pL_.-]+$/ui', ':value')
+	
+## Adding objects
+
+Since rules and filters ultimately become rule and filter objects respectively, you can add objects directly into any method that adds validator items and it will be added in the proper spot.
+
+This flexibility makes it nice to group all validation rules together.
+
+Here are some examples:
+
+	$form = Formo::form()
+		->add('username')
+		->rules('username', Formo::rule('not_empty'))
+		->add('email')
+		->rules('email', array(
+			Formo::filter('trim'),
+			Formo::rule('not_empty'),
+			Formo::rule('email')
+		));
+		
+This does the same thing but lets you group all rules for every field together in an array.
+		
+	$form = Formo::form()
+		->add('username')
+		->add('email')
+		->rules(array(
+			'username' => array(
+				Formo::rule('not_empty')
+			),
+			'email'	=> array(
+				Formo::filter('trim'),
+				Formo::rule('not_empty'),
+				Formo::rule('email'),
+			)
+		));
