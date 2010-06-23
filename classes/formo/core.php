@@ -39,7 +39,9 @@ class Formo_Core {
 	public static function rule()
 	{
 		$args = func_get_args();
-		return call_user_func_array(array('Formo_Validator_Rule', 'factory'), $args);
+		
+		$method = new ReflectionMethod('Formo_Validator_Rule', 'factory');
+		return $method->invokeArgs(NULL, $args);
 	}
 	
 	// Return a new trigger object
@@ -52,7 +54,9 @@ class Formo_Core {
 	public static function filter()
 	{
 		$args = func_get_args();
-		return call_user_func_array(array('Formo_Validator_Filter', 'factory'), $args);
+			
+		$method = new ReflectionMethod('Formo_Validator_Filter', 'factory');
+		return $method->invokeArgs(NULL, $args);
 	}
 		
 	// Return or create a new driver instance

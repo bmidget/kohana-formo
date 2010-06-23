@@ -244,7 +244,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		
 		if ($rule instanceof Formo_Validator_Item === FALSE)
 		{
-			$rule = Formo::$type($rule, $args);
+			$rule = call_user_func(array('Formo', $type), $rule, $args);
 		}
 		
 		// The field the rule is attached to
@@ -453,7 +453,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	
 	// Replace pseudo_params
 	public function pseudo_args( & $params, array $args = NULL)
-	{		
+	{
 		// We will cycle through these pseudo params
 		$defaults = array
 		(
@@ -471,12 +471,12 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			if (($key = array_search($search, $params)) !== FALSE)
 			{
 				// First check against custom values in $args
-				$params[$key] = ( ! empty($args[$key]))
-					? $args[$key]
+				$params[$key] = ( ! empty($args[$search]))
+					? $args[$search]
 					: $val;
 			}
 		}
-		
+				
 		// Always make sure at least the value is passed
 		if (empty($params))
 		{
