@@ -444,31 +444,40 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			$new_params[$key] = $this->alias();
 		}
+	public function pseudo_args( & $params, array $args = NULL)
+	{		
+		// We will cycle through these pseudo params
+		$defaults = array
+		(
+			':field'	=> $this,
+			':alias'	=> $this->alias(),
+			':parent'	=> $this->parent(),
+			':form'		=> $this->parent(Formo::PARENT),
+			':model'	=> $this->model(),
+			':value'	=> $this->val(),
+		);
 		
-		if (($key = array_search(':parent', $params)) !== FALSE)
+		foreach ($defaults as $search => $val)
 		{
-			$new_params[$key] = $this->parent();
-		}
-
-		if (($key = array_search(':form', $params)) !== FALSE)
-		{
-			$new_params[$key] = $this->parent(Container::PARENT);
-		}
-
-		if (($key = array_search(':model', $params)) !== FALSE)
-		{
-			$new_params[$key] = ($this instanceof Formo)
-				? $this->get('model')
-				: $this->parent()->get('model');
+			// If a default is found, continue
+			if (($key = array_search($search, $params)) !== FALSE)
+			{
+				// First check against custom values in $args
+				$params[$key] = ( ! empty($args[$key]))
+					? $args[$key]
+					: $val;
+			}
 		}
 		
-		if (($key = array_search(':value', $params)) !== FALSE)
+		// Always make sure at least the value is passed
+		if (empty($params))
 		{
-			$new_params[$key] = $this->val();
+			// If :value is specified, use it, otherwise use val()
+			$params = ( ! empty($args[':value']))
+				? array($args[':value'])
+				: array($this->val());
 		}
-		
-		$params = empty($new_params) ? array($this->val()) : $new_params;
-		
+						
 		return $params;
 	}
 	
