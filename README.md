@@ -15,4 +15,4 @@ _For full Jelly Integration, use the [Formo-Jelly](http://github.com/bmidget/koh
 * Supports any combination of forms, subforms and fields
 * New, simple and powerful object-based validation
 
-Documentation is contained within the Formo module and requires Kodoc.
+Documentation is contained within the Formo module and requires Kohana's [userguide module](http://github.com/kohana/userguide).
