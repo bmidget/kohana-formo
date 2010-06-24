@@ -48,7 +48,7 @@ class Formo_Validator_Trigger_Core extends Formo_Validator_Item {
 		if ($rule->execute() === $this->check_against)
 		{
 			// Use the parent for executing actions
-			$parent = $this->context->parent(Container::PARENT);
+			$parent = $this->context->parent(Formo::PARENT);
 						
 			foreach($this->action_fields as $key => $field)
 			{
