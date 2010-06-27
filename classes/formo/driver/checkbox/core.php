@@ -22,7 +22,7 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
 			->attr('name', $this->field->parent()->alias().'[]')
-			->attr('value', htmlentities($this->render_field->val()));
+			->attr('value', HTML::entities($this->render_field->value));
 		
 		$parent_value = $this->render_field->parent()->val();
 				

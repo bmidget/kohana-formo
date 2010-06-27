@@ -9,7 +9,7 @@ class Formo_Driver_Option_Core extends Formo_Driver {
 		$this->render_field
 			->set('tag', 'option')
 			->text($this->render_field->alias())
-			->attr('value', htmlentities($this->render_field->val()));
+			->attr('value', HTML::entities($this->render_field->value));
 			
 		if ($this->render_field->parent()->val() == $this->render_field->val())
 		{
