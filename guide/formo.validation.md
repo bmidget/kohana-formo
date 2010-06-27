@@ -52,20 +52,23 @@ Here, "trim" will be run only on the username field
 	$form->filters('username', 'trim', NULL);
 	$form->username->filters(NULL, 'trim', NULL);
 
-## Post Filters
-Post filters function exactly like filters but are run on field values only on the rendering object passed into views. Basically, these keep data pretty for the end user.
+## Display Filters
+Display filters function exactly like filters but are run on field values only on the rendering object passed into views. Basically, these keep data pretty for the end user.
 
 A good example of a post filter is reformatting a phone number to (xxx) xxx-xxxx format in the view files.
 
-This runs the function "Format::phone($field_value, '(3) 3-4')" on the all fields within $form
+This runs the function "Format::phone($field_value, '(3) 3-4')" on the field, _phone_
 
-	$form->post_filters(NULL, 'Format::phone', array('(3) 3-4'));
+	$form->display_filters('phone', 'Format::phone', array(':value', '(3) 3-4'));
 	
-This runs the same function but only on the field 'phone'
+You can also add display_filters with a group of other rules
 
-	$form->post_filters('phone', 'Format::phone', array('(3) 3-4'));
-	$form->phone->post_filters(NULL, 'Format::phone', array('(3) 304'));
-
+$form->rules('phone', array(
+	Formo::filter('trim');
+	Formo::rule('phone');
+	Formo::display_filter('phone', array(':value', '(3) 3-4'))
+));
+	
 ## Rules
 
 A rule returns TRUE if the field passes it, and FALSE if it doesn't. By default, a field's value is passed as a sole parameter, but this can be overridden to anything and in any order.
