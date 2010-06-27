@@ -145,11 +145,6 @@ abstract class Formo_Driver_Core {
 	public function pre_render($type)
 	{
 		$this->render_type = $type;
-		foreach ($this->field->get_filter('post') as $filter)
-		{
-			// Execute every post filter
-			$filter->execute();
-		}
 		
 		$this->render_field = Formo::render_obj($type, $this->field);
 		$this->render_field->set('fields', $this->field->fields());
@@ -161,7 +156,18 @@ abstract class Formo_Driver_Core {
 		
 		// Grab the value
 		$value = $this->field->val();
+
+		// Run display_filters
+		foreach ($this->field->get_filter('display') as $filter)
+		{
+			// Resolve parameters
+			$this->field->pseudo_args($filter->args);
+			// Run the filter
+			$value = $filter->execute();
+		}
+		
 		$this->render_field->value = $value;
+						
 		// Run the type-specific method for further setup, ex: $this->html()
 		(method_exists($this, $type) AND $this->$type());
 	}

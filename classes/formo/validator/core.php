@@ -21,7 +21,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	protected $_filters = array
 	(
 		'pre'		=> array(),
-		'post'		=> array(),
+		'display'	=> array(),
 	);
 	
 	// Convenience method for setting and retrieving error
@@ -50,7 +50,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	{
 		$type = Inflector::plural($rule->type);
 
-		if (in_array($type, array('filters', 'post_filters')))
+		if (in_array($type, array('filters', 'display_filters')))
 			return $this->add_filter(Inflector::singular($type), $rule);
 			
 		$next = count($this->_validators[$type]);
@@ -66,12 +66,12 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	// Add a filter item
 	public function add_filter($type, $filter)
 	{
-		$resolved_types = array('filter' => 'pre', 'post_filter', 'post');
+		$resolved_types = array('filter' => 'pre', 'display_filter' => 'display');
 		// Resolve the type
 		$type = ( ! empty($resolved_types[$type]))
 			? $resolved_types[$type]
 			: $type;
-		
+
 		// Resolve the context
 		$this->make_context($filter);
 		
@@ -260,6 +260,12 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function filters($field, $callback = NULL, array $args = NULL)
 	{
 		return $this->build_rule('filter', $field, $callback, $args);
+	}
+	
+	// Allow inputting multiple display_filters
+	public function display_filters($field, $callback = NULL, array $args = NULL)
+	{
+		return $this->build_rule('display_filter', $field, $callback, $args);
 	}
 			
 	// Attach any kind of rule to the specified field

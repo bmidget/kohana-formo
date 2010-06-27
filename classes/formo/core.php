@@ -58,6 +58,18 @@ class Formo_Core {
 		$method = new ReflectionMethod('Formo_Validator_Filter', 'factory');
 		return $method->invokeArgs(NULL, $args);
 	}
+	
+	// Return a new filter object
+	public static function display_filter()
+	{
+		$args = func_get_args();
+		
+		$method = new ReflectionMethod('Formo_Validator_Filter', 'factory');
+		$filter = $method->invokeArgs(NULL, $args);
+		$filter->type = 'display_filter';
+		
+		return $filter;
+	}
 		
 	// Return or create a new driver instance
 	public function load_driver($save_instance = FALSE)
