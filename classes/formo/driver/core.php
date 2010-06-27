@@ -159,6 +159,9 @@ abstract class Formo_Driver_Core {
 			$this->field->orm->pre_render();
 		}
 		
+		// Grab the value
+		$value = $this->field->val();
+		$this->render_field->value = $value;
 		// Run the type-specific method for further setup, ex: $this->html()
 		(method_exists($this, $type) AND $this->$type());
 	}

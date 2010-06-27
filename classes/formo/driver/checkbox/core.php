@@ -24,7 +24,7 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 			->attr('name', $this->field->parent()->alias().'[]')
 			->attr('value', HTML::entities($this->render_field->value));
 		
-		$parent_value = $this->render_field->parent()->val();
+		$parent_value = $this->field->parent()->val();
 				
 		if ($this->field->checked())
 		{

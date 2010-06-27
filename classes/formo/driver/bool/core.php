@@ -48,7 +48,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
-			->attr('name', $this->render_field->alias())
+			->attr('name', $this->field->alias())
 			->attr('value', 1);
 		
 		$parent_value = $this->render_field->parent()->val();

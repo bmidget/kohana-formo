@@ -18,7 +18,7 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 	public $label;
 	// Quote to use
 	public $quote = '"';
-		
+			
 	protected $_variables = array
 	(
 		// Cached html objects for quickly accessing later

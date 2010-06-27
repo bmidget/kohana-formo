@@ -9,7 +9,7 @@ class Formo_Driver_Password_Core extends Formo_Driver {
 		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'password')
-			->attr('name', $this->render_field->alias());
+			->attr('name', $this->field->alias());
 	}
 
 }

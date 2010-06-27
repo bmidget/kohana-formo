@@ -9,10 +9,10 @@ class Formo_Driver_Radio_Core extends Formo_Driver {
 		$this->render_field
 			->set('tag', 'input')
 			->attr('type', 'radio')
-			->attr('name', $this->render_field->parent()->alias())
+			->attr('name', $this->field->parent()->alias())
 			->attr('value', HTML::entities($this->field->value));
 			
-		if ($this->render_field->parent()->val() == $this->render_field->val())
+		if ($this->field->parent()->val() == $this->render_field->value)
 		{
 			$this->render_field->attr('checked', 'checked');
 		}

@@ -14,7 +14,7 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 		}
 		
 		$this->render_field->set('tag', 'select')
-			->attr('name', $this->render_field->alias());		
+			->attr('name', $this->field->alias());		
 	}
 
 }
