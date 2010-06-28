@@ -10,6 +10,8 @@ return array
 		'Field_Text'				=> 'textarea',
 		'Field_Password'			=> 'password',
 		'Field_Integer'				=> 'text',
+		'Field_Float'				=> 'text',
+		'Field_Boolean'				=> 'bool',
 		'Field_BelongsTo'			=> 'select',
 		'Field_HasOne'				=> 'select',
 		'Field_ManyToMany'			=> 'checkboxes',
