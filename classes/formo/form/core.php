@@ -102,6 +102,13 @@ class Formo_Form_Core extends Formo_Validator {
 		{
 			foreach ($array as $callback => $opts)
 			{
+				if ($opts instanceof Formo_Validator_Item)
+				{
+					// The rules method will suffice for all Formo_Validator_Item objects
+					$field->rules(NULL, $opts);
+					continue;
+				}
+				
 				$args = array(NULL, $callback, $opts);
 				call_user_func_array(array($field, $method), $args);
 			}
@@ -112,12 +119,12 @@ class Formo_Form_Core extends Formo_Validator {
 	
 	// For adding select, checkboxes, radios, etc
 	public function add_group($alias, $driver, $options, $value = NULL, array $settings = NULL)
-	{
+	{		
 		$settings['alias'] = $alias;
 		$settings['driver'] = $driver;
 		$settings['options'] = $options;
 		$settings['value'] = $value;
-				
+						
 		return $this->add($settings);
 	}
 	
