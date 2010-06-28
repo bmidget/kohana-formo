@@ -14,6 +14,7 @@ return array
 		'Field_Boolean'				=> 'bool',
 		'Field_BelongsTo'			=> 'select',
 		'Field_HasOne'				=> 'select',
+		'Field_HasMany'				=> 'checkboxes',
 		'Field_ManyToMany'			=> 'checkboxes',
 	),
 	// Rules to attach according to Jelly Field parameter values
