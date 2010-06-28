@@ -66,7 +66,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 					: $options['default'];
 			}
 			// Only perform this on BelongsTo and HasOne relationships
-			elseif ($field instanceof ManyToMany === FALSE AND $field instanceof HasMany === FALSE)
+			elseif ($field instanceof Field_ManyToMany === FALSE AND $field instanceof Field_HasMany === FALSE)
 			{
 				// grab the actual foreign model
 				$foreign_model = $model->get($column)->execute();
@@ -79,9 +79,9 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				$foreign_models = $model->get($column)->execute();
 				// Create the array
 				$values = array();
-				foreach ($foreign_model as $record)
+				foreach ($foreign_models as $record)
 				{
-					$values[$record->get($record->name_key())] = $record->get($record->primary_key());
+					$values[$record->get($record->meta()->name_key())] = $record->get($record->meta()->primary_key());
 				}
 				
 				$options['value'] = $values;
@@ -117,9 +117,9 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			if ( ! $data instanceof Jelly_Field_Relationship)
 				// If field is not a relationship, continue
 				continue;
-				
+						
 			// Fetch the list of all available records
-			$records = Jelly::select($field->alias())
+			$records = Jelly::select($field->foreign['model'])
 				->order_by(':name_key')
 				->execute();
 			
