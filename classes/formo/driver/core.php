@@ -68,10 +68,10 @@ abstract class Formo_Driver_Core {
 		// Set the value
 		$this->field->set('new_value', $value);
 		
-		if ($model = $this->field->model())
+		if ($this->field->model() AND $orm = $this->field->orm)
 		{
 			// If the value needs to be set in the model, do that too
-			$model->{$this->field->alias()} = $value;
+			$orm->set_field($this->field, $value);
 		}
 		
 		return $this;

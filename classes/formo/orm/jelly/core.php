@@ -23,7 +23,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 	{
 		$this->model = $model;
 		$this->make_fields($fields);
-		
+				
 		foreach ($model->meta()->fields() as $column => $field)
 		{
 			if (in_array($column, $this->skip_fields))
@@ -99,6 +99,33 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		}
 		
 		return $this->form;
+	}
+	
+	public function set_field(Formo $field, $value)
+	{
+		$field_name = $field->alias();
+		$data = $this->model->meta()->fields($field_name);
+						
+		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
+		{
+			// Run through each possibility and add/remove as necessary
+			foreach (Jelly::select($field->foreign['model'])->execute() as $record)
+			{
+				// Determine whether to add or remove the record
+				$method = (in_array($record->{$record->meta()->primary_key()}, (array) $value))
+					? 'add'
+					: 'remove';
+				
+				// Run the add/remove method
+				$this->model->$method($field->get('column'), $record);
+			}
+			
+			return $this;
+		}
+
+		// Simple field, just set the data
+		$this->model->$field_name = $value;
+		return $this;
 	}
 	
 	// This adds turns fills relational fields with relations to choose from
