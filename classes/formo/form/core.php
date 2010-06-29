@@ -156,17 +156,31 @@ class Formo_Form_Core extends Formo_Validator {
 			}
 		}
 		
-		foreach ($input as $name => $value)
+		if ($this->sent($input) === FALSE)
+			// Stop if input doesn't match the form's fields
+			return $this;
+		
+		foreach ($this->fields() as $field)
 		{
-			if ($field = $this->find($name))
+			// post keys never have spaces
+			$input_key = str_replace(' ', '_', $field->alias());
+			
+			if ($field instanceof Formo_Form)
 			{
-				$field->driver->load($value);
+				// Recursively load values
+				$field->load($input);
 				continue;
 			}
 			
-			if ($field = $this->find(str_replace('_', ' ', $name)))
+			if (isset($input[$input_key]))
 			{
-				$field->driver->load($value);
+				// Set the value
+				$field->driver->load($input[$input_key]);
+			}
+			elseif ($field->driver->empty_input === TRUE)
+			{
+				// If the an empty input is allowed, pass an empty value
+				$field->driver->load(array());
 			}
 		}
 		

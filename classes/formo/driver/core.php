@@ -12,6 +12,8 @@ abstract class Formo_Driver_Core {
 	protected $render_type;
 	// Render object name passed to view
 	protected $alias = 'field';
+	// Does this kind of field potentially not have a post value
+	public $empty_input = FALSE;
 		
 	public static function factory(Formo_Container $field)
 	{

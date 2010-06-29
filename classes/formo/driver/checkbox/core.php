@@ -3,6 +3,7 @@
 class Formo_Driver_Checkbox_Core extends Formo_Driver {
 
 	protected $view = 'checkbox';
+	public $empty_input = TRUE;
 	
 	public function checked()
 	{

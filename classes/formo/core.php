@@ -100,6 +100,9 @@ class Formo_Core {
 		
 	public function load_orm($save_instance = FALSE)
 	{
+		if ( ! $this instanceof Formo_Form)
+			return $this->parent()->load_orm(TRUE);
+			
 		if ($instance = $this->get('orm_driver_instance'))
 			// If the instance exists, return it
 			return $instance;

@@ -3,6 +3,7 @@
 class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 
 	protected $view = 'bool';
+	public $empty_input = TRUE;
 		
 	public function checked()
 	{
