@@ -103,8 +103,8 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 	
 	public function set_field(Formo $field, $value)
 	{
-		$field_name = $field->alias();
-		$data = $this->model->meta()->fields($field_name);
+		$column = $field->get('column');
+		$data = $this->model->meta()->fields($column);
 						
 		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
 		{
@@ -117,14 +117,14 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 					: 'remove';
 				
 				// Run the add/remove method
-				$this->model->$method($field->get('column'), $record);
+				$this->model->$method($column, $record);
 			}
 			
 			return $this;
 		}
 
 		// Simple field, just set the data
-		$this->model->$field_name = $value;
+		$this->model->{$column} = $value;
 		return $this;
 	}
 	
