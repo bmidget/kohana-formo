@@ -181,11 +181,13 @@ abstract class Formo_Driver_Core {
 		
 		$prefix = ($_prefix = $this->field->get('view_prefix'))
 			? $_prefix
-			: $this->field->parent(Formo::PARENT)->get('view_prefix');
+			: $_prefix = $this->field->parent(Formo::PARENT)->get('view_prefix');
+		
+		$prefix = rtrim($prefix, '/');
 			
 		$view = ($this->field->get('view')) ? $this->field->get('view') : $this->view;
-			
-		return View::factory("formo/html/$view")
+		
+		return View::factory("$prefix/html/$view")
 			->bind($this->alias, $this->render_field);
 	}
 	

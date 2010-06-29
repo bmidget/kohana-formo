@@ -21,7 +21,7 @@ class Formo_Form_Core extends Formo_Validator {
 		// If the object should be namespaces
 		'namespace'				=> FALSE,
 		// The view path prefix
-		'view_prefix'			=> 'formo/',
+		'view_prefix'			=> NULL,
 		// Whether the form is 'post' or 'get'
 		'type'					=> 'post',
 		// Whether the field should render
@@ -206,7 +206,13 @@ class Formo_Form_Core extends Formo_Validator {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
-						
+		
+		$view_prefix = $view_prefix !== FALSE
+			? $view_prefix
+			: Kohana::config('formo')->view_prefix;
+			
+		$this->set('view_prefix', $view_prefix);
+		
 		$view = $this->driver->view($type);
 		
 		if (Kohana::$profiling === TRUE)
