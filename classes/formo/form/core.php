@@ -161,11 +161,7 @@ class Formo_Form_Core extends Formo_Validator {
 			return $this;
 		
 		foreach ($this->fields() as $field)
-		{
-			if ($field->get('editable') === FALSE)
-				// Don't ever adjust values for not editable fields
-				continue;
-				
+		{				
 			// post keys never have spaces
 			$input_key = str_replace(' ', '_', $field->alias());
 			
