@@ -1,5 +1,5 @@
 <div>
-	<h2><?php echo ucfirst($group->alias()); ?></h2>
+	<h2><?php echo UTF8::ucfirst($group->alias()); ?></h2>
 	<?php if ($group->error): ?>
 		<div>There were errors with this part</div>
 	<?php endif; ?>
