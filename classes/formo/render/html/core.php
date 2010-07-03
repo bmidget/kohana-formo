@@ -75,7 +75,7 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 		}
 		
 		// Copy settings and defaults and error messages
-		if ($object instanceof Formo)
+		if ($object instanceof Formo_Container)
 		{
 			$this->_settings = $object->get('_settings');
 			$this->_defaults = $object->get('_defaults');

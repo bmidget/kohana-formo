@@ -5,7 +5,7 @@
  * 
  * @abstract
  */
-abstract class Formo_Container_Core extends Formo {
+abstract class Formo_Container_Core {
 
 	/**
 	 * Class-specific settings
