@@ -2,23 +2,61 @@
 
 class Formo_Render_HTML_Core extends Formo_Render_Core {
 
-	// HTML tag
+	/**
+	 * HTML tagname
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	public $tag;
-	// Array of attributes
+
+	/**
+	 * Array of attributes
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	public $attr = array
 	(
 		'class' => array(),
 	);
-	// Styles
+
+	/**
+	 * Styles array
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access public
+	 */
 	public $css = array();
-	// Text inside thag
+
+	/**
+	 * Text inside tag
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	public $text;
 	
-	// Label string
+	/**
+	 * Label string
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	public $label;
-	// Quote to use
+
+	/**
+	 * Quote to use
+	 * 
+	 * (default value: '"')
+	 * 
+	 * @var string
+	 * @access public
+	 */
 	public $quote = '"';
-			
+	
 	protected $_variables = array
 	(
 		// Cached html objects for quickly accessing later

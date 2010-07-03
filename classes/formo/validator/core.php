@@ -2,6 +2,12 @@
 
 abstract class Formo_Validator_Core extends Formo_Container {
 
+	/**
+	 * Errorm messages
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_errors = array
 	(
 		// Error message for this field/form
@@ -10,6 +16,12 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		'errors'	=> array(),
 	);
 	
+	/**
+	 * Validator types
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_validators = array
 	(
 		// Normal validation rules
@@ -18,34 +30,66 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		'triggers'		=> array(),
 	);
 	
+	/**
+	 * Filter types
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_filters = array
 	(
 		'pre'		=> array(),
 		'display'	=> array(),
 	);
 	
-	// Convenience method for setting and retrieving error
+	/**
+	 * Convenience method for setting and retrieving error
+	 * 
+	 * @access public
+	 * @param mixed $message. (default: NULL)
+	 * @param mixed $translate. (default: FALSE)
+	 * @param mixed array $param_names. (default: NULL)
+	 * @return object or string
+	 */
 	public function error($message = NULL, $translate = FALSE, array $param_names = NULL)
 	{
 		if (func_num_args() > 0)
 		{
 			($translate AND $message = $this->make_message($message, $param_names));
-			return $this->_errors['error'] = $message;
+			$this->_errors['error'] = $message;
+			
+			return $this;
 		}
 		
 		return $this->_errors['error'];
 	}
 
-	// Convenience method for fetching/setting errors
+	/**
+	 * Convenience method for setting and retrieving error
+	 * 
+	 * @access public
+	 * @param mixed array $errors. (default: NULL)
+	 * @return object or string
+	 */
 	public function errors(array $errors = NULL)
 	{
 		if (func_num_args() == 1 AND $errors !== NULL)
-			return $this->_errors['errors'] = $errors;
+		{
+			$this->_errors['errors'] = $errors;
+			return $this;
+		}
 			
 		return $this->_errors['errors'];
 	}
 
-	// Add a validator item
+	/**
+	 * Add a validator item
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param mixed $rule
+	 * @return object
+	 */
 	public function add_validator($type, $rule)
 	{
 		$type = Inflector::plural($rule->type);
@@ -63,7 +107,14 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		return $this;
 	}
 	
-	// Add a filter item
+	/**
+	 * Add a filter item
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param mixed $filter
+	 * @return object
+	 */
 	public function add_filter($type, $filter)
 	{
 		$resolved_types = array('filter' => 'pre', 'display_filter' => 'display');
@@ -80,12 +131,25 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		return $this;
 	}
 	
+	/**
+	 * Retrieve a filter from filters arrays
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @return array
+	 */
 	public function get_filter($type)
 	{
 		return $this->_filters[$type];
 	}
 
-	// Retrieve a validator set
+	/**
+	 * Retrieve a validator set
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @return array
+	 */
 	public function get_validator($type)
 	{
 		return $this->_validators[$type] ? $this->_validators[$type] : array();

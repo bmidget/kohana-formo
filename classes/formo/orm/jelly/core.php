@@ -2,23 +2,62 @@
 
 class Formo_ORM_Jelly_Core extends Formo_ORM {
 
-	// A parent form or subform
+	/**
+	 * A parent form or subform
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $form;
-	// The model associated with the form
+
+	/**
+	 * The model associated with the form
+	 * 
+	 * @var mixed
+	 * @access public
+	 */
 	public $model;
 	
-	// Fields to load
+	/**
+	 * Fields to load
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
 	protected $fields = array();
-	// Fields to skip altogether
+	
+	/**
+	 * Fields to skip altogether
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
 	protected $skip_fields = array();
 	
-	// This is instantiated from Formo::load_orm
+	/**
+	 * Instantiated from Formo::load_orm
+	 * 
+	 * @access public
+	 * @param mixed $form
+	 * @return void
+	 */
 	public function __construct($form)
 	{
 		$this->form = $form;
 	}
 	
-	// Load a model's fields
+	/**
+	 * Load a model's fields into the form
+	 * 
+	 * @access public
+	 * @param mixed Jelly_Model $model
+	 * @param mixed array $fields. (default: NULL)
+	 * @return form object
+	 */
 	public function load(Jelly_Model $model, array $fields = NULL)
 	{
 		$this->model = $model;
@@ -101,6 +140,14 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		return $this->form;
 	}
 	
+	/**
+	 * Set all field's values to correspond with formo values
+	 * 
+	 * @access public
+	 * @param mixed Formo $field
+	 * @param mixed $value
+	 * @return object
+	 */
 	public function set_field(Formo $field, $value)
 	{
 		$column = $field->get('column');
@@ -128,7 +175,12 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		return $this;
 	}
 	
-	// This adds turns fills relational fields with relations to choose from
+	/**
+	 * Adds turns fills relational fields with relations to choose from
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function pre_render()
 	{
 		if ((bool) $this->model === FALSE)
@@ -163,7 +215,13 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		}
 	}
 	
-	// Determine which fields to add, which to skip
+	/**
+	 * Determine which fields to add, which to skip
+	 * 
+	 * @access protected
+	 * @param mixed array $fields. (default: NULL)
+	 * @return void
+	 */
 	protected function make_fields(array $fields = NULL)
 	{
 		// If no fields were specified, no need to continue
@@ -179,7 +237,13 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		return $this->fields = $fields;
 	}
 	
-	// Add any auto_rules
+	/**
+	 * Add any auto_rules
+	 * 
+	 * @access protected
+	 * @param mixed Formo_Container $field
+	 * @return void
+	 */
 	protected function add_auto_rules(Formo_Container $field)
 	{
 		foreach ($this->config()->auto_rules as $parameter => $values)
@@ -200,6 +264,14 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		}	
 	}
 	
+	/**
+	 * Determine which driver should be used
+	 * 
+	 * @access protected
+	 * @param mixed array $options
+	 * @param mixed $class
+	 * @return string
+	 */
 	protected function determine_driver(array $options, $class)
 	{
 		// If the driver has been explicitly defined, use that
@@ -214,8 +286,15 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			// Otherwise return the genral form default driver
 			: $this->form->get('config')->default_driver;
 	}
-		
-	// Push a form's values into a model
+
+	/**
+	 * Push a form's values into a model
+	 * 
+	 * @access public
+	 * @param mixed & $model
+	 * @param mixed $model_name. (default: NULL)
+	 * @return void
+	 */
 	public function pull( & $model, $model_name = NULL)
 	{
 		if ($model instanceof Jelly_Model === FALSE)

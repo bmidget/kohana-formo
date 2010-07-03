@@ -1,19 +1,38 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-// This class simply makes storing and retrieving objects neat
+/**
+ * This class makes storing and retrieving objects neat
+ * 
+ * @abstract
+ */
 abstract class Formo_Container_Core extends Formo {
 
-	// The topmost parent
-	const PARENT = '__PARENT';
-	// Used to determine if new_value is set
-	const NOTSET = '__UNSET';
-
-	// Other settings
+	/**
+	 * Class-specific settings
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
 	protected $_settings = array();
-	// Where custom vars are stored
+
+	/**
+	 * Where custom vars are stored
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
 	protected $_customs = array();
 	
-	// Container settings
+	/**
+	 * Container settings
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_defaults = array
 	(
 		'alias'				=> NULL,
@@ -21,8 +40,14 @@ abstract class Formo_Container_Core extends Formo {
 		'fields'			=> array(),
 		'driver_instance'	=> NULL,
 	);
-				
-	// Simplifies 	// Fetch a field or return a driver object
+
+	/**
+	 * Fetch a field or return a driver object
+	 * 
+	 * @access public
+	 * @param mixed $variable
+	 * @return object or void
+	 */
 	public function __get($variable)
 	{
 		if ($variable == 'driver' AND $variable = $this->get('driver'))
@@ -34,7 +59,13 @@ abstract class Formo_Container_Core extends Formo {
 		return $this->get_field($variable);
 	}
 	
-	// Return all fields in order
+	/**
+	 * Returns all fields in order
+	 * 
+	 * @access public
+	 * @param mixed $field. (default: NULL)
+	 * @return array
+	 */
 	public function fields($field = NULL)
 	{
 		$unordered = array();
@@ -49,7 +80,14 @@ abstract class Formo_Container_Core extends Formo {
 		return $ordered;
 	}
 
-	// Fetch a field directly within its container
+	/**
+	 * Fetch a field directly within its container
+	 * 
+	 * @access public
+	 * @param mixed $search
+	 * @param mixed $option. (default: FALSE)
+	 * @return object or void
+	 */
 	public function get_field($search, $option = FALSE)
 	{			
 		if (is_array($search))
@@ -80,14 +118,28 @@ abstract class Formo_Container_Core extends Formo {
 		}
 	}
 		
-	// Runs the method through the driver
+	/**
+	 * Runs the method through the driver
+	 * 
+	 * @access public
+	 * @param mixed $func
+	 * @param mixed $args
+	 * @return void
+	 */
 	public function __call($func, $args)
 	{
 		$method = new ReflectionMethod($this->driver, $func);
 		return $method->invokeArgs($this->driver, $args);
 	}
 	
-	// Set variables
+	/**
+	 * Set variables
+	 * 
+	 * @access public
+	 * @param mixed $variable
+	 * @param mixed $value
+	 * @return object
+	 */
 	public function set($variable, $value)
 	{
 		// Support array of key => values
@@ -125,6 +177,15 @@ abstract class Formo_Container_Core extends Formo {
 		$this->$variable = $value;
 		return $this;
 	}
+
+	/**
+	 * Load construct options
+	 * 
+	 * @access public
+	 * @param mixed $option
+	 * @param mixed $value. (default: NULL)
+	 * @return object
+	 */
 	public function load_options($option, $value = NULL)
 	{
 		// Support array of options
@@ -144,7 +205,15 @@ abstract class Formo_Container_Core extends Formo {
 		return $this;
 	}	
 	
-	// Pass variable by reference
+	/**
+	 * Pass variable by reference
+	 * 
+	 * @access public
+	 * @param mixed $variable
+	 * @param mixed $key
+	 * @param mixed & $value
+	 * @return object
+	 */
 	public function bind($variable, $key, & $value)
 	{
 		if ($key)
@@ -159,7 +228,14 @@ abstract class Formo_Container_Core extends Formo {
 		return $this;
 	}
 		
-	// Fetch variables
+	/**
+	 * Fetch variable(s)
+	 * 
+	 * @access public
+	 * @param mixed $variable
+	 * @param mixed $default. (default: FALSE)
+	 * @return mixed
+	 */
 	public function get($variable, $default = FALSE)
 	{
 		$arrays = array('_defaults', '_settings', '_customs');
@@ -175,8 +251,13 @@ abstract class Formo_Container_Core extends Formo {
 		// Return default if variable doesn't exist
 		return (isset($this->$variable)) ? $this->$variable : $default;
 	}
-				
-	// Return the model
+
+	/**
+	 * Return the model
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function model()
 	{
 		if ($this instanceof Formo_Form)
@@ -185,7 +266,13 @@ abstract class Formo_Container_Core extends Formo {
 		return $this->parent()->orm->model;
 	}
 	
-	// Stores an item in the container
+	/**
+	 * Stores an item in the container
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @return object
+	 */
 	public function append($field)
 	{
 		// Set the field's parent
@@ -213,14 +300,28 @@ abstract class Formo_Container_Core extends Formo {
 		return $this;
 	}
 	
-	// Add a field to the beginning of the form
+	/**
+	 * Add an item to the beginning of a container
+	 * 
+	 * @access public
+	 * @param mixed $item
+	 * @return object
+	 */
 	public function prepend($item)
 	{
 		$item->_defaults['parent'] = $this;
 		array_unshift($this->_defaults['fields'], $item);
+		
+		return $this;
 	}
 	
-	// Removes a field
+	/**
+	 * Removes a field from its container
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @return object
+	 */
 	public function remove($alias)
 	{
 		// Support an array of fields
@@ -245,7 +346,13 @@ abstract class Formo_Container_Core extends Formo {
 		return $this;
 	}
 
-	// Return array of element with its specified value
+	/**
+	 * Return array of fields with the specified value for each
+	 * 
+	 * @access public
+	 * @param mixed $value. (default: NULL)
+	 * @return array
+	 */
 	public function as_array($value = NULL)
 	{
 		// Create the empty array to fill
@@ -270,7 +377,13 @@ abstract class Formo_Container_Core extends Formo {
 		return $array;
 	}
 	
-	// Retrieve's an item's parent
+	/**
+	 * Retrieve a field's parent
+	 * 
+	 * @access public
+	 * @param mixed $search. (default: NULL)
+	 * @return mixed
+	 */
 	public function parent($search = NULL)
 	{
 		$this_parent = $this->_defaults['parent'];
@@ -280,7 +393,7 @@ abstract class Formo_Container_Core extends Formo {
 			return $this_parent;
 		
 		// If searching for the topmost parent, return it if this is
-		if ($search === self::PARENT AND ! $this_parent)
+		if ($search === Formo::PARENT AND ! $this_parent)
 			return $this;
 		
 		// If this parent doesn't exist, return FALSE
@@ -304,9 +417,14 @@ abstract class Formo_Container_Core extends Formo {
 		$this->_defaults['alias'] = $alias;
 		return $this;
 	}
-			
-	// Look through a form object for a formo or formo_field objeect
-	// by alias
+
+	/**
+	 * Look through a container object for a field object by alias
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @return mixed
+	 */
 	public function find($alias)
 	{
 		// If an array wasn't entered, look everywhere
@@ -338,7 +456,13 @@ abstract class Formo_Container_Core extends Formo {
 		}
 	}
 	
-	// Return the order a field is in
+	/**
+	 * Return the order a field is in
+	 * 
+	 * @access protected
+	 * @param mixed $search
+	 * @return mixed
+	 */
 	protected function find_order($search)
 	{
 		$i = 0;
@@ -355,7 +479,13 @@ abstract class Formo_Container_Core extends Formo {
 		return FALSE;
 	}
 	
-	// Get the key of a specific field
+	/**
+	 * Get the key of a specific field
+	 * 
+	 * @access protected
+	 * @param mixed $field
+	 * @return mixed
+	 */
 	protected function find_fieldkey($field)
 	{
 		foreach ($this->_defaults['fields'] as $key => $value)
@@ -367,7 +497,15 @@ abstract class Formo_Container_Core extends Formo {
 		return FALSE;		
 	}
 	
-	// Set the order of a new field
+	/**
+	 * Set the order of a new field
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $new_order
+	 * @param mixed $relative_field. (default: NULL)
+	 * @return object
+	 */
 	public function order($field, $new_order, $relative_field = NULL)
 	{
 		// Find the field if necessary

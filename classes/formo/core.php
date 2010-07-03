@@ -1,23 +1,63 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * The interface class for Formo
+ * 
+ */
 class Formo_Core {
 	
+	/**
+	 * An unset parameter
+	 */
 	const NOTSET = '__NOTSET';
+	/**
+	 * The topmost parent object
+	 */
 	const PARENT = '__PARENT';
 	
-	// Return a form object
+	/**
+	 * Return a form object
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $alias. (default: NULL)
+	 * @param mixed $driver. (default: NULL)
+	 * @param mixed array $options. (default: NULL)
+	 * @return Formo_Form object
+	 */
 	public static function form($alias = NULL, $driver = NULL, array $options = NULL)
 	{
 		return new Formo_Form($alias, $driver, $options);
 	}
 	
-	// Return a field object
+	/**
+	 * Return a field object
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $alias
+	 * @param mixed $driver. (default: NULL)
+	 * @param mixed $value. (default: NULL)
+	 * @param mixed array $options. (default: NULL)
+	 * @return Formo_Field object
+	 */
 	public static function field($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
 		return new Formo_Field($alias, $driver, $value, $options);
 	}
 	
-	// For radios, checkboxes, select, etc.
+	/**
+	 * For radios, checkboxes, select, etc.
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $alias
+	 * @param mixed $driver
+	 * @param mixed $options
+	 * @param mixed $values
+	 * @param mixed array $settings. (default: NULL)
+	 * @return Formo_Field object
+	 */
 	public static function group($alias, $driver, $options, $values, array $settings = NULL)
 	{
 		$settings['values'] = $values;
@@ -28,14 +68,28 @@ class Formo_Core {
 		return new Formo_Field($settings);
 	}
 	
-	// Return a new render object
+	/**
+	 * Return a new render object
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $type
+	 * @param mixed $options
+	 * @return Render object
+	 */
 	public static function render_obj($type, $options)
 	{
 		$class = Kohana::config('formo')->render_classes[$type];
 		return new $class($options);
 	}
 	
-	// Return a new rule object
+	/**
+	 * Return a new rule object
+	 * 
+	 * @access public
+	 * @static
+	 * @return Formo_Validator_Rule object
+	 */
 	public static function rule()
 	{
 		$args = func_get_args();
@@ -44,13 +98,25 @@ class Formo_Core {
 		return $method->invokeArgs(NULL, $args);
 	}
 	
-	// Return a new trigger object
+	/**
+	 * trigger function.
+	 * 
+	 * @access public
+	 * @static
+	 * @return void
+	 */
 	public static function trigger()
 	{
 	
 	}
 	
-	// Return a new filter object
+	/**
+	 * Return a new filter object
+	 * 
+	 * @access public
+	 * @static
+	 * @return Formo_Validator_Filter object
+	 */
 	public static function filter()
 	{
 		$args = func_get_args();
@@ -59,7 +125,13 @@ class Formo_Core {
 		return $method->invokeArgs(NULL, $args);
 	}
 	
-	// Return a new filter object
+	/**
+	 * Return a new filter object
+	 * 
+	 * @access public
+	 * @static
+	 * @return Formo_Validator_Filter object
+	 */
 	public static function display_filter()
 	{
 		$args = func_get_args();

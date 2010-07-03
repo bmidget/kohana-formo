@@ -1,7 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+
 class Formo_Form_Core extends Formo_Validator {
 
+	/**
+	 * Form-specific settings
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_settings = array
 	(
 		// The config array
@@ -15,7 +22,7 @@ class Formo_Form_Core extends Formo_Validator {
 		// A model associated with this form
 		'model'					=> NULL,
 		// Whether the form was sent
-		'sent'					=> '__NOTSET',
+		'sent'					=> Formo::NOTSET,
 		// The input object ($_GET/$_POST/etc)
 		'input'					=> array(),
 		// If the object should be namespaces
@@ -32,11 +39,19 @@ class Formo_Form_Core extends Formo_Validator {
 		'message_file'			=> NULL,
 	);
 	
+	/**
+	 * Construct the form object
+	 * 
+	 * @access public
+	 * @param mixed $alias. (default: NULL)
+	 * @param mixed $driver. (default: NULL)
+	 * @return void
+	 */
 	public function __construct($alias = NULL, $driver = NULL)
 	{
 		// Setup options array
 		$options = func_get_args();
-		$options = Formo_Container::args(__CLASS__, __FUNCTION__, $options);
+		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 				
 		// Load the config file
 		$this->set('config', Kohana::config('formo'));
@@ -55,7 +70,16 @@ class Formo_Form_Core extends Formo_Validator {
 		$this->load_options($options);
 	}
 	
-	// Add a field to the form
+	/**
+	 * Adds a field to a form
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $driver. (default: NULL)
+	 * @param mixed $value. (default: NULL)
+	 * @param mixed array $options. (default: NULL)
+	 * @return object
+	 */
 	public function add($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
 		// If Formo instnace was passed
@@ -70,7 +94,7 @@ class Formo_Form_Core extends Formo_Validator {
 					
 		$orig_options = $options;
 		$options = func_get_args();
-		$options = self::args(__CLASS__, __FUNCTION__, $options);
+		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 
 		// If a driver is named but not an alias, make the driver text and the alias the driver
 		if (empty($options['driver']))
@@ -117,7 +141,17 @@ class Formo_Form_Core extends Formo_Validator {
 		return $this;
 	}
 	
-	// For adding select, checkboxes, radios, etc
+	/**
+	 * For adding select, checkboxes, radios, etc
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $driver
+	 * @param mixed $options
+	 * @param mixed $value. (default: NULL)
+	 * @param mixed array $settings. (default: NULL)
+	 * @return object
+	 */
 	public function add_group($alias, $driver, $options, $value = NULL, array $settings = NULL)
 	{		
 		$settings['alias'] = $alias;
@@ -128,7 +162,13 @@ class Formo_Form_Core extends Formo_Validator {
 		return $this->add($settings);
 	}
 	
-	// Add a subform to the form
+	/**
+	 * Add a subform to the form
+	 *
+	 * @access protected
+	 * @param mixed Formo $subform
+	 * @return object
+	 */
 	protected function add_object(Formo $subform)
 	{
 		($subform instanceof Formo_Form AND $subform->bind('_settings', 'input', $this->_settings['input']));
@@ -138,7 +178,13 @@ class Formo_Form_Core extends Formo_Validator {
 		return $this;
 	}
 			
-	// Load data, auto-works with get/post
+	/**
+	 * Load data, works automatcially with with get/post
+	 *
+	 * @access public
+	 * @param mixed array $input. (default: NULL)
+	 * @return void
+	 */
 	public function load(array $input = NULL)
 	{
 		($input === NULL AND $input = Arr::get($this->config, 'type', 'post'));
@@ -193,13 +239,26 @@ class Formo_Form_Core extends Formo_Validator {
 		return $this;
 	}
 	
+	/**
+	 * Renders the form according to the config file's "render" setting
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function __toString()
 	{
 		// Render as the default render type
 		return $this->render(Kohana::config('formo')->render_type)->render();
 	}
 
-	// Render
+	/**
+	 * Render the form
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param mixed $view_prefix. (default: FALSE)
+	 * @return view object
+	 */
 	public function render($type, $view_prefix = FALSE)
 	{
 		if ($this->get('render') === FALSE)
