@@ -70,61 +70,18 @@ class Formo_Core {
 		
 		return $filter;
 	}
-		
-	// Return or create a new driver instance
-	public function load_driver($save_instance = FALSE)
-	{
-		// Fetch the current settings
-		$driver = $this->get('driver');
-		$instance = $this->get('driver_instance');
-		
-		// If the instance is the correct driver for the field, return it
-		if ($instance AND get_class($instance) == $driver)
-			return $instance;
-		
-		// Build the class name
-		$driver_class_name = Kohana::config('formo')->driver_prefix.ucfirst($driver);
-				
-		// Create the new instance
-		$instance = new $driver_class_name($this);
-		
-		if ($save_instance === TRUE)
-		{
-			// Save the instance if asked to
-			$this->set('driver_instance', $instance);
-		}
-		
-		// Return the new driver instance
-		return $instance;
-	}
-		
-	public function load_orm($save_instance = FALSE)
-	{
-		if ( ! $this instanceof Formo_Form)
-			return $this->parent()->load_orm(TRUE);
-			
-		if ($instance = $this->get('orm_driver_instance'))
-			// If the instance exists, return it
-			return $instance;
-		
-		// Get the driver neame
-		$driver = Kohana::config('formo')->orm_driver;
-		
-		// Create the new instance
-		$instance = new $driver($this);
-		
-		if ($save_instance === TRUE)
-		{
-			// Save the instance if asked to
-			$this->set('orm_driver_instance', $instance);
-		}
-		
-		// REturn the new orm driver instance
-		return $instance;
-	}
-				
-	// Simplifies taking function arguments
-	// Turn all arguments into one nice $options array
+						
+	/**
+	 * Simplifies taking function arguments
+	 * Turns all arguments into one nice $options array
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $class
+	 * @param mixed $method
+	 * @param mixed $args
+	 * @return array
+	 */
 	public static function args($class, $method, $args)
 	{
 		$method = new ReflectionMethod($class, $method);
@@ -152,30 +109,19 @@ class Formo_Core {
 		return $options;		
 	}
 	
+	/**
+	 * Determines whether a setting has been set
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $val
+	 * @param mixed & $var. (default: NULL)
+	 * @return bool
+	 */
 	public static function notset($val, & $var = NULL)
 	{
 		$var = $val;
 		return $val === Formo::NOTSET;
 	}
 	
-	// Load construct options
-	public function load_options($option, $value = NULL)
-	{
-		// Support array of options
-		if (is_array($option))
-		{
-			foreach ($option as $_option => $_value)
-			{
-				$this->load_options($_option, $_value);
-			}
-			
-			return $this;
-		}
-		
-		// Otherwise just set the variable
-		$this->set($option, $value);
-		
-		return $this;
-	}	
-
 }

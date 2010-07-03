@@ -125,6 +125,24 @@ abstract class Formo_Container_Core extends Formo {
 		$this->$variable = $value;
 		return $this;
 	}
+	public function load_options($option, $value = NULL)
+	{
+		// Support array of options
+		if (is_array($option))
+		{
+			foreach ($option as $_option => $_value)
+			{
+				$this->load_options($_option, $_value);
+			}
+			
+			return $this;
+		}
+		
+		// Otherwise just set the variable
+		$this->set($option, $value);
+		
+		return $this;
+	}	
 	
 	// Pass variable by reference
 	public function bind($variable, $key, & $value)
@@ -380,5 +398,71 @@ abstract class Formo_Container_Core extends Formo {
 		
 		return $this;
 	}
+	
+	/**
+	 * Return or create a new driver instance
+	 * 
+	 * @access public
+	 * @param mixed $save_instance. (default: FALSE)
+	 * @return Formo_Driver
+	 */
+	public function load_driver($save_instance = FALSE)
+	{
+		// Fetch the current settings
+		$driver = $this->get('driver');
+		$instance = $this->get('driver_instance');
+		
+		// If the instance is the correct driver for the field, return it
+		if ($instance AND get_class($instance) == $driver)
+			return $instance;
+		
+		// Build the class name
+		$driver_class_name = Kohana::config('formo')->driver_prefix.UTF8::ucfirst($driver);
+				
+		// Create the new instance
+		$instance = new $driver_class_name($this);
+		
+		if ($save_instance === TRUE)
+		{
+			// Save the instance if asked to
+			$this->set('driver_instance', $instance);
+		}
+		
+		// Return the new driver instance
+		return $instance;
+	}
+		
+	/**
+	 * Load an orm driver instance
+	 * 
+	 * @access public
+	 * @param mixed $save_instance. (default: FALSE)
+	 * @return Formo_ORM object
+	 */
+	public function load_orm($save_instance = FALSE)
+	{
+		if ( ! $this instanceof Formo_Form)
+			return $this->parent()->load_orm(TRUE);
+			
+		if ($instance = $this->get('orm_driver_instance'))
+			// If the instance exists, return it
+			return $instance;
+		
+		// Get the driver neame
+		$driver = Kohana::config('formo')->orm_driver;
+		
+		// Create the new instance
+		$instance = new $driver($this);
+		
+		if ($save_instance === TRUE)
+		{
+			// Save the instance if asked to
+			$this->set('orm_driver_instance', $instance);
+		}
+		
+		// REturn the new orm driver instance
+		return $instance;
+	}
+	
 		
 }
