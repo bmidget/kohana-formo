@@ -18,6 +18,7 @@ Parameter string	|	What is passed
 ':field'			|	That field object. Can also be a form/subform
 ':parent'			|	That field's parent
 ':form'				|	The topmost parent
+':alias				|	The field's alias
 
 Note that if you define any parameter, value is no longer passed by default and has to be specified. For example:
 
