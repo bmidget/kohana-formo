@@ -141,7 +141,7 @@ abstract class Formo_Driver_Core {
 		// Append the new subform		
 		$this->field->append($subform);
 		
-		return $this;
+		return $this->field;
 	}
 	
 	public function pre_render($type)
