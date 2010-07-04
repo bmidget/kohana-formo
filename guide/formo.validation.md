@@ -35,6 +35,19 @@ And then the message file could say
 
 	'preg_match'	=> ':field must be :param1';
 	
+## Message files
+The default message file for your validation error messages is specified in `config/formo.php` as `'message_file'`. You can change this to whichever file you need to be your default file.
+
+If you need to use custom files at a form, subform or even field level, set it's `'message_file'` parameter to what you need it to be.
+
+Examples of setting specific message files:
+
+	$form->set('message_file', 'custom_file');
+	
+	$form->add('username', array('message_file' => 'user_messages'));
+	
+	$form->username->set('message_file', 'custom_file');
+	
 ## Parameter
 
 ## Filters
