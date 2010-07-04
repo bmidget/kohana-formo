@@ -148,7 +148,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 	 * @param mixed $value
 	 * @return object
 	 */
-	public function set_field(Formo $field, $value)
+	public function set_field(Formo_Container $field, $value)
 	{
 		$column = $field->get('column');
 		$data = $this->model->meta()->fields($column);
