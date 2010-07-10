@@ -169,7 +169,7 @@ class Formo_Form_Core extends Formo_Validator {
 	 * @param mixed Formo $subform
 	 * @return object
 	 */
-	protected function add_object(Formo $subform)
+	protected function add_object(Formo_Container $subform)
 	{
 		($subform instanceof Formo_Form AND $subform->bind('_settings', 'input', $this->_settings['input']));
 		
