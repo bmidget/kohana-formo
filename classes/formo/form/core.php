@@ -83,13 +83,13 @@ class Formo_Form_Core extends Formo_Validator {
 	public function add($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
 		// If Formo instnace was passed
-		if ($alias instanceof Formo)
+		if ($alias instanceof Formo_Form)
 			return $this->add_object($alias);
 			
-		if ($driver instanceof Formo)
+		if ($driver instanceof Formo_Form)
 			return $this->add_object($driver->alias($alias));
 			
-		if ($value instanceof Formo)
+		if ($value instanceof Formo_Form)
 			return $this->add_object($value->set('driver', $driver)->alias($alias));
 					
 		$orig_options = $options;
