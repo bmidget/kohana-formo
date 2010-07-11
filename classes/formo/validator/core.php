@@ -466,7 +466,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			}
 			
 			// Use a Container object's alias
-			$array[$next] = ($arg instanceof Formo)
+			$array[$next] = ($arg instanceof Formo_Container)
 				? $arg->alias()
 				: $arg;
 				
