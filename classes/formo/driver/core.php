@@ -55,7 +55,7 @@ abstract class Formo_Driver_Core {
 	{
 		if (func_num_args() === 0)
 			return $this->getval();
-		
+					
 		foreach ($this->field->get_filter('pre') as $filter)
 		{
 			// Resolve pseudo args

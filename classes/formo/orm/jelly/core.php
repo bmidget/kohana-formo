@@ -150,9 +150,15 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 	 */
 	public function set_field(Formo_Container $field, $value)
 	{
-		$column = $field->get('column');
+		$column = ($foreign = $field->get('foreign'))
+			? $foreign['model']
+			: $field->get('column');
+		
+		if ( ! $column)
+			return $this;
+			
 		$data = $this->model->meta()->fields($column);
-						
+														
 		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
 		{
 			// Run through each possibility and add/remove as necessary
@@ -169,9 +175,10 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			
 			return $this;
 		}
-
+		
 		// Simple field, just set the data
 		$this->model->{$column} = $value;
+
 		return $this;
 	}
 	
