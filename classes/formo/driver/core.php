@@ -144,6 +144,12 @@ abstract class Formo_Driver_Core {
 		return $this->field;
 	}
 	
+	public function orm($method)
+	{
+		$args = array_slice(func_get_args(), 1);
+		return call_user_func_array(array($this->field->orm, $method), $args);
+	}
+	
 	public function pre_render($type)
 	{
 		$this->render_type = $type;
