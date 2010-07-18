@@ -55,7 +55,7 @@ You can also pull pieces of a model when you don't need to work with every field
 	
 ## Direct integration approach
 
-You can really make Jelly and Formo play nicely together by using the Jelly_Model for integration. When you do this, Jelly will use a Formo object to validat against instead of the Validate library.
+You can really make Jelly and Formo play nicely together by using the Jelly_Model for integration. When you do this, Jelly will use a Formo object to validate against instead of the Validate library.
 
 With this approach every Jelly model has a property named `$model->form` that is the jelly fields as a Formo object. This is created on the fly only when necessary as not to add any overhead to Jelly when it's not necessary.
 
