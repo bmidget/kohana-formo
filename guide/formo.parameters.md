@@ -13,6 +13,7 @@ Parameter		|	Type	|	Function
 `driver`		|	String	|	The driver that handles the field/form type
 `message_file`	|	String	|	The file to use for the form/field's validation messages
 `options`		|	Array	|	Become available options for selects, radio groups and checkbox groups
+`order`			|	Mixed	|	Specifies where the field is placed relative to other fields
 
 ## Setting specific parameters
 
