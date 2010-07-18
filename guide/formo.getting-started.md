@@ -79,9 +79,9 @@ You can also pass an array of key => values to set.
 	
 	$form->set($settings);
 
-### Formo Fields (Ffields)
+### Formo Fields 
 
-Fields are containers for data. Every field you add to your form object is an `Ffield` object.
+Fields are containers for data. Every field you add to your form object is an `Formo_Field` object.
 
 ### Subforms
 
