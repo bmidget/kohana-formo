@@ -6,7 +6,7 @@ Validation is based on filters, rules, triggers and post_filters attached to for
 
 ## Parameters and pseudo parameters
 
-If no parameter is defined, the only the field's value will be passed to the callback as a parameter.
+If no parameter is defined, then only the field's value will be passed to the callback as a parameter.
 
 If any parameters are defined, those are what are passed to the callback.
 
