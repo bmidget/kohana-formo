@@ -12,6 +12,7 @@ Parameter		|	Type	|	Function
 `label`			|	String	|	Becomes a field's label. If not specified, the alias is its label
 `driver`		|	String	|	The driver that handles the field/form type
 `message_file`	|	String	|	The file to use for the form/field's validation messages
+`options`		|	Array	|	Become available options for selects, radio groups and checkbox groups
 
 ## Setting specific parameters
 
