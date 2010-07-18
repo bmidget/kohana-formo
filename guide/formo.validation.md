@@ -20,6 +20,8 @@ Parameter string	|	What is passed
 `:form`				|	The topmost parent
 `:alias`			|	The field's alias
 
+[See pseudos section for more on formo pseudos](formo.pseudos)
+
 Note that if you define any parameter, value is no longer passed by default and has to be specified. For example:
 
 	$form->rules('myfield', 'preg_match', array('/[a-z]+/', ':value'));
