@@ -2,7 +2,7 @@
 	- [Overview](formo.overview)
 	- [Getting started](formo.getting-started)
 	- [Formo constructs](formo.constructs)
-	- [Formo parameters](formo.parameters)
+	- [Field Parameters](formo.parameters)
 	- [HTML views](formo.html-views)
 	- [Validation](formo.validation)
 	- [Validation errors](formo.errors)

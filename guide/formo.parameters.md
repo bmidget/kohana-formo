@@ -1,4 +1,4 @@
-# Useful Formo parameters
+# Useful field parameters
 
 The following is a list of parameters you will often deal with.
 
