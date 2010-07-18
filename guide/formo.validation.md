@@ -14,11 +14,11 @@ Because you may need to work with context-specific parameters, the following pse
 
 Parameter string	|	What is passed
 --------------------|-----------------------
-':value'			|	The field's value
-':field'			|	That field object. Can also be a form/subform
-':parent'			|	That field's parent
-':form'				|	The topmost parent
-':alias				|	The field's alias
+`:value`			|	The field's value
+`:field`			|	That field object. Can also be a form/subform
+`:parent`			|	That field's parent
+`:form`				|	The topmost parent
+`:alias`			|	The field's alias
 
 Note that if you define any parameter, value is no longer passed by default and has to be specified. For example:
 
