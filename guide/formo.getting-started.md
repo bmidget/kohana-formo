@@ -36,21 +36,19 @@ You will need to access individual fields. They will be returned by the field's 
 		->add('notes', 'textarea');
 	
 	$form->notes;
-	$form->field('notes');
-	$form->field(1);
+	$form->{'notes'};
+	$form->{1};
 	
-Occasionally you may want to use a number as a field's alias. In order to retrieve the field by its numerical alias, send the string version of the number in the `field()` method:
+Occasionally you may want to use a number as a field's alias. In order to retrieve the field by its numerical alias, send the string version of the number in the `__get` method:
 
 	$form->add(23, 'text', array(stuff));
 		
-	$form->field('23');
-	$form->{23};
+	$form->{'23'};
 	
 You can also have spaces in your aliases.
 
 	$form->add('my field', 'text');
 	
-	$form->field('my field');
 	$form->{'my field'};
 
 To recap, strings return by alias, integers return by key, and `__get()` returns a field by alias.
