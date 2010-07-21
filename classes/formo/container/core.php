@@ -27,6 +27,12 @@ abstract class Formo_Container_Core {
 	 */
 	protected $_customs = array();
 	
+	protected $_loaded = array
+	(
+		'orm'		=> FALSE,
+		'driver'	=> FALSE
+	);
+	
 	/**
 	 * Container settings
 	 * 
@@ -57,6 +63,12 @@ abstract class Formo_Container_Core {
 			return $this->load_orm(TRUE);
 			
 		return $this->get_field($variable);
+	}
+	
+	public function __isset($variable)
+	{
+		if (array_key_exists($variable, $this->_loaded))
+			return $this->_loaded[$variable];
 	}
 	
 	/**
@@ -258,12 +270,19 @@ abstract class Formo_Container_Core {
 	 * @access public
 	 * @return void
 	 */
-	public function model()
+	public function model($return_driver = FALSE)
 	{
-		if ($this instanceof Formo_Form)
-			return $this->orm->model;
+		if (isset($this->orm))
+		{
+			return ($return_driver === TRUE)
+				? $this->orm
+				: $this->orm->model;
+		}
+									
+		if ($this->parent() !== FALSE)
+			return $this->parent()->model($return_driver);
 		
-		return $this->parent()->orm->model;
+		return FALSE;
 	}
 	
 	/**
@@ -566,6 +585,8 @@ abstract class Formo_Container_Core {
 			$this->set('driver_instance', $instance);
 		}
 		
+		$this->_loaded['driver'] = TRUE;
+		
 		// Return the new driver instance
 		return $instance;
 	}
@@ -597,6 +618,8 @@ abstract class Formo_Container_Core {
 			// Save the instance if asked to
 			$this->set('orm_driver_instance', $instance);
 		}
+		
+		$this->_loaded['orm'] = TRUE;
 		
 		// REturn the new orm driver instance
 		return $instance;

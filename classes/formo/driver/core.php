@@ -68,7 +68,7 @@ abstract class Formo_Driver_Core {
 		// Set the value
 		$this->field->set('new_value', $value);
 		
-		if ($this->field->model() AND $orm = $this->field->orm)
+		if ($orm = $this->field->model(TRUE))
 		{
 			// If the value needs to be set in the model, do that too
 			$orm->set_field($this->field, $value);
@@ -157,7 +157,7 @@ abstract class Formo_Driver_Core {
 		$this->render_field = Formo::render_obj($type, $this->field);
 		$this->render_field->set('fields', $this->field->fields());
 		
-		if ($this->field->orm)
+		if (isset($this->field->orm))
 		{
 			$this->field->orm->pre_render();
 		}

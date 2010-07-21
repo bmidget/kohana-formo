@@ -156,7 +156,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		
 		if ( ! $column)
 			return $this;
-			
+
 		$data = $this->model->meta()->fields($column);
 														
 		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
