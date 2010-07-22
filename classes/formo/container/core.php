@@ -42,7 +42,7 @@ abstract class Formo_Container_Core {
 	protected $_defaults = array
 	(
 		'alias'				=> NULL,
-		'parent'			=> NULL,
+		'parent'			=> FALSE,
 		'fields'			=> array(),
 		'driver_instance'	=> NULL,
 	);
@@ -278,7 +278,7 @@ abstract class Formo_Container_Core {
 				? $this->orm
 				: $this->orm->model;
 		}
-									
+											
 		if ($this->parent() !== FALSE)
 			return $this->parent()->model($return_driver);
 		

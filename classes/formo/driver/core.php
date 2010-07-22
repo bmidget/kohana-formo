@@ -185,12 +185,19 @@ abstract class Formo_Driver_Core {
 		// First run the pre_render method
 		$this->pre_render($type);
 		
+		// Find the appropriate view_prefix
 		$prefix = ($_prefix = $this->field->get('view_prefix'))
 			? $_prefix
-			: $_prefix = $this->field->parent()->get('view_prefix');
+			: $this->field->parent()->get('view_prefix');
+			
+		// If prefix is not set and config file has one defined, use the config prefix
+		if ( (bool) $prefix === FALSE AND $_prefix = Kohana::config('formo')->view_prefix)
+		{
+			$prefix = $_prefix;
+		}
 					
 		$prefix = rtrim($prefix, '/');
-			
+					
 		$view = ($this->field->get('view')) ? $this->field->get('view') : $this->view;
 				
 		return View::factory("$prefix/html/$view")
