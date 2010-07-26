@@ -8,4 +8,4 @@
 			<?php endforeach; ?>
 		</span>
 	</label>
-</p>
+<?php echo $close; ?>

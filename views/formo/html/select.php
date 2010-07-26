@@ -8,5 +8,6 @@
 				<span><?php echo $field->val(); ?></span>
 			<?php endif; ?>
 		</span>
+	</label>
 	<?php echo $message; ?>
 <?php echo $close; ?>
