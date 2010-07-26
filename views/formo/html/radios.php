@@ -1,10 +1,11 @@
-<?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
-<p<?php echo $class; ?>>
-	<label><?php echo UTF8::ucfirst($field->label()); ?>:</label>
-	<span class="error-message"><?php echo UTF8::ucfirst($field->error()); ?></span>
-	<?php foreach ($field->fields() as $radio): ?>
-		<span>
-			<?php echo $radio->render('html'); ?>
+<?php echo $open; ?>
+	<label>
+		<?php echo $label; ?>
+		<?php echo $message; ?>
+		<span class="field">
+			<?php foreach ($field->fields() as $radio): ?>
+				<?php echo $radio->render('html'); ?>
+			<?php endforeach; ?>
 		</span>
-	<?php endforeach; ?>
+	</label>
 </p>

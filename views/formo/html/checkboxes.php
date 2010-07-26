@@ -1,10 +1,11 @@
-<?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
-<p<?php echo $class; ?>>
-	<label><?php echo UTF8::ucfirst($field->label()); ?>:</label>
-	<span class="error-message"><?php echo UTF8::ucfirst($field->error()); ?></span>
-	<?php foreach ($field->fields() as $checkbox): ?>
-		<span>
-			<?php echo $checkbox->render('html'); ?>
+<?php echo $open; ?>
+	<label>
+		<?php echo $label; ?>
+		<?php echo $messagel ?>
+		<span class="field">
+			<?php foreach ($field->fields() as $checkbox): ?>
+				<?php echo $checkbox->render('html'); ?>
+			<?php endforeach; ?>
 		</span>
-	<?php endforeach; ?>
-</p>
+	</label>
+<?php echo $close; ?>

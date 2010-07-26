@@ -201,7 +201,11 @@ abstract class Formo_Driver_Core {
 		$view = ($this->field->get('view')) ? $this->field->get('view') : $this->view;
 				
 		return View::factory("$prefix/html/$view")
-			->bind($this->alias, $this->render_field);
+			->bind($this->alias, $this->render_field)
+			->set('open', View::factory("$prefix/html/_open_tag", array('field' => $this->render_field)))
+			->set('close', View::factory("$prefix/html/_close_tag", array('field' => $this->render_field)))
+			->set('message', View::factory("$prefix/html/_message", array('field' => $this->render_field)))
+			->set('label', View::factory("$prefix/html/_label", array('field' => $this->render_field)));
 	}
 	
 	public function not_empty()

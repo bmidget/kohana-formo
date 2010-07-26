@@ -1,8 +1,7 @@
-<?php $class = ($field->error()) ? ' class="error"' : NULL; ?>
-<p<?php echo $class; ?>>
+<?php echo $open; ?>
 	<label>
-		<span class="field"><?php echo $field; ?></span>
-		<span class="label"><?php echo UTF8::ucfirst($field->label()); ?></span>
+		<span class="input"><?php echo $field; ?></span>
+		<?php echo $label; ?>
 	</label>
-	<span class="error-message"><?php echo UTF8::ucfirst($field->error()); ?></span>
-</p>
+	<?php echo $message; ?>
+<?php echo $close; ?>

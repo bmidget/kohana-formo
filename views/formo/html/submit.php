@@ -1,1 +1,3 @@
-<p><?php echo $field; ?></p>
+<?php echo $open; ?>
+	<?php echo $field; ?>
+<?php echo $close; ?>

@@ -1,0 +1,1 @@
+<span class="label"><?php echo UTF8::ucfirst($field->label()); ?>:</span>
