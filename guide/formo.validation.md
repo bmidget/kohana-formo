@@ -1,3 +1,48 @@
+# loading $_POST values
+
+New field values are added with the `load` method. The method accepts an array of key => value pairs that correspond with field aliases. If an array is not passed in the method, Formo loads uses the $_POST array.
+
+This method also sets whether the form is considered "sent". It is considered sent if any of the fields were present in the array from `load()`.
+
+	// This loads $_POST
+	$form->load();
+	
+	// This also loads the $_POST values
+	$form->load($_POST);
+	
+	// This loads the $_GET values
+	$form->load($_GET);
+	
+	// This loads another array of values
+	$form->load($vals);
+	
+# Sent method
+
+Though this is used internally, it is a public method that you may find the need for. Pass an input array as the parameter and it returns a *boolean* value whether the form was sent or not.
+
+If a field from the input array exists in the form/subform, `sent()` returns `TRUE`.
+	
+# Validate method
+
+The `validate` method checks each field against any validation rules that are assigned to it, attaches errors to any fields or subforms that didn't pass, and returns a **boolean** representing whether the form passed (`TRUE`) or failed (`FALSE`) validation.
+
+If the form wasn't sent (that is, there are weren't any field values in the `load()` array), `validate()` will also return `FALSE`. If you need to run validation on the form even if it wasn't sent by passing `TRUE` as a parameter.
+
+Since you will generally check validation rules after adding an input array, `validate()` will likely be coupled with `load()`.
+
+You can also run `validate()` on a single field.
+
+Here are some examples:
+
+	// Attach error messages and check if form passes validation
+	if ($form->load()->validate())
+	
+	// Attach error messages and check if email field passed validation
+	if ($form->load()->email->validate())
+	
+	// Attach error messages and check if form passes validation even if it wasn't sent
+	if ($form->validate(TRUE))
+
 # Formo validation
 
 Formo provides its own validation system instead of Kohana's packaged Validate library except that it utilizes Validate's helper methods where useful.
