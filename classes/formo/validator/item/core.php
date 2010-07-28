@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Abstract Formo_Validator_Item_Core class.
+ * 
+ * @abstract
+ * @package Formo
+ */
 abstract class Formo_Validator_Item_Core {
 
 	// The field type

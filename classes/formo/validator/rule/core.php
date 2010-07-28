@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Formo_Validator_Rule_Core class.
+ * 
+ * @extends Formo_Validator_Item
+ * @package Formo
+ */
 class Formo_Validator_Rule_Core extends Formo_Validator_Item {
 
 	public $type = 'rule';

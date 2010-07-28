@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Formo_Field_Core class.
+ * 
+ * @extends Formo_Validator
+ * @package Formo
+ */
 class Formo_Field_Core extends Formo_Validator {
 	
 	/**

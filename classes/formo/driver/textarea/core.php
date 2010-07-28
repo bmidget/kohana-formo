@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Formo_Driver_Textarea_Core class.
+ * 
+ * @extends Formo_Driver
+ * @package Formo
+ */
 class Formo_Driver_Textarea_Core extends Formo_Driver {
 
 	protected $view = 'textarea';

@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Formo_ORM_Jelly_Core class.
+ * 
+ * @extends Formo_ORM
+ * @package Formo
+ */
 class Formo_ORM_Jelly_Core extends Formo_ORM {
 
 	/**

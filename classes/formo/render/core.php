@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Formo_Render_Core class.
+ * 
+ * @extends Formo_Container
+ * @package Formo
+ */
 class Formo_Render_Core extends Formo_Container
 {
 	// Allow error to be returned

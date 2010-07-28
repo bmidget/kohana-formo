@@ -1,5 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Abstract Formo_Driver_Core class.
+ * 
+ * @abstract
+ * @package Formo
+ */
 abstract class Formo_Driver_Core {
 
 	protected $view;
