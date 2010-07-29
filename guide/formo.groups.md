@@ -23,16 +23,20 @@ For the following examples, we will be using this array of options:
 
 	$options = array
 	(
-		1 => 'Running',
-		2 => 'Jumping',
+		'Running'	=> 1
+		'Jumping'	=> 2
 		array
 		(
-			'alias' => 'swimming',
+			'alias' => 'Swimming',
 			'value'	=> 900
+		)
+		'Hunting'	=> array
+		(
+			'value'	=> 300
 		)
 	);
 	
-You can either use `value => alias` pairs or individually specify all of the parameters for greater control.
+You can either use `alias => value` pairs or individually specify all of the parameters for greater control.
 
 Without `add_group()`, you would have to do this:
 
