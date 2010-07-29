@@ -3,8 +3,7 @@
 /**
  * Abstract Formo_Validator_Item_Core class.
  * 
- * @abstract
- * @package Formo
+ * @package  Formo
  */
 abstract class Formo_Validator_Item_Core {
 

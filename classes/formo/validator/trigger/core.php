@@ -3,8 +3,7 @@
 /**
  * Formo_Validator_Trigger_Core class.
  * 
- * @extends Formo_Validator_Item
- * @package Formo
+ * @package  Formo
  */
 class Formo_Validator_Trigger_Core extends Formo_Validator_Item {
 	

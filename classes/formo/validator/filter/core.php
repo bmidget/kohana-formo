@@ -3,8 +3,7 @@
 /**
  * Formo_Validator_Filter_Core class.
  * 
- * @extends Formo_Validator_Item
- * @package Formo
+ * @package  Formo
  */
 class Formo_Validator_Filter_Core extends Formo_Validator_Item {
 

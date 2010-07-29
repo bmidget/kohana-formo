@@ -3,8 +3,7 @@
 /**
  * Formo_render_xml_Core class.
  * 
- * @extends Formo_render_Core
- * @package Formo
+ * @package  Formo
  */
 class Formo_render_xml_Core extends Formo_render_Core {
 

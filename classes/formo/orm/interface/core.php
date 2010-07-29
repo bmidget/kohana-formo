@@ -3,7 +3,7 @@
 /**
  * Formo_ORM_interface_Core interface.
  *
- * @package Formo
+ * @package  Formo
  */
 interface Formo_ORM_interface_Core {
 

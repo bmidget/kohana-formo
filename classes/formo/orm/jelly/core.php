@@ -3,8 +3,7 @@
 /**
  * Formo_ORM_Jelly_Core class.
  * 
- * @extends Formo_ORM
- * @package Formo
+ * @package  Formo
  */
 class Formo_ORM_Jelly_Core extends Formo_ORM {
 

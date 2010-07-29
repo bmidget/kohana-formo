@@ -3,9 +3,7 @@
 /**
  * Abstract Formo_Validator_Core class.
  * 
- * @extends Formo_Container
- * @abstract
- * @package Formo
+ * @package  Formo
  */
 abstract class Formo_Validator_Core extends Formo_Container {
 

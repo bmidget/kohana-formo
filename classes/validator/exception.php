@@ -3,7 +3,7 @@
 /**
  * Validator_Exception class.
  * 
- * @package Formo
+ * @package  Formo
  */
 class Validator_Exception extends Kohana_Exception {
 

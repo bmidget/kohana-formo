@@ -3,7 +3,7 @@
 /**
  * The interface class for Formo
  * 
- * @package Formo
+ * @package  Formo
  */
 class Formo_Core {
 	

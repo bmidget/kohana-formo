@@ -3,8 +3,7 @@
 /**
  * Formo_Render_HTML_Core class.
  * 
- * @extends Formo_Render_Core
- * @package Formo
+ * @package  Formo
  */
 class Formo_Render_HTML_Core extends Formo_Render_Core {
 
