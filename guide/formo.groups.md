@@ -23,13 +23,13 @@ For the following examples, we will be using this array of options:
 
 	$options = array
 	(
-		'Running'	=> 1
-		'Jumping'	=> 2
+		'Running'	=> 1,
+		'Jumping'	=> 2,
 		array
 		(
 			'alias' => 'Swimming',
 			'value'	=> 900
-		)
+		),
 		'Hunting'	=> array
 		(
 			'value'	=> 300
