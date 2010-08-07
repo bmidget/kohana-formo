@@ -209,7 +209,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		
 		// Run through each validator type in order
 		foreach ($this->_validators as $name => $rules)
-		{							
+		{
+			// Keep track if the field is required
+			$required = FALSE;
 			// Execute each of the rules
 			foreach ($rules as $rule)
 			{
@@ -218,6 +220,18 @@ abstract class Formo_Validator_Core extends Formo_Container {
 				
 				if ($name === 'rules')
 				{
+					// If 'not_empty' was set, the rule is required
+					if ($rule->callback == 'not_empty')
+					{
+						$required = TRUE;
+					}
+					
+					if ($rule->callback != 'not_empty' AND $required !== TRUE AND (bool) $this->val() === FALSE)
+					{
+						// Don't worry about fields that aren't required without values
+						break;
+					}
+					
 					// Run the rule
 					if ($rule->execute() === FALSE)
 					{
