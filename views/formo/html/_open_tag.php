@@ -1,1 +1,1 @@
-<p class="<?php echo $field->get('driver'); ?><?php echo ($field->error()) ? ' error' : ''; ?>">
+<p class="field <?php echo $field->get('driver'); ?><?php echo ($field->error()) ? ' error' : ''; ?>">
