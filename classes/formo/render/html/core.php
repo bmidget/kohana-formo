@@ -240,7 +240,7 @@ class Formo_Render_HTML_Core extends Formo_Render_Core {
 		foreach ($this->attr as $attr => $value)
 		{
 			$value = (is_array($value)) ? implode(' ', $value) : $value;
-			$str.= " $attr = $this->quote$value$this->quote";
+			$str.= " $attr=$this->quote$value$this->quote";
 		}
 		
 		// Then attach styles
