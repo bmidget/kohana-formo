@@ -155,9 +155,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 	 */
 	public function set_field(Formo_Container $field, $value)
 	{
-		$column = ($foreign = $field->get('foreign'))
-			? $foreign['model']
-			: $field->get('column');
+		$column = $field->get('column');
 		
 		if ( ! $column)
 			return $this;
