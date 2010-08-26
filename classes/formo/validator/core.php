@@ -525,7 +525,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$message = $file.'.'.$this->alias().'.'.$error_name;
 		}
 		
-		$values = Arr::merge(array(':value' => $this->val(), ':field' => $this->alias()), (array) $param_names);
+		$values = Arr::merge(array(':value' => $this->val(), ':field' => isset($this->label) ? $this->label : $this->alias()), (array) $param_names);
 				
 		if (Kohana::config('formo')->translate === TRUE)
 		{
