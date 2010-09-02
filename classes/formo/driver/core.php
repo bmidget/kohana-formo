@@ -184,6 +184,13 @@ abstract class Formo_Driver_Core {
 		// Run the type-specific method for further setup, ex: $this->html()
 		(method_exists($this, $type) AND $this->$type());
 	}
+	
+	public function into($type)
+	{
+		$this->pre_render($type);
+		
+		return $this->render_field;
+	}
 
 	public function view($type)
 	{
