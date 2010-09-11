@@ -672,10 +672,10 @@ abstract class Formo_Container_Core {
 	 * @param mixed $save_instance. (default: FALSE)
 	 * @return Formo_ORM object
 	 */
-	public function orm($save_instance = TRUE)
+	public function orm_driver($save_instance = TRUE)
 	{
 		if ( ! $this instanceof Formo_Form)
-			return $this->parent()->load_orm(TRUE);
+			return $this->parent()->orm_driver(TRUE);
 
 		if ($instance = $this->get('orm_driver_instance'))
 			// If the instance exists, return it
