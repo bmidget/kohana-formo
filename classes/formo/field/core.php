@@ -50,7 +50,7 @@ class Formo_Field_Core extends Formo_Validator {
 	 * @param mixed array $options. (default: NULL)
 	 * @return void
 	 */
-	public function __construct($alias, $driver = NULL, array $options = NULL)
+	public function __construct($alias, $driver = NULL, $value = NULL, array $options = NULL)
 	{
 		$options = func_get_args();
 		$orig_options = $options;
