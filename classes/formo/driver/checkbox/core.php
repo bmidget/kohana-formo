@@ -22,7 +22,7 @@ class Formo_Driver_Checkbox_Core extends Formo_Driver {
 	}
 
 	// Setup the html field
-	protected function html()
+	public function html()
 	{
 		$this->decorator
 			->set('tag', 'input')

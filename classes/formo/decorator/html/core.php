@@ -321,7 +321,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	{
 		if (method_exists($this->driver, 'html') === FALSE)
 			return;
-
+			
 		// Run the html() setup method if it's defined in the driver
 		$this->driver->html();
 	}

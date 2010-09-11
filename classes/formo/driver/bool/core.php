@@ -49,7 +49,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver {
 		$this->field->set('value', 0);
 	}
 	
-	protected function html()
+	public function html()
 	{
 		$this->decorator
 			->set('tag', 'input')
