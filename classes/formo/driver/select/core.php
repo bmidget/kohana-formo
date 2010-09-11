@@ -11,14 +11,15 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->render_field->append(Formo::field('', 'option'));
+		$this->field->append(Formo::field('', 'option'));
 		
-		foreach ($this->render_field->options as $label => $options)
+		foreach ($this->field->options as $label => $options)
 		{			
-			$this->render_field->append(Formo::field($label, 'option', $options));
+			$this->field->append(Formo::field($label, 'option', $options));
 		}
 		
-		$this->render_field->set('tag', 'select')
+		$this->decorator
+			->set('tag', 'select')
 			->attr('name', $this->field->alias());		
 	}
 

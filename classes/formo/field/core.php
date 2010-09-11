@@ -60,7 +60,7 @@ class Formo_Field_Core extends Formo_Validator {
 		$this->load_options($options);
 		
 		// Run the driver's post_construct() method
-		$this->driver->post_construct();
+		$this->driver()->post_construct();
 	}
 	
 	/**
@@ -102,21 +102,4 @@ class Formo_Field_Core extends Formo_Validator {
 			: $this->parent()->message_file();
 	}
 	
-	/**
-	 * Turn field into a view file for rendering
-	 * 
-	 * @access public
-	 * @param mixed $render_type
-	 * @return view object
-	 */
-	public function render($render_type)
-	{
-		if ($this->get('render') === FALSE)
-			return;
-			
-		$view = $this->driver->view($render_type);
-		
-		return $view;
-	}
-
 }

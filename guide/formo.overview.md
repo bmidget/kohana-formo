@@ -14,4 +14,44 @@ Data out is any sort of response. Perhaps JSON for an AJAX request, perhaps pure
 
 Additionally, Formo can act as a useful hub for data. A good example of this is data interaction with a model. The model provides the tools for interacting with the database, but Formo provides the tools for displaying the method for inputting the data as well as the appropriate response to a request.
 
+## Structure
+
+This document explains the structure of a Formo object and gives basic information about each part. The heirarchy of an object looks like this:
+
+- Formo
+- Container
+	- Validator
+		- Form/Field
+			- ORM
+			- Driver
+				- Decorator
+			
+### Formo
+
+This class acts as an interface to Formo objects.
+
+### Container
+
+The container class handles the ability for a form or field to contain other fields or forms within itself and find them. It also understands how to access the driver and orm objects.
+
+### Validator
+
+The validator class carries the ability to add and remove rules, callbacks and filters as well as how to run them. This class also keeps track of errors.
+
+### Form/Field
+
+Although both forms and fields have the ability to carry fields and forms within themselves because of the container object, each of these classes hold specific functionality for dealing with forms, subforms and fields specifically.
+
+### ORM
+
+The ORM object acts as a driver and interface to connectivity with an ORM library
+
+### Driver
+
+Drivers handle form and field-specific functionality. For instance, a group of checkbox fields is checked for being not_empty differently from a password field.
+
+### Decorator
+
+The decorator adds extra functionality to a form or field object. An example of a decorator is the HTML decorator that adds `attr()` and `add_class()` and also renders forms and fields as HTML DOM objects.
+
 [Continue to Getting Started >](formo.getting-started)

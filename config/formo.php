@@ -3,7 +3,7 @@
 return array
 (
 	// Default path to view files
-	'view_prefix'				=> 'formo/',
+	'view_prefix'				=> 'formo/html/',
 	// For determining path to driver files
 	'driver_prefix'				=> 'Formo_Driver_',
 	// Default form driver
@@ -13,7 +13,9 @@ return array
 	// Default field driver
 	'default_driver'			=> 'text',
 	// Default render type
-	'render_type'				=> 'html',
+	'type'						=> 'html',
+	// Close single html tags (TRUE = <br/>. FALSE = <br>)
+	'close_single_html_tags'	=> TRUE,
 	// Default subform driver
 	'default_subform_driver'	=> 'subform',
 	// File for validate messages
@@ -29,12 +31,4 @@ return array
 	// If set to true, all Validate helper functions are auto-preceded
 	// by :value if it's not explicitly set
 	'validate_compatible'		=> TRUE,
-		
-	// Classes for objects that are passed to render view files
-	'render_classes'			=> array
-	(
-		'html'					=> 'Formo_Render_HTML',
-		'json'					=> 'Formo_Render_Json',
-		'xml'					=> 'Formo_Render_XML',
-	),
 );

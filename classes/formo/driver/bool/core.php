@@ -51,17 +51,17 @@ class Formo_Driver_Bool_Core extends Formo_Driver_Core {
 	
 	protected function html()
 	{
-		$this->render_field
+		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
 			->attr('name', $this->field->alias())
 			->attr('value', 1);
 		
-		$parent_value = $this->render_field->parent()->val();
+		$parent_value = $this->field->parent()->val();
 		
-		if ($this->field->checked())
+		if ($this->decorator->checked())
 		{
-			$this->render_field->attr('checked', 'checked');
+			$this->decorator->attr('checked', 'checked');
 		}
 	}
 

@@ -4,19 +4,19 @@ Getting Started
 Create a form using the `form` method:
 
 	$form = Formo::form();
-	
+
 Generally you will create a form object and `add` fields to it:
 
 	$form = Formo::form()
 		->add('username')
 		->add('email');
-		
+
 ## Constructs and the $options array
 
 To further understand Formo constructs, see [Construct documentation](formo.constructs).
-	
+
 ## The add method
-		
+
 The `add` method takes that parameters `alias, driver, value, options`. If the driver is left out, the default driver is whatever you specify in the config file (default is "text"). Also, for most Formo methods, you can simply pass an array of `options` as the first or second parameter. Thus, the following are the same:
 
 	$form->add('notes', 'textarea', 'My notes');
@@ -34,21 +34,21 @@ You will need to access individual fields. They will be returned by the field's 
 	$form
 		->add('subject', 'text')
 		->add('notes', 'textarea');
-	
+
 	$form->notes;
 	$form->{'notes'};
 	$form->{1};
-	
+
 Occasionally you may want to use a number as a field's alias. In order to retrieve the field by its numerical alias, send the string version of the number in the `__get` method:
 
 	$form->add(23, 'text', array(stuff));
-		
+
 	$form->{'23'};
-	
+
 You can also have spaces in your aliases.
 
 	$form->add('my field', 'text');
-	
+
 	$form->{'my field'};
 
 To recap, strings return by alias, integers return by key, and `__get()` returns a field by alias.
@@ -62,24 +62,24 @@ In order to preserve simple syntax for working with subforms and fields inside f
 This method returns a variable inside any Container object.
 
 	$form->get('driver');
-	
+
 You can also specify a default value if the variable doesn't exist.
 
 	$form->get('my_variable', array());
-	
+
 #### Set method
 
 To set variables within a Container object, use `set`.
 
 	$form->set('driver', 'group');
-	
+
 You can also pass an array of key => values to set.
 
 	$settings = array('driver' => 'group', 'foo' => 'bar');
-	
+
 	$form->set($settings);
 
-### Formo Fields 
+### Formo Fields
 
 Fields are containers for data. Every field you add to your form object is an `Formo_Field` object.
 
@@ -101,10 +101,10 @@ $subform2 = Formo::form()
 $subform = Formo::form()
 	->add('foo', 'text')
 	->add('subform2', $subform2);
-	
+
 $form = Formo::form()
 	->add('subform', $subform);
-	
+
 // These will return the same 'bar' field
 $form->find(array('subform', 'subform2', 'bar'));
 $form->find('bar');
@@ -113,6 +113,8 @@ $form->find('bar');
 
 When you render a Formo object, the object will be converted from pure data to a usable object. For instance, if you wish to render your form as html using the defined view files, do:
 
-	$form->render('html');
-	
+	$form->generate();
+
 This example will convert every field into a HTML DOM object and that object is sent to their defined view files.
+
+See more about rendering in the [rendering section](formo.rendering)

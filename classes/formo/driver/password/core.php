@@ -2,7 +2,7 @@
 
 /**
  * Formo_Driver_Password_Core class.
- * 
+ *
  * @package  Formo
  */
 class Formo_Driver_Password_Core extends Formo_Driver {
@@ -11,7 +11,7 @@ class Formo_Driver_Password_Core extends Formo_Driver {
 
 	public function html()
 	{
-		$this->render_field
+		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'password')
 			->attr('name', $this->field->alias());

@@ -30,7 +30,7 @@ class Formo_Core {
 	{
 		return new Formo_Form($alias, $driver, $options);
 	}
-	
+		
 	/**
 	 * Return a field object
 	 * 
@@ -68,7 +68,7 @@ class Formo_Core {
 		
 		return new Formo_Field($settings);
 	}
-	
+		
 	/**
 	 * Return a new render object
 	 * 

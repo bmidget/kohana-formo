@@ -4,7 +4,7 @@
 		<?php echo $message; ?>
 		<span class="field">
 			<?php foreach ($field->fields() as $checkbox): ?>
-				<?php echo $checkbox->render('html'); ?>
+				<?php echo $checkbox->render(); ?>
 			<?php endforeach; ?>
 		</span>
 	</label>

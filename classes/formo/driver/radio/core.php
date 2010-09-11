@@ -2,7 +2,7 @@
 
 /**
  * Formo_Driver_Radio_Core class.
- * 
+ *
  * @package  Formo
  */
 class Formo_Driver_Radio_Core extends Formo_Driver {
@@ -11,15 +11,15 @@ class Formo_Driver_Radio_Core extends Formo_Driver {
 
 	public function html()
 	{
-		$this->render_field
+		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'radio')
 			->attr('name', $this->field->parent()->alias())
-			->attr('value', HTML::entities($this->render_field->value));
-						
-		if ($this->field->parent()->val() == $this->render_field->value)
+			->attr('value', $this->field->val());
+
+		if ($this->field->parent()->val() == $this->field->value)
 		{
-			$this->render_field->attr('checked', 'checked');
+			$this->field->attr('checked', 'checked');
 		}
 	}
 

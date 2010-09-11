@@ -4,6 +4,6 @@
 		<div>There were errors with this section</div>
 	<?php endif; ?>
 	<?php foreach ($group->fields() as $group): ?>
-		<?php echo $group->render('html'); ?>
+		<?php echo $group->generate(); ?>
 	<?php endforeach; ?>
 </div>

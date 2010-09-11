@@ -66,7 +66,7 @@ Here's an example of working with a user record using this approach:
 	$user->form
 		->add('submit', 'submit');
 		
-	$this->template->content = $user->form->render('html');
+	$this->template->content = $user->form->generate();
 	
 	if ($user->load()->sent())
 	{
@@ -91,7 +91,7 @@ Here's an example of a login form and how clean and obvious this tight integrati
 	$user->subform(array('username', 'password'))
 		->add('submit', 'submit');
 		
-	$this->template->content = $user->subform->render('html');
+	$this->template->content = $user->subform->generate();
 	
 	// Notice here we are working with just the user form object and not
 	// just $user->load()->validate. This is because we are working with
@@ -111,7 +111,7 @@ If you set up your model correctly, the following would always fail at $user->sa
 	$user->subform(array('email'))
 		->add('submit', 'submit');
 		
-	$this->template->content = $user->subform->render('html');
+	$this->template->content = $user->subform->generate();
 	
 	// Notice loading and validating against the form and not user
 	if ($user->subform->load()->validate())

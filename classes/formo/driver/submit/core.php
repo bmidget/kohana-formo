@@ -11,11 +11,15 @@ class Formo_Driver_Submit_Core extends Formo_Driver {
 
 	public function html()
 	{
-		$this->render_field
+		$value = ($val = $this->field->get('value'))
+			? $val
+			: $this->decorator->label();
+			
+		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'submit')
 			->attr('name', $this->field->alias())
-			->attr('value', HTML::entities($this->render_field->value));
+			->attr('value', $value);
 	}
 
 }

@@ -197,7 +197,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
 		
-		$this->driver->pre_validate();
+		$this->driver()->pre_validate();
 		
 		// Stop if it hasn't been sent and it needs to be sent	
 		if ($validate_if_not_sent === FALSE AND ! $this->sent())
@@ -277,7 +277,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			Profiler::stop($benchmark);
 		}
 		
-		$this->driver->post_validate();
+		$this->driver()->post_validate();
 				
 		// What to return depends on if it's a field or form object
 		if ($this instanceof Formo_Form)
@@ -583,7 +583,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function not_empty()
 	{
 		// The driver handles whether the field is empty
-		return $this->driver->not_empty();
+		return $this->driver()->not_empty();
 	}
 			
 	public function matches($match_against)

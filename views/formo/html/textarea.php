@@ -3,7 +3,7 @@
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
-				<?php echo $field->add_class('input')->attr('rows', 10); ?>
+				<?php echo $field->add_class('input')->attr('rows', 10)->render(); ?>
 			<?php else: ?>
 				<span><?php echo $field->val(); ?></span>
 			<?php endif; ?>

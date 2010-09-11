@@ -4,6 +4,6 @@
 
 <?php echo $form->open(); ?>
 	<?php foreach ($form->fields() as $field): ?>
-		<?php echo $field->render('html'); ?>
+		<?php echo $field->generate(); ?>
 	<?php endforeach; ?>
 <?php echo $form->close(); ?>
