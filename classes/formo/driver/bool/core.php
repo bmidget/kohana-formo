@@ -59,7 +59,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver {
 		
 		$parent_value = $this->field->parent()->val();
 		
-		if ($this->decorator->checked())
+		if ($this->field->checked())
 		{
 			$this->decorator->attr('checked', 'checked');
 		}
