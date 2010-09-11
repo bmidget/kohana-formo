@@ -5,7 +5,7 @@
  * 
  * @package  Formo
  */
-class Formo_Driver_Bool_Core extends Formo_Driver_Core {
+class Formo_Driver_Bool_Core extends Formo_Driver {
 
 	protected $view = 'bool';
 	public $empty_input = TRUE;
