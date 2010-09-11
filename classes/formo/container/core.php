@@ -286,8 +286,8 @@ abstract class Formo_Container_Core {
 		if (isset($this->orm))
 		{
 			return ($return_driver === TRUE)
-				? $this->orm()
-				: $this->orm()->model;
+				? $this->orm_driver()
+				: $this->orm_driver()->model;
 		}
 
 		if ($this->parent() !== FALSE)
