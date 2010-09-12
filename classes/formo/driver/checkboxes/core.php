@@ -44,7 +44,9 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 		$new_value = (array) $this->field->get('value');
 		foreach ($aliases as $alias)
 		{
-			$value = $this->field->options[$alias]['value'];
+			$options = $this->field->get('options');
+			$value = $options[$alias]['value'];
+
 			if ( ! in_array($value, $new_value))
 			{
 				$new_value[] = $value;
@@ -59,7 +61,9 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 		$new_value = (array) $this->field->get('value');
 		foreach ($aliases as $alias)
 		{
-			$value = $this->field->options[$alias]['value'];
+			$options = $this->field->get('options');
+			$value = $options[$alias]['value'];
+
 			unset($new_value[array_search($value, $new_value)]);
 		}
 
@@ -68,7 +72,7 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 
 	public function html()
 	{
-		foreach ($this->field->options as $alias => $options)
+		foreach ($this->field->get('options') as $alias => $options)
 		{
 			$this->field->append(Formo::field($alias, 'checkbox', $options));
 		}

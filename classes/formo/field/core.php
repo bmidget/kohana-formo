@@ -6,17 +6,7 @@
  * @package  Formo
  */
 class Formo_Field_Core extends Formo_Validator {
-	
-	/**
-	 * Group items as in select options, individual radios, individual checkboxes, etc.
-	 * 
-	 * (default value: array())
-	 * 
-	 * @var array
-	 * @access public
-	 */
-	public $options = array();
-	
+		
 	/**
 	 * Field-specific settings
 	 * 
@@ -39,6 +29,8 @@ class Formo_Field_Core extends Formo_Validator {
 		'new_value'		=> Formo::NOTSET,
 		// A custom message file
 		'message_file'	=> NULL,
+		// Group items as in select options, individual radios, individual checkboxes, etc.
+		'options'		=> array(),
 	);
 		
 	/**

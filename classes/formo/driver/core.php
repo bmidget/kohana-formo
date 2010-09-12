@@ -336,6 +336,9 @@ abstract class Formo_Driver_Core {
 	 */
 	public function generate($view_file = FALSE, $view_prefix = NULL)
 	{
+		if ($this->field->get('render', NULL) === FALSE)
+			return;
+			
 		// First run and do any pre_render stuff
 		$this->pre_render();
 

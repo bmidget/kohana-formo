@@ -177,7 +177,7 @@ abstract class Formo_Container_Core {
 		
 		// Allow the driver to alter the variable beforehand
 		// but obviously it can't happen when setting the driver instance
-		if ($variable != 'driver_instance' AND method_exists($this->driver, 'set_'.$variable))
+		if ($variable != 'driver_instance' AND method_exists($this->driver(), "set_$variable"))
 		{
 			$value = $this->driver()->{'set_'.$variable}($value);
 		}
