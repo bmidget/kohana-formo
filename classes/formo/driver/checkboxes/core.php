@@ -12,6 +12,10 @@ class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 
 	public function load($values)
 	{
+		// If this field is not being rendered, do nothing
+		if ($this->field->get('render') === FALSE)
+			return;
+
 		$this->val($values);
 
 		if ( ! is_array($values))
