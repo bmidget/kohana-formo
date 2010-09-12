@@ -298,6 +298,8 @@ abstract class Formo_Driver_Core {
 	public function pre_render()
 	{
 		$this->decorator->pre_render();
+		
+		return $this->field;
 	}
 
 	/**
