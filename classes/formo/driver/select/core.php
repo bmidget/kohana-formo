@@ -13,7 +13,7 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 	{
 		$this->field->append(Formo::field('', 'option'));
 		
-		foreach ($this->field->options as $label => $options)
+		foreach ($this->field->get('options') as $label => $options)
 		{			
 			$this->field->append(Formo::field($label, 'option', $options));
 		}
