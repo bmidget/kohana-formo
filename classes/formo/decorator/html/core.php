@@ -192,8 +192,8 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	// Retrieve the label text
 	public function label()
 	{		
-		$label = ($this->container->get('label'))
-			? $this->container->get('label')
+		$label = ($label = $this->container->get('label'))
+			? $label
 			: $this->container->alias();
 		
 		// Translate if needed
