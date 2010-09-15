@@ -191,10 +191,13 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 	// Retrieve the label text
 	public function label()
-	{
-		return ($label = $this->container->get('label'))
-			? $label
-			: $this->container->alias();
+	{		
+		$label = $this->container->get('label', $this->container->alias());
+		
+		// Translate if needed
+		return (Kohana::config('formo')->translate === TRUE)
+			? __($label)
+			: $label;
 	}
 
 	// Set or return the text
