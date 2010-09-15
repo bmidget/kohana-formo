@@ -115,7 +115,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				// grab the actual foreign model
 				$foreign_model = $model->get($column)->execute();
 				// Set the value
-				$options['value'] = $foreign_model->{$foreign_model->meta()->primary_key()};
+				$options['value'] = $foreign_model->id();
 			}
 			else
 			{
@@ -127,19 +127,16 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				$options['value'] = array();
 				foreach ($all_options as $option)
 				{
-					$primary_id = $option->meta()->primary_key();
-					$name_key = $option->meta()->name_key();
-
 					// Build the option
 					$options['options'][] = array
 					(
-						'value' => $option->$primary_id,
-						'alias' => $option->$name_key,
+						'value' => $option->id(),
+						'alias' => $option->name(),
 					);
 
 					if ($model->has($column, $option))
 					{
-						$options['value'][] = $option->$primary_id;
+						$options['value'][] = $option->id();
 					}
 				}
 			}
@@ -176,7 +173,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			foreach (Jelly::select($field->foreign['model'])->execute() as $record)
 			{
 				// Determine whether to add or remove the record
-				$method = (in_array($record->{$record->meta()->primary_key()}, (array) $value))
+				$method = (in_array($record->id(), (array) $value))
 					? 'add'
 					: 'remove';
 
@@ -225,7 +222,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			foreach ($records as $record)
 			{
 				// Set the option
-				$options[$record->{$record->meta()->name_key()}] = $record->{$record->meta()->primary_key()};
+				$options[$record->name()] = $record->id();
 			}
 
 			// Set all available options

@@ -251,7 +251,7 @@ class Formo_Form_Core extends Formo_Validator {
 	public function __toString()
 	{
 		// Render as the default render type
-		return $this->render(Kohana::config('formo')->render_type)->render();
+		return $this->render(Kohana::config('formo')->render_type);
 	}
 
 }
