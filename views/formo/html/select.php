@@ -3,7 +3,12 @@
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
-				<?php echo $field->render(); ?>
+				<?php echo $field->open(); ?>
+					<option value=""></option>
+					<?php foreach ($field->fields() as $option): ?>
+						<?=$option->generate()?>
+					<?php endforeach; ?>
+				<?php echo $field->close(); ?>
 			<?php else: ?>
 				<span><?php echo $field->val(); ?></span>
 			<?php endif; ?>

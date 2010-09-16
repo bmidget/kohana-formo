@@ -10,9 +10,7 @@ class Formo_Driver_Select_Core extends Formo_Driver {
 	protected $view = 'select';
 	
 	public function html()
-	{
-		$this->field->append(Formo::field('', 'option'));
-		
+	{		
 		foreach ($this->field->get('options') as $label => $options)
 		{			
 			$this->field->append(Formo::field($label, 'option', $options));
