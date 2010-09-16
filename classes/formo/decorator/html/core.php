@@ -191,11 +191,11 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 	// Retrieve the label text
 	public function label()
-	{		
+	{
 		$label = ($label = $this->container->get('label'))
 			? $label
 			: $this->container->alias();
-		
+
 		// Translate if needed
 		return (Kohana::config('formo')->translate === TRUE)
 			? __($label)
@@ -326,7 +326,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	{
 		if (method_exists($this->driver, 'html') === FALSE)
 			return;
-			
+
 		// Run the html() setup method if it's defined in the driver
 		$this->driver->html();
 	}
