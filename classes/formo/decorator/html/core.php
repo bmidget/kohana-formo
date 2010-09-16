@@ -207,7 +207,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	{
 		// Return the text if nothing was entered
 		if (func_num_args() === 0)
-			return $this->_text;
+			return $this->_vars['text'];
 
 		// Fetch the args
 		$vals = func_get_args();
