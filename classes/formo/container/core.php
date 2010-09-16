@@ -64,8 +64,9 @@ abstract class Formo_Container_Core {
 
 	public function __isset($variable)
 	{
+
 		if (array_key_exists($variable, $this->_loaded))
-			return $this->_loaded[$variable];
+			return (bool) $this->_loaded[$variable];
 	}
 
 	public function __invoke()

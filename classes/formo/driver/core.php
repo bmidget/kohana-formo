@@ -116,7 +116,7 @@ abstract class Formo_Driver_Core {
 
 		// Otherwise just set the field value
 		$this->field->$variable = $value;
-		
+
 		return $this->field;
 	}
 
@@ -297,8 +297,13 @@ abstract class Formo_Driver_Core {
 	 */
 	public function pre_render()
 	{
+		if (isset($this->field->orm))
+		{
+			$this->field->orm_driver()->pre_render();
+		}
+
 		$this->decorator->pre_render();
-		
+
 		return $this->field;
 	}
 
@@ -340,7 +345,7 @@ abstract class Formo_Driver_Core {
 	{
 		if ($this->field->get('render', NULL) === FALSE)
 			return;
-			
+
 		// First run and do any pre_render stuff
 		$this->pre_render();
 

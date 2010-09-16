@@ -323,7 +323,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	}
 
 	public function pre_render()
-	{
+	{		
 		if (method_exists($this->driver, 'html') === FALSE)
 			return;
 
