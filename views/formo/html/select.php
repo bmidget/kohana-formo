@@ -6,7 +6,7 @@
 				<?php echo $field->open(); ?>
 					<option value=""></option>
 					<?php foreach ($field->fields() as $option): ?>
-						<?=$option->generate()?>
+						<?php echo $option->generate()?>
 					<?php endforeach; ?>
 				<?php echo $field->close(); ?>
 			<?php else: ?>
