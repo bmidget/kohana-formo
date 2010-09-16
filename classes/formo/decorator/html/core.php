@@ -56,7 +56,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			$this->_vars[$var] = $value;
 		}
 
-		return $this;
+		return $this->container;
 	}
 
 	public function get($var, $default = NULL)
@@ -87,7 +87,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				$this->attr($_attr, $_value);
 			}
 
-			return $this;
+			return $this->container;
 		}
 
 		if ($attr == 'class')
@@ -107,7 +107,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			$this->set('attr', $attr, $value);
 		}
 
-		return $this;
+		return $this->container;
 	}
 
 	// Set or retrieve class
@@ -119,12 +119,12 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 		if (in_array($class, $this->classes))
 			// No need re-add a class
-			return $this;
+			return $this->container;
 
 		// Add the class
 		$this->_vars['classes'][] = $class;
 
-		return $this;
+		return $this->container;
 	}
 
 	// Set or get a "style" attribute
@@ -137,7 +137,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				$this->css($_style, $_value);
 			}
 
-			return $this;
+			return $this->container;
 		}
 
 		if (func_num_args() < 2)
@@ -152,7 +152,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			$this->set('css', $style, $value);
 		}
 
-		return $this;
+		return $this->container;
 	}
 
 	// Add class to element
@@ -165,7 +165,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				$this->add_class($_class);
 			}
 
-			return $this;
+			return $this->container;
 		}
 		elseif (strpos($class, ' ') !== FALSE)
 		{
@@ -186,7 +186,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			$this->remove_var('classes', $key);
 		}
 
-		return $this;
+		return $this->container;
 	}
 
 	// Retrieve the label text
@@ -226,7 +226,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				}
 			}
 
-			return $this;
+			return $this->container;
 		}
 
 		// If two args were given perform special functions
@@ -245,13 +245,13 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				break;
 			}
 
-			return $this;
+			return $this->container;
 		}
 
 		// If one arg was given set text to that value
 		(count($vals) == 1 AND $this->text = $vals[0]);
 
-		return $this;
+		return $this->container;
 	}
 
 	// Turn attributes into a string (tag="val" tag2="val2")
