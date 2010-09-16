@@ -91,7 +91,10 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		}
 
 		if ($attr == 'class')
-			return $this->classes($value, func_get_args() < 2);
+		{
+			$args = func_get_args() < 2;
+			return $this->classes($value, $args);
+		}
 
 		if (func_num_args() < 2)
 			return Arr::get($this->attr, $attr, NULL);
