@@ -99,6 +99,14 @@ class Formo_Core {
 		return $method->invokeArgs(NULL, $args);
 	}
 	
+	public static function callback()
+	{
+		$args = func_get_args();
+		
+		$method = new ReflectionMethod('Formo_Validator_Callback', 'factory');
+		return $method->invokeArgs(NULL, $args);
+	}
+	
 	/**
 	 * trigger function.
 	 * 
