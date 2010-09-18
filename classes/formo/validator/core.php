@@ -560,7 +560,11 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			// If a default is found, continue
 			if (($key = array_search($search, $params)) !== FALSE)
+			$key = array_search($search, $params, TRUE);
+			if ($key !== FALSE)
 			{
+				$key = array_search($search, $params);
+
 				// First check against custom values in $args
 				$params[$key] = ( ! empty($args[$search]))
 					? $args[$search]
