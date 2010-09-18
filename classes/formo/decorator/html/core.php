@@ -91,7 +91,10 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		}
 
 		if ($attr == 'class')
-			return $this->classes($value, func_get_args() < 2);
+		{
+			$args = func_get_args() < 2;
+			return $this->classes($value, $args);
+		}
 
 		if (func_num_args() < 2)
 			return Arr::get($this->attr, $attr, NULL);
@@ -264,7 +267,9 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			? " class=\"$classes_str\""
 			: NULL;
 
-		foreach ($this->attr as $attr => $value)
+		$attrs = $this->attr;
+		
+		foreach ($attrs as $attr => $value)
 		{
 			$valsue = HTML::entities($value);
 			$str.= " $attr=\"$value\"";
@@ -274,7 +279,10 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		if ($this->css)
 		{
 			$str.= ' style="';
-			foreach ($this->css as $style => $value)
+			
+			$styles = $this->css;
+			
+			foreach ($styles as $style => $value)
 			{
 				$str.= "$style:$value;";
 			}
