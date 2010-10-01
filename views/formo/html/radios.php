@@ -3,7 +3,7 @@
 	<?php echo $message; ?>
 	<span class="field">
 		<?php foreach ($field->fields() as $radio): ?>
-			<?php echo $radio->render(); ?>
+			<?php echo $radio->generate(); ?>
 		<?php endforeach; ?>
 	</span>
 <?php echo $close; ?>
