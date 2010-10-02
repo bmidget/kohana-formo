@@ -212,7 +212,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Make the proper parameteres
 			$this->pseudo_args($rule->args);
 	
-			// If 'not_empty' was set, the rule is required
+			// If 'not_empty' was set, the rule is required, but we assume
+			// it is not required
+			$required = FALSE;
+			
 			if ($rule->callback == 'not_empty')
 			{
 				$required = TRUE;

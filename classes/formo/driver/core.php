@@ -38,11 +38,21 @@ abstract class Formo_Driver_Core {
 	 *
 	 * (default value: FALSE)
 	 *
-	 * @var mixed
+	 * @var bool
 	 * @access public
 	 */
 	public $empty_input = FALSE;
-
+	
+	/**
+	 * Indicates whether this kind of field must use the $_FILES array
+	 * 
+	 * (default value: FALSE)
+	 * 
+	 * @var bool
+	 * @access public
+	 */
+	public $file = FALSE;
+	
 	/**
 	 * General factory method
 	 *
