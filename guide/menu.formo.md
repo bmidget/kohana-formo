@@ -9,6 +9,7 @@
 	- [Subforms](formo.subforms)
 	- [Field Parameters](formo.parameters)
 	- [Pseudo Parameters](formo.pseudos)
+	- [Working with files](formo.files)
 	- [HTML views](formo.html-views)
 	- [Validation](formo.validation)
 	- [Validation errors](formo.errors)
