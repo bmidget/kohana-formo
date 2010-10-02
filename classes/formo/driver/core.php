@@ -107,6 +107,18 @@ abstract class Formo_Driver_Core {
 		// Create the actual decorator object
 		$this->decorator = new $class($this->field, $this);
 	}
+	
+	/**
+	 * Append event takes place after field has been appended
+	 * to its parent
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function append()
+	{
+		$this->decorator->append();
+	}
 
 	public function set($variable, $value)
 	{

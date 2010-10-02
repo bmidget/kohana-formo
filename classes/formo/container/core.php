@@ -387,6 +387,8 @@ abstract class Formo_Container_Core {
 
 			call_user_func_array(array($this, 'order'), $args);
 		}
+		
+		$field->driver()->append();
 
 		return $this;
 	}

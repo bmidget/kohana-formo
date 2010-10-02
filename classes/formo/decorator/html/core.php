@@ -33,6 +33,10 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		'data'		=> array(),
 	);
 
+	public function __construct(Formo_Container $container, Formo_Driver $driver)
+	{
+		parent::__construct($container, $driver);
+	}
 
 	public function __isset($var)
 	{
@@ -357,6 +361,14 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		}
 
 		return $view;
+	}
+	
+	public function append()
+	{
+		if (method_exists($this->driver, 'html_append'))
+		{
+			$this->driver->html_append();
+		}
 	}
 
 	// Render fields as html
