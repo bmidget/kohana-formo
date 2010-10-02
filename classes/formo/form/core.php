@@ -230,6 +230,11 @@ class Formo_Form_Core extends Formo_Validator {
 				// Set the value
 				$field->driver()->load($input[$input_key]);
 			}
+			elseif ($field->driver()->file === TRUE AND isset($_FILES[$input_key]))
+			{
+				// Load the $_FILES params as the value
+				$field->driver()->load($_FILES[$input_key]);
+			}
 			elseif ($field->driver()->empty_input === TRUE)
 			{
 				// If the an empty input is allowed, pass an empty value
