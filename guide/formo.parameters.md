@@ -4,7 +4,7 @@ The following is a list of parameters you will often deal with.
 
 Parameter		|	Type	|	Function
 ----------------|-----------|------------
-`editable`		|	Bool	|	When `TRUE`, field value displays as text instead of input.
+`editable`		|	Bool	|	When `FALSE`, field value displays as text instead of input. When `TRUE` it is displayed as a field.
 `render`		|	Bool	|	If set to `FALSE`, Formo will not render or validate the field
 `ignore`		|	Bool	|	If set to `TRUE`, Formo will ignore the field's validate rules
 `attr`			|	Array	|	Carried over into forms/fields rendered as HTML. These are `key => value` pairs of HTML attribute tags
