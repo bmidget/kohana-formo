@@ -345,6 +345,12 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 	public function generate($view, $prefix)
 	{
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
 		// If prefix is a string, rtrim it
 		($prefix and $prefix = rtrim($prefix, '/'));
 
@@ -358,6 +364,12 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				->set('close', View::factory("$prefix/_close_tag", array('field' => $this->container)))
 				->set('message', View::factory("$prefix/_message", array('field' => $this->container)))
 				->set('label', View::factory("$prefix/_label", array('field' => $this->container)));
+		}
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
 		}
 
 		return $view;
