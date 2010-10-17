@@ -14,7 +14,7 @@ class Formo_Driver_Hidden_Core extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'hidden')
-			->attr('name', $this->field->alias())
+			->attr('name', $this->name())
 			->attr('value', $this->field->val());
 	}
 

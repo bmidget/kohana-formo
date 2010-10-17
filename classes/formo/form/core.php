@@ -225,10 +225,13 @@ class Formo_Form_Core extends Formo_Validator {
 				continue;
 			}
 
-			if (isset($input[$input_key]))
+			// Fetch the namespace for this form
+			$namespaced_input = Arr::get($input, $this->alias(), array());
+
+			if (isset($namespaced_input[$input_key]))
 			{
 				// Set the value
-				$field->driver()->load($input[$input_key]);
+				$field->driver()->load($namespaced_input[$input_key]);
 			}
 			elseif ($field->driver()->file === TRUE AND isset($_FILES[$input_key]))
 			{
