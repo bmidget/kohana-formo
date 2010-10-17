@@ -14,7 +14,7 @@ This is an example of a adding a required file input field that must be an image
 		->add('logo', 'file')
 		->rules('logo', array(
 			'Upload::not_empty' => NULL,
-			'Upload::type'      => array(':value', array('jpg', 'png', 'gif')),
+			'Upload::type'      => array(':value', 'PNG, PNG or GIF' => array('jpg', 'png', 'gif')),
 			'Upload::size'      => array(':value', '1M'),
 		));
 		
