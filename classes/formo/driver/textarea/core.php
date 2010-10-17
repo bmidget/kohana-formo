@@ -14,7 +14,7 @@ class Formo_Driver_Textarea_Core extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'textarea')
 			->set('text', $this->field->val())
-			->attr('name', $this->field->alias());
+			->attr('name', $this->name());
 	}
 
 }

@@ -241,6 +241,21 @@ abstract class Formo_Driver_Core {
 
 		return $this;
 	}
+	
+	/**
+	 * Return the namespaced name
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function name()
+	{
+		if ( ! $parent = $this->field->parent())
+			// If there isn't a parent, don't namespace the name
+			return $this->field->alias();
+
+		return $parent->alias().'['.$this->field->alias().']';
+	}
 
 	/**
 	 * Pre-filter field value
