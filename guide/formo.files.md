@@ -4,7 +4,9 @@ File fields function like any other Formo fields except its value is always popu
 
 You will also use Kohana's Upload rules instead of Validate rules.
 
-[!!] When working with HTML forms, the field's parent is automatically added the *enctype="multipart/form-data"*
+[!!] When working with HTML forms, the field's parent is automatically added the *enctype="multipart/form-data"*, but only for field's immediate parent
+
+[!!] $_FILES cannot be namespaced, thus neither are file fields
 
 ### Example
 
