@@ -29,8 +29,8 @@ abstract class Formo_Container_Core {
 
 	protected $_loaded = array
 	(
-		'orm'		=> FALSE,
-		'driver'	=> FALSE
+		'orm'    => FALSE,
+		'driver' => FALSE
 	);
 
 	/**
@@ -41,13 +41,13 @@ abstract class Formo_Container_Core {
 	 */
 	protected $_defaults = array
 	(
-		'alias'				=> NULL,
-		'parent'			=> FALSE,
-		'fields'			=> array(),
-		'driver_instance'	=> NULL,
-		'label'				=> NULL,
-		'order'				=> FALSE,
-		'type'				=> NULL,
+		'alias'           => NULL,
+		'parent'          => FALSE,
+		'fields'          => array(),
+		'driver_instance' => NULL,
+		'label'           => NULL,
+		'order'           => FALSE,
+		'type'            => NULL,
 	);
 
 	/**

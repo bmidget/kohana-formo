@@ -16,9 +16,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	protected $_errors = array
 	(
 		// Error message for this field/form
-		'error'		=> FALSE,
+		'error'  => FALSE,
 		// Error messages for fields inside
-		'errors'	=> array(),
+		'errors' => array(),
 	);
 
 	/**
@@ -30,9 +30,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	protected $_validators = array
 	(
 		// Normal validation rules
-		'rules'			=> array(),
+		'rules'     => array(),
 		// Special triggers
-		'callbacks'		=> array(),
+		'callbacks' => array(),
 	);
 
 	/**
@@ -43,8 +43,8 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	 */
 	protected $_filters = array
 	(
-		'pre'		=> array(),
-		'display'	=> array(),
+		'pre'     => array(),
+		'display' => array(),
 	);
 
 	/**

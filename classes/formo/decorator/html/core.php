@@ -25,12 +25,12 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	 */
 	protected $_vars = array
 	(
-		'tag'		=> NULL,
-		'attr'		=> array(),
-		'classes'	=> array(),
-		'css'		=> array(),
-		'text'		=> NULL,
-		'data'		=> array(),
+		'tag'     => NULL,
+		'attr'    => array(),
+		'classes' => array(),
+		'css'     => array(),
+		'text'    => NULL,
+		'data'    => array(),
 	);
 
 	public function __construct(Formo_Container $container, Formo_Driver $driver)
