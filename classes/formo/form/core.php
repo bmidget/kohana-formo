@@ -16,29 +16,29 @@ class Formo_Form_Core extends Formo_Validator {
 	protected $_settings = array
 	(
 		// The config array
-		'config'				=> array(),
+		'config'              => array(),
 		// The orm config array
-		'orm_config'			=> array(),
+		'orm_config'          => array(),
 		// Driver name for handling validation/rendering
-		'driver'				=> 'form',
+		'driver'              => 'form',
 		// Driver instance that handles orm comm
-		'orm_driver_instance'	=> NULL,
+		'orm_driver_instance' => NULL,
 		// A model associated with this form
-		'model'					=> NULL,
+		'model'               => NULL,
 		// Whether the form was sent
-		'sent'					=> Formo::NOTSET,
+		'sent'                => Formo::NOTSET,
 		// The input object ($_GET/$_POST/etc)
-		'input'					=> array(),
+		'input'               => array(),
 		// If the object should be namespaces
-		'namespace'				=> FALSE,
+		'namespace'           => FALSE,
 		// The view path prefix
-		'view_prefix'			=> NULL,
+		'view_prefix'         => NULL,
 		// Whether the field should render
-		'render'				=> TRUE,
+		'render'              => TRUE,
 		// Whether the field is editable
-		'editable'				=> TRUE,
+		'editable'            => TRUE,
 		// A custom message file
-		'message_file'			=> NULL,
+		'message_file'        => NULL,
 	);
 
 	/**

@@ -16,21 +16,21 @@ class Formo_Field_Core extends Formo_Validator {
 	protected $_settings = array
 	(
 		// The field's driver
-		'driver'		=> 'text',
+		'driver'       => 'text',
 		// The wah this field is rendered
-		'render_type'	=> 'html',
+		'render_type'  => 'html',
 		// Whether the field should be rendered
-		'render'		=> TRUE,
+		'render'       => TRUE,
 		// Whether the field is editable
-		'editable'		=> TRUE,
+		'editable'     => TRUE,
 		// Original value added to field
-		'value'			=> NULL,
+		'value'        => NULL,
 		// New values added to field
-		'new_value'		=> Formo::NOTSET,
+		'new_value'    => Formo::NOTSET,
 		// A custom message file
-		'message_file'	=> NULL,
+		'message_file' => NULL,
 		// Group items as in select options, individual radios, individual checkboxes, etc.
-		'options'		=> array(),
+		'options'      => array(),
 	);
 		
 	/**
