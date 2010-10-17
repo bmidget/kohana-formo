@@ -5,17 +5,17 @@ return array
 	// Default drivers associated with Jelly Fields
 	'drivers' => array
 	(
-		'Field_Primary'				=> 'text',
-		'Field_String'				=> 'text',
-		'Field_Text'				=> 'textarea',
-		'Field_Password'			=> 'password',
-		'Field_Integer'				=> 'text',
-		'Field_Float'				=> 'text',
-		'Field_Boolean'				=> 'bool',
-		'Field_BelongsTo'			=> 'select',
-		'Field_HasOne'				=> 'select',
-		'Field_HasMany'				=> 'checkboxes',
-		'Field_ManyToMany'			=> 'checkboxes',
+		'Jelly_Field_Primary'				=> 'text',
+		'Jelly_Field_String'				=> 'text',
+		'Jelly_Field_Text'				=> 'textarea',
+		'Jelly_Field_Password'			=> 'password',
+		'Jelly_Field_Integer'				=> 'text',
+		'Jelly_Field_Float'				=> 'text',
+		'Jelly_Field_Boolean'				=> 'bool',
+		'Jelly_Field_BelongsTo'			=> 'select',
+		'Jelly_Field_HasOne'				=> 'select',
+		'Jelly_Field_HasMany'				=> 'checkboxes',
+		'Jelly_Field_ManyToMany'			=> 'checkboxes',
 	),
 	// Rules to attach according to Jelly Field parameter values
 	'auto_rules' => array

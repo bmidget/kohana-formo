@@ -102,7 +102,9 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			$options['driver'] = $this->determine_driver($options, get_class($field));
 
 			// Add the value
-			if ($field instanceof Jelly_Field_Relationship === FALSE)
+			if ($field instanceof Jelly_Field_Supports_AddRemove === FALSE
+				AND $field instanceof Jelly_Field_Supports_Has === FALSE
+				AND $field instanceof Jelly_Field_Supports_With === FALSE)
 			{
 				// Add the value
 				$options['value'] = ($model->get($column))
@@ -110,7 +112,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 					: $options['default'];
 			}
 			// Only perform this on BelongsTo and HasOne relationships
-			elseif ($field instanceof Field_ManyToMany === FALSE AND $field instanceof Field_HasMany === FALSE)
+			elseif ($field instanceof Jelly_Field_ManyToMany === FALSE AND $field instanceof Jelly_Field_HasMany === FALSE)
 			{
 				// grab the actual foreign model
 				$foreign_model = $model->get($column)->execute();
@@ -120,7 +122,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			else
 			{
 				// Grab all the foreign options
-				$all_options = Jelly::select($field->foreign['model'])->execute();
+				$all_options = Jelly::query($field->foreign['model'])->select();
 
 				// Create the array
 				$options['options'] = array();
@@ -144,7 +146,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 			// Add the field to its parent
 			$this->form->add($column, $options);
 
-			$field = $this->form->{$column};
+			$field = $this->form->$column;
 		}
 
 		return $this->form;
@@ -165,12 +167,12 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		if ( ! $column)
 			return $this;
 
-		$data = $this->model->meta()->fields($column);
+		$data = $this->model->meta()->field($column);
 
 		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
 		{
 			// Run through each possibility and add/remove as necessary
-			foreach (Jelly::select($field->foreign['model'])->execute() as $record)
+			foreach (Jelly::query($field->foreign['model'])->select() as $record)
 			{
 				// Determine whether to add or remove the record
 				$method = (in_array($record->id(), (array) $value))
@@ -185,7 +187,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		}
 
 		// Simple field, just set the data
-		$this->model->{$column} = $value;
+		$this->model->$column = $value;
 
 		return $this;
 	}
@@ -204,7 +206,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 
 		foreach ($this->form->fields() as $field)
 		{
-			if ( ! $data = $this->model->meta()->fields($field->alias()))
+			if ( ! $data = $this->model->meta()->field($field->alias()))
 				// If field doesn't exist continue
 				continue;
 
@@ -213,9 +215,9 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				continue;
 
 			// Fetch the list of all available records
-			$records = Jelly::select($field->foreign['model'])
+			$records = Jelly::query($field->foreign['model'])
 				->order_by(':name_key')
-				->execute();
+				->select();
 
 			// Create the array
 			$options = array();
@@ -320,7 +322,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 
 		foreach ($this->form->as_array('value') as $alias => $value)
 		{
-			if ($model->meta()->fields($alias) !== NULL)
+			if ($model->meta()->field($alias) !== NULL)
 			{
 				// Add form values to the model
 				$model->$alias = $value;
