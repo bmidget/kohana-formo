@@ -307,7 +307,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			 . $this->attr_to_str()
 			 . (($singletag === TRUE)
 			    // Do not end the tag if it's a single tag
-			    ? '/'
+			    ? NULL
 			    // Otherwise close the tag
 			    : ">\n");
 	}
@@ -316,22 +316,20 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	public function close()
 	{
 		$singletag = in_array($this->tag, $this->singles);
-
-		return (($singletag === FALSE)
-					// If the tag is not a single tag, start with a carrot
-					? '<'
-					: NULL)
-				// All closing tags will have the trailing slash
-				. '/'
-				. (($singletag === FALSE)
-					// Non-single tags close again with the tag name
-					? $this->tag
-					: ((Kohana::config('formo')->close_single_html_tags === TRUE)
-						// Let the config file determine whether to close the tags
-						? ' /'
-						: NULL))
-				// Close the tag
-				. ">\n";
+		
+		// Let the config file determine whether to close the tags
+		$closetag = (Kohana::config('formo')->close_single_html_tags === TRUE)
+			? '/'
+			: NULL;
+		
+		if ($singletag === TRUE)
+		{
+			return '/>'."\n";
+		}
+		else
+		{
+			return '</'.$this->tag.'>'."\n";
+		}
 	}
 
 	public function pre_render()
