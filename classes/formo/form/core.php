@@ -26,7 +26,7 @@ class Formo_Form_Core extends Formo_Validator {
 		// A model associated with this form
 		'model'               => NULL,
 		// Whether the form was sent
-		'sent'                => Formo::NOTSET,
+		'sent'                => FALSE,
 		// The input object ($_GET/$_POST/etc)
 		'input'               => array(),
 		// If the object should be namespaces
