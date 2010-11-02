@@ -541,7 +541,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}
 		else
 		{
-			$message = strstr($message, $values);
+			$message = strtr($message, $values);
 		}
 
 		return $message;
