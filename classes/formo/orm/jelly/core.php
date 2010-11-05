@@ -110,6 +110,11 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				$options['value'] = ($model->get($column))
 					? $model->get($column)
 					: $options['default'];
+				
+				if (isset($field->choices))
+				{
+					$options['options'] = $field->choices;
+				}
 			}
 			// Only perform this on BelongsTo and HasOne relationships
 			elseif ($field instanceof Jelly_Field_ManyToMany === FALSE AND $field instanceof Jelly_Field_HasMany === FALSE)

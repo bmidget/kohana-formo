@@ -11,6 +11,7 @@ return array
 		'Jelly_Field_Password'   => 'password',
 		'Jelly_Field_Integer'    => 'text',
 		'Jelly_Field_Float'      => 'text',
+		'Jelly_Field_Enum'       => 'select',
 		'Jelly_Field_Boolean'    => 'bool',
 		'Jelly_Field_BelongsTo'  => 'select',
 		'Jelly_Field_HasOne'     => 'select',
