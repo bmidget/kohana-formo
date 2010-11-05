@@ -38,11 +38,21 @@ abstract class Formo_Driver_Core {
 	 *
 	 * (default value: FALSE)
 	 *
-	 * @var mixed
+	 * @var bool
 	 * @access public
 	 */
 	public $empty_input = FALSE;
-
+	
+	/**
+	 * Indicates whether this kind of field must use the $_FILES array
+	 * 
+	 * (default value: FALSE)
+	 * 
+	 * @var bool
+	 * @access public
+	 */
+	public $file = FALSE;
+	
 	/**
 	 * General factory method
 	 *
@@ -106,6 +116,18 @@ abstract class Formo_Driver_Core {
 
 		// Create the actual decorator object
 		$this->decorator = new $class($this->field, $this);
+	}
+	
+	/**
+	 * Append event takes place after field has been appended
+	 * to its parent
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function append()
+	{
+		$this->decorator->append();
 	}
 
 	public function set($variable, $value)
@@ -179,7 +201,7 @@ abstract class Formo_Driver_Core {
 	{
 		$new_value = $this->field->get('new_value');
 
-		return (Formo::notset($new_value) === FALSE)
+		return (Formo::is_set($new_value) === TRUE)
 			? $new_value
 			: $this->field->get('value');
 	}
@@ -218,6 +240,21 @@ abstract class Formo_Driver_Core {
 		$this->set_orm_fields($value);
 
 		return $this;
+	}
+	
+	/**
+	 * Return the namespaced name
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function name()
+	{
+		if ( ! $parent = $this->field->parent())
+			// If there isn't a parent, don't namespace the name
+			return $this->field->alias();
+
+		return $parent->alias().'['.$this->field->alias().']';
 	}
 
 	/**
@@ -407,7 +444,7 @@ abstract class Formo_Driver_Core {
 	{
 		$new_value = $this->field->get('new_value');
 
-		if (Formo::notset($new_value) AND ! $this->field->get('value'))
+		if (Formo::is_set($new_value) === FALSE AND ! $this->field->get('value'))
 			return FALSE;
 
 		return (bool) $new_value;

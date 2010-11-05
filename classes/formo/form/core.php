@@ -16,29 +16,29 @@ class Formo_Form_Core extends Formo_Validator {
 	protected $_settings = array
 	(
 		// The config array
-		'config'				=> array(),
+		'config'              => array(),
 		// The orm config array
-		'orm_config'			=> array(),
+		'orm_config'          => array(),
 		// Driver name for handling validation/rendering
-		'driver'				=> 'form',
+		'driver'              => 'form',
 		// Driver instance that handles orm comm
-		'orm_driver_instance'	=> NULL,
+		'orm_driver_instance' => NULL,
 		// A model associated with this form
-		'model'					=> NULL,
+		'model'               => NULL,
 		// Whether the form was sent
-		'sent'					=> Formo::NOTSET,
+		'sent'                => Formo::NOTSET,
 		// The input object ($_GET/$_POST/etc)
-		'input'					=> array(),
+		'input'               => array(),
 		// If the object should be namespaces
-		'namespace'				=> FALSE,
+		'namespace'           => FALSE,
 		// The view path prefix
-		'view_prefix'			=> NULL,
+		'view_prefix'         => NULL,
 		// Whether the field should render
-		'render'				=> TRUE,
+		'render'              => TRUE,
 		// Whether the field is editable
-		'editable'				=> TRUE,
+		'editable'            => TRUE,
 		// A custom message file
-		'message_file'			=> NULL,
+		'message_file'        => NULL,
 	);
 
 	/**
@@ -109,7 +109,7 @@ class Formo_Form_Core extends Formo_Validator {
 		$validate_options = array('rules', 'triggers', 'filters');
 		// Create the array
 		$validate_settings = array();
-
+		
 		foreach ($validate_options as $option)
 		{
 			if ( ! empty($options[$option]))
@@ -225,10 +225,18 @@ class Formo_Form_Core extends Formo_Validator {
 				continue;
 			}
 
-			if (isset($input[$input_key]))
+			// Fetch the namespace for this form
+			$namespaced_input = Arr::get($input, $this->alias(), array());
+
+			if (isset($namespaced_input[$input_key]))
 			{
 				// Set the value
-				$field->driver()->load($input[$input_key]);
+				$field->driver()->load($namespaced_input[$input_key]);
+			}
+			elseif ($field->driver()->file === TRUE AND isset($_FILES[$input_key]))
+			{
+				// Load the $_FILES params as the value
+				$field->driver()->load($_FILES[$input_key]);
 			}
 			elseif ($field->driver()->empty_input === TRUE)
 			{

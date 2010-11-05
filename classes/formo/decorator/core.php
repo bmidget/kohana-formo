@@ -56,7 +56,15 @@ abstract class Formo_Decorator_Core implements Formo_Decorator_Interface {
 	public function __construct(Formo_Container $container, Formo_Driver $driver)
 	{
 		$this->container = $container;
-		$this->driver = $driver;
+		$this->driver = $driver;		
 	}
+	
+	/**
+	 * Append event. Run after field is appended to its parent
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function append(){}
 
 }

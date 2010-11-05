@@ -99,6 +99,14 @@ class Formo_Core {
 		return $method->invokeArgs(NULL, $args);
 	}
 	
+	public static function callback()
+	{
+		$args = func_get_args();
+		
+		$method = new ReflectionMethod('Formo_Validator_Callback', 'factory');
+		return $method->invokeArgs(NULL, $args);
+	}
+	
 	/**
 	 * trigger function.
 	 * 
@@ -191,10 +199,10 @@ class Formo_Core {
 	 * @param mixed & $var. (default: NULL)
 	 * @return bool
 	 */
-	public static function notset($val, & $var = NULL)
+	public static function is_set($val, & $var = NULL)
 	{
 		$var = $val;
-		return $val === Formo::NOTSET;
+		return $val !== Formo::NOTSET;
 	}
 	
 }

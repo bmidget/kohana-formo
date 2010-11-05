@@ -25,14 +25,18 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	 */
 	protected $_vars = array
 	(
-		'tag'		=> NULL,
-		'attr'		=> array(),
-		'classes'	=> array(),
-		'css'		=> array(),
-		'text'		=> NULL,
-		'data'		=> array(),
+		'tag'     => NULL,
+		'attr'    => array(),
+		'classes' => array(),
+		'css'     => array(),
+		'text'    => NULL,
+		'data'    => array(),
 	);
 
+	public function __construct(Formo_Container $container, Formo_Driver $driver)
+	{
+		parent::__construct($container, $driver);
+	}
 
 	public function __isset($var)
 	{
@@ -303,7 +307,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			 . $this->attr_to_str()
 			 . (($singletag === TRUE)
 			    // Do not end the tag if it's a single tag
-			    ? '/'
+			    ? NULL
 			    // Otherwise close the tag
 			    : ">\n");
 	}
@@ -312,22 +316,20 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	public function close()
 	{
 		$singletag = in_array($this->tag, $this->singles);
-
-		return (($singletag === FALSE)
-					// If the tag is not a single tag, start with a carrot
-					? '<'
-					: NULL)
-				// All closing tags will have the trailing slash
-				. '/'
-				. (($singletag === FALSE)
-					// Non-single tags close again with the tag name
-					? $this->tag
-					: ((Kohana::config('formo')->close_single_html_tags === TRUE)
-						// Let the config file determine whether to close the tags
-						? ' /'
-						: NULL))
-				// Close the tag
-				. ">\n";
+		
+		// Let the config file determine whether to close the tags
+		$closetag = (Kohana::config('formo')->close_single_html_tags === TRUE)
+			? '/'
+			: NULL;
+		
+		if ($singletag === TRUE)
+		{
+			return '/>'."\n";
+		}
+		else
+		{
+			return '</'.$this->tag.'>'."\n";
+		}
 	}
 
 	public function pre_render()
@@ -341,6 +343,12 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 	public function generate($view, $prefix)
 	{
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
 		// If prefix is a string, rtrim it
 		($prefix and $prefix = rtrim($prefix, '/'));
 
@@ -356,7 +364,21 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 				->set('label', View::factory("$prefix/_label", array('field' => $this->container)));
 		}
 
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
+		}
+
 		return $view;
+	}
+	
+	public function append()
+	{
+		if (method_exists($this->driver, 'html_append'))
+		{
+			$this->driver->html_append();
+		}
 	}
 
 	// Render fields as html
