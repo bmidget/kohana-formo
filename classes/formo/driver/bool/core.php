@@ -13,7 +13,7 @@ class Formo_Driver_Bool_Core extends Formo_Driver {
 	public function checked()
 	{
 		// Check if field was sent. If so, the new value shoulda been posted
-		if ($this->field->sent() AND Formo::notset($this->field->get('new_value')))
+		if ($this->field->sent() AND Formo::is_set($this->field->get('new_value')) === FALSE)
 			return FALSE;
 						
 		return $this->val() == TRUE;
@@ -22,12 +22,12 @@ class Formo_Driver_Bool_Core extends Formo_Driver {
 	public function getval()
 	{
 		// If the form was sent but the field wasn't set, return empty array as value
-		if ($this->field->sent() AND Formo::notset($this->field->get('new_value')))
+		if ($this->field->sent() AND Formo::is_set($this->field->get('new_value')) === TRUE)
 			return FALSE;
 			
 		// Otherwise return the value that's set
-		return ( ! Formo::notset($this->field->get('new_value')))
-			? (bool) $this->field->get('new_value')
+		return (Formo::is_set($this->field->get('new_value', $new_value)) === TRUE)
+			? (bool) $new_value
 			: (bool) $this->field->get('value');
 	}
 	

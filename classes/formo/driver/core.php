@@ -201,7 +201,7 @@ abstract class Formo_Driver_Core {
 	{
 		$new_value = $this->field->get('new_value');
 
-		return (Formo::notset($new_value) === FALSE)
+		return (Formo::is_set($new_value) === TRUE)
 			? $new_value
 			: $this->field->get('value');
 	}
@@ -444,7 +444,7 @@ abstract class Formo_Driver_Core {
 	{
 		$new_value = $this->field->get('new_value');
 
-		if (Formo::notset($new_value) AND ! $this->field->get('value'))
+		if (Formo::is_set($new_value) === FALSE AND ! $this->field->get('value'))
 			return FALSE;
 
 		return (bool) $new_value;

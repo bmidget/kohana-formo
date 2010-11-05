@@ -171,8 +171,8 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	// Determine whether data was sent
 	public function sent(array $input = NULL)
 	{
-		if ( ! Formo::notset($this->get('sent'), $sent))
-			return $sent;
+		if (Formo::is_set($this->get('sent')) === TRUE)
+			return TRUE;
 
 		$input = ($input !== NULL) ? $input : $this->get('input');
 
