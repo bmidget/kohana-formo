@@ -200,7 +200,6 @@ class Formo_Core {
 	 * @return bool
 	 */
 	public static function is_set($val, & $var = NULL)
-//	public static function notset($val, & $var = NULL)
 	{
 		$var = $val;
 		return $val !== Formo::NOTSET;
