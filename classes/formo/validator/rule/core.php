@@ -43,7 +43,12 @@ class Formo_Validator_Rule_Core extends Formo_Validator_Item {
 	}
 
 	public function execute()
-	{		
+	{
+		// Support for PHP < 5.3	
+		$callback = ( strpos($this->callback, '::') !== FALSE )
+			? explode('::', $this->callback)
+			: $this->callback;
+			
 		if ((bool) $this->context === TRUE)
 		{
 			$method = new ReflectionMethod($this->context, $this->callback);
@@ -55,11 +60,11 @@ class Formo_Validator_Rule_Core extends Formo_Validator_Item {
 		else
 		{
 			// Otherwise run the method as a standalone method
-			return $this->error(call_user_func_array($this->callback, array_values($this->args)));
+			return $this->error(call_user_func_array($callback, array_values($this->args)));
 		}
 		
 		// Return TRUE if it passed
-		return TRUE;		
+		return TRUE;
 	}
 	
 }
