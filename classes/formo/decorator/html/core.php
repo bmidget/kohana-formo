@@ -275,7 +275,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		
 		foreach ($attrs as $attr => $value)
 		{
-			$valsue = HTML::entities($value);
+			$value = HTML::entities($value);
 			$str.= " $attr=\"$value\"";
 		}
 
