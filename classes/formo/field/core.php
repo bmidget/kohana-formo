@@ -2,14 +2,14 @@
 
 /**
  * Formo_Field_Core class.
- * 
+ *
  * @package  Formo
  */
 class Formo_Field_Core extends Formo_Validator {
-		
+
 	/**
 	 * Field-specific settings
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -32,10 +32,10 @@ class Formo_Field_Core extends Formo_Validator {
 		// Group items as in select options, individual radios, individual checkboxes, etc.
 		'options'      => array(),
 	);
-		
+
 	/**
 	 * Create a new field
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $alias
 	 * @param mixed $driver. (default: NULL)
@@ -47,17 +47,17 @@ class Formo_Field_Core extends Formo_Validator {
 		$options = func_get_args();
 		$orig_options = $options;
 		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
-		
+
 		// Add all the options to the object
 		$this->load_options($options);
-		
+
 		// Run the driver's post_construct() method
 		$this->driver()->post_construct();
 	}
-	
+
 	/**
 	 * Render the field according to default render_type
-	 * 
+	 *
 	 * @access public
 	 * @return view object
 	 */
@@ -66,10 +66,10 @@ class Formo_Field_Core extends Formo_Validator {
 		// Render as the default render type
 		return (string) $this->render(Kohana::config('formo')->render_type);
 	}
-	
+
 	/**
 	 * Overloaded sent method
-	 * 
+	 *
 	 * @access public
 	 * @param mixed array $input. (default: NULL)
 	 * @return bool
@@ -79,10 +79,10 @@ class Formo_Field_Core extends Formo_Validator {
 		// Always return whether the parent was sent
 		return $this->parent()->sent();
 	}
-	
+
 	/**
 	 * Overloaded message_file
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -93,5 +93,5 @@ class Formo_Field_Core extends Formo_Validator {
 			? $this->get('message_file')
 			: $this->parent()->message_file();
 	}
-	
+
 }

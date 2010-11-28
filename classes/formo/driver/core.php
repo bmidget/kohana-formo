@@ -142,10 +142,11 @@ abstract class Formo_Driver_Core {
 		return $this->field;
 	}
 
-	public function get($variable, $default)
+	public function get($variable, $default, $shallow_look = FALSE)
 	{
-		if (isset($this->decorator->$variable))
+		if ($shallow_look !== TRUE AND isset($this->decorator->$variable))
 			// If the variable is inside the decorator, return that
+			// and only do so if not doing a shallow look
 			return $this->decorator->get($variable);
 
 		// Otherwise return the field value if it's set, or the default value if it's not
