@@ -161,7 +161,7 @@ abstract class Formo_Container_Core {
 
 			return $this;
 		}
-		
+
 		// Allow the driver to alter the variable beforehand
 		// but obviously it can't happen when setting the driver instance
 		if ($variable != 'driver_instance' AND method_exists($this->driver(), "set_$variable"))
@@ -246,7 +246,7 @@ abstract class Formo_Container_Core {
 	 * @param mixed $default. (default: FALSE)
 	 * @return mixed
 	 */
-	public function get($variable, $default = FALSE)
+	public function get($variable, $default = FALSE, $shallow_look = FALSE)
 	{
 		$arrays = array('_defaults', '_settings', '_customs');
 
@@ -257,9 +257,13 @@ abstract class Formo_Container_Core {
 				return $this->{$array}[$variable];
 			}
 		}
+		
+		if ($shallow_look === TRUE)
+			// Don't keep searching deeper
+			return $default;
 
 		// Otherwise run get through the driver
-		return $this->driver()->get($variable, $default);
+		return $this->driver()->get($variable, $default, $shallow_look);
 	}
 
 	/**
@@ -373,7 +377,7 @@ abstract class Formo_Container_Core {
 
 			call_user_func_array(array($this, 'order'), $args);
 		}
-		
+
 		$field->driver()->append();
 
 		return $this;
@@ -639,7 +643,6 @@ abstract class Formo_Container_Core {
 		// Build the class name
 		$driver_class_name = Kohana::config('formo')->driver_prefix.UTF8::ucfirst($driver);
 
-		// Create the new instance
 		$instance = new $driver_class_name($this);
 
 		if ($save_instance === TRUE)

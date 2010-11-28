@@ -51,6 +51,13 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 
 	public function set($var, $value)
 	{
+		// Look for class inside 'attr' specifically
+		if ($var == 'attr' AND is_array($value) AND isset($value['class']))
+		{
+			$this->add_class($value['class']);
+			unset($value['class']);
+		}
+		
 		if (func_num_args() === 3)
 		{
 			$this->_vars[$var][$value] = func_get_arg(2);
@@ -63,7 +70,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		return $this->container;
 	}
 
-	public function get($var, $default = NULL)
+	public function get($var, $default = FALSE)
 	{
 		if (array_key_exists($var, $this->_vars))
 			return $this->_vars[$var];
@@ -180,6 +187,8 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 			{
 				$this->add_class($_class);
 			}
+			
+			return $this->container;
 		}
 
 		return $this->classes($class);
@@ -188,9 +197,10 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 	// Remove a class if it exists
 	public function remove_class($class)
 	{
-		if ($key = array_search($class, $this->_classes) !== FALSE)
+		$classes =& $this->_vars['classes'];
+		if (($key = array_search($class, $classes)) !== FALSE)
 		{
-			$this->remove_var('classes', $key);
+			unset($classes[$key]);
 		}
 
 		return $this->container;
