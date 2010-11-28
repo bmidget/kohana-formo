@@ -69,20 +69,6 @@ abstract class Formo_Container_Core {
 			return (bool) $this->_loaded[$variable];
 	}
 
-	public function __invoke()
-	{
-		$args = func_get_args();
-
-		if (func_num_args() === 0)
-			return $this->val();
-
-		if (func_num_args() === 1)
-			return $this->get($args[0]);
-
-		if (func_num_args() === 2)
-			return $this->set($args[0], $args[1]);
-	}
-
 	/**
 	 * Returns all fields in order
 	 *
