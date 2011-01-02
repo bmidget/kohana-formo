@@ -25,9 +25,9 @@ return array
 	// Whether to translate labels
 	'translate'              => TRUE,
 	// ORM driver to use
-	'orm_driver'             => 'Formo_ORM_Jelly',
+	'orm_driver'             => 'Formo_ORM_Kohana',
 	// Config file for the ORM driver
-	'orm_config'             => 'formo_jelly',
+	'orm_config'             => 'formo_kohana',
 	// If set to true, all Validate helper functions are auto-preceded
 	// by :value if it's not explicitly set
 	'validate_compatible'    => TRUE,

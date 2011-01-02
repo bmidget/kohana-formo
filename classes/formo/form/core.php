@@ -180,6 +180,19 @@ class Formo_Form_Core extends Formo_Validator {
 
 		return $this;
 	}
+	
+	public function preload(array $input)
+	{
+		foreach ($input as $name => $value)
+		{
+			if ($field = $this->get_field($name))
+			{
+				$field->val($value);
+			}
+		}
+		
+		return $this;
+	}
 
 	/**
 	 * Load data, works automatcially with with get/post
