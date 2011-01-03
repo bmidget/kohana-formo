@@ -6,22 +6,22 @@ This method also sets whether the form is considered "sent". It is considered se
 
 	// This loads $_POST
 	$form->load();
-	
+
 	// This also loads the $_POST values
 	$form->load($_POST);
-	
+
 	// This loads the $_GET values
 	$form->load($_GET);
-	
+
 	// This loads another array of values
 	$form->load($vals);
-	
+
 # Sent method
 
 Though this is used internally, it is a public method that you may find the need for. Pass an input array as the parameter and it returns a *boolean* value whether the form was sent or not.
 
 If a field from the input array exists in the form/subform, `sent()` returns `TRUE`.
-	
+
 # Validate method
 
 The `validate` method checks each field against any validation rules that are assigned to it, attaches errors to any fields or subforms that didn't pass, and returns a **boolean** representing whether the form passed (`TRUE`) or failed (`FALSE`) validation.
@@ -36,10 +36,10 @@ Here are some examples:
 
 	// Attach error messages and check if form passes validation
 	if ($form->load()->validate())
-	
+
 	// Attach error messages and check if email field passed validation
 	if ($form->load()->email->validate())
-	
+
 	// Attach error messages and check if form passes validation even if it wasn't sent
 	if ($form->validate(TRUE))
 
@@ -70,7 +70,7 @@ Parameter string	|	What is passed
 Note that if you define any parameter, value is no longer passed by default and has to be specified. For example:
 
 	$form->rules('myfield', 'preg_match', array('/[a-z]+/', ':value'));
-	
+
 The in the validation messages, the names of additional parameters follows the same rules as Kohana's Validate. That is, the name of the parameter is the value of the parameter.
 
 If, like in the example with preg_match above, the :param replacement doesn't fit, you can make they parameter's key a readable name.
@@ -78,11 +78,11 @@ If, like in the example with preg_match above, the :param replacement doesn't fi
 Like this:
 
 	$form->rules('name', 'preg_match', array('all lowercase' => '/[a-z]+/', ':value'));
-	
+
 And then the message file could say
 
 	'preg_match'	=> ':field must be :param1';
-	
+
 ## Message files
 The default message file for your validation error messages is specified in `config/formo.php` as `'message_file'`. You can change this to whichever file you need to be your default file.
 
@@ -91,11 +91,11 @@ If you need to use custom files at a form, subform or even field level, set it's
 Examples of setting specific message files:
 
 	$form->set('message_file', 'custom_file');
-	
+
 	$form->add('username', array('message_file' => 'user_messages'));
-	
+
 	$form->username->set('message_file', 'custom_file');
-	
+
 ## Parameter
 
 ## Filters
@@ -105,7 +105,7 @@ A filter is a callback that processes a value before setting it as a field's val
 Filters attached at the form or subform level apply to every one of its fields.
 
 This adds the "trim" filter without any parameters to the form. this will be applied to all fields within the form
-	
+
 	$form->filters(NULL, 'trim', NULL);
 
 Here, "trim" will be run only on the username field
@@ -121,7 +121,7 @@ A good example of a post filter is reformatting a phone number to (xxx) xxx-xxxx
 This runs the function "Format::phone($field_value, '(3) 3-4')" on the field, _phone_
 
 	$form->display_filters('phone', 'Format::phone', array(':value', '(3) 3-4'));
-	
+
 You can also add display_filters with a group of other rules
 
 $form->rules('phone', array(
@@ -129,12 +129,12 @@ $form->rules('phone', array(
 	Formo::rule('phone');
 	Formo::display_filter('phone', array(':value', '(3) 3-4'))
 ));
-	
+
 ## Rules
 
 A rule returns TRUE if the field passes it, and FALSE if it doesn't. By default, a field's value is passed as a sole parameter, but this can be overridden to anything and in any order.
 
-Rules 
+Rules
 
 ## Converting Validate rules to Formo-style rules
 
@@ -145,19 +145,19 @@ Take a look at these examples:
 	// Validate rules
 	'max_length' => array(32)
 	'min_length' => array(3)
-	
+
 	// In Formo
 	'max_length' => array(':value', 32)
 	'min_length' => array(':value', 32)
-	
+
 This is implemented so you don't always have to make your validate methods require value to be the first parameter. Then simple functions like preg_match can easily be validated against:
 
 	// Validate requires special regex method
 	'regex' => array('/^[\pL_.-]+$/ui')
-	
+
 	// But Formo allows you to just use preg_match
 	'preg_match'	=> array('/^[\pL_.-]+$/ui', ':value')
-	
+
 ## Adding objects
 
 Since rules and filters ultimately become rule and filter objects respectively, you can add objects directly into any method that adds validator items and it will be added in the proper spot.
@@ -175,9 +175,9 @@ Here are some examples:
 			Formo::rule('not_empty'),
 			Formo::rule('email')
 		));
-		
+
 This does the same thing but lets you group all rules for every field together in an array.
-		
+
 	$form = Formo::form()
 		->add('username')
 		->add('email')
@@ -191,3 +191,45 @@ This does the same thing but lets you group all rules for every field together i
 				Formo::rule('email'),
 			)
 		));
+
+## Form/subform-level rules
+
+Rules that exist at the form or subform level have the following difference from rules at the field level:
+
+- They are run only after all fields within pass validation
+- `:value` passes an array of all the values within the subform
+
+An example of a rule at the form level could be a login form where `username` and `password` have rules that they can't be empty, and the form has a rule that both fields together are correct login credentials.
+
+	$form = Formo::form()
+		->add('username')
+		->add('password', 'password')
+		->add('submit', 'submit')
+		->rules(array(
+			NULL => array(
+				'Model_User::can_login(':values', 'username', 'password')
+			),
+			'username' => array(
+				'not_empty' => NULL
+			),
+			'password' => array(
+				'not_empty' => NULL
+			)
+		));
+
+	if ($form->load($_POST)->validate())
+	{
+
+	}
+
+In this example, the `username` and `password` fields are first required to not be empty, then the form login rule would run after the other two fields passed.
+
+The example validation rule in `Model_User`:
+
+	public static function can_login($values, $username, $password)
+	{
+		if (Auth::instance()->login($values[$username], $values[$password]))
+			return TRUE;
+
+		return FALSE;
+	}
