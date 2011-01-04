@@ -110,7 +110,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 				$options['value'] = ($model->get($column))
 					? $model->get($column)
 					: $options['default'];
-				
+
 				if (isset($field->choices))
 				{
 					$options['options'] = $field->choices;
@@ -172,7 +172,7 @@ class Formo_ORM_Jelly_Core extends Formo_ORM {
 		if ( ! $column)
 			return $this;
 
-		$data = $this->model->meta()->field($column);
+		$data = $this->model->meta()->fields($column);
 
 		if ($data instanceof Jelly_Field_ManyToMany OR $data instanceof Jelly_Field_HasMany)
 		{
