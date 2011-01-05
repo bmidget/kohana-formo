@@ -68,6 +68,11 @@ class Formo_Form_Core extends Formo_Validator {
 		{
 			$this->set('orm_config', $orm_file);
 		}
+		
+		// Add validation rules first
+		$this->add_rules($options);
+		
+		echo Kohana::debug($this);
 
 		// Load the options
 		$this->load_options($options);
@@ -105,41 +110,10 @@ class Formo_Form_Core extends Formo_Validator {
 			$options['driver'] = Arr::get($this->config, 'default_driver', 'text');
 		}
 
-		// Allow loading rules, callbacks, filters upon adding a field
-		$validate_options = array('rules', 'triggers', 'filters');
-		// Create the array
-		$validate_settings = array();
-		
-		foreach ($validate_options as $option)
-		{
-			if ( ! empty($options[$option]))
-			{
-				$validate_settings[$option] = $options[$option];
-				unset($options[$option]);
-			}
-		}
-
 		// Create the new field
 		$field = Formo::field($options);
 
 		$this->append($field);
-
-		// Add the validation rules
-		foreach ($validate_settings as $method => $array)
-		{
-			foreach ($array as $callback => $opts)
-			{
-				if ($opts instanceof Formo_Validator_Item)
-				{
-					// The rules method will suffice for all Formo_Validator_Item objects
-					$field->rules(NULL, $opts);
-					continue;
-				}
-
-				$args = array(NULL, $callback, $opts);
-				call_user_func_array(array($field, $method), $args);
-			}
-		}
 
 		return $this;
 	}

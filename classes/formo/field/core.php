@@ -48,6 +48,9 @@ class Formo_Field_Core extends Formo_Validator {
 		$orig_options = $options;
 		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 
+		// Add validation rules first
+		$this->add_rules($options);
+		
 		// Add all the options to the object
 		$this->load_options($options);
 

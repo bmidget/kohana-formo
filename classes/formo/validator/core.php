@@ -46,6 +46,43 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		'pre'     => array(),
 		'display' => array(),
 	);
+	
+	/**
+	 * Add rules to form/field
+	 * 
+	 * @access protected
+	 * @param mixed & $options
+	 * @return void
+	 */
+	protected function add_rules( & $options)
+	{
+		// Allow loading rules, callbacks, filters upon adding a field
+		$validate_options = array('rules', 'triggers', 'filters');
+		// Create the array
+		$validate_settings = array();
+		
+		foreach ($validate_options as $option)
+		{
+			if ( ! empty($options[$option]))
+			{
+				foreach ($options[$option] as $callback => $opts)
+				{
+					if ($opts instanceof Formo_Validator_Item)
+					{
+						// The rules method will suffice for all Formo_Validator_Item objects
+						$this->rules(NULL, $opts);
+						continue;
+					}
+					
+					$args = array(NULL, $callback, $opts);
+					// Otherwise just use the args
+					call_user_func_array(array($field, $method), $args);
+				}
+
+				unset($options[$option]);
+			}
+		}		
+	}
 
 	/**
 	 * Convenience method for setting and retrieving error
