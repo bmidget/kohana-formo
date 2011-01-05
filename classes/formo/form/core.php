@@ -72,8 +72,6 @@ class Formo_Form_Core extends Formo_Validator {
 		// Add validation rules first
 		$this->add_rules($options);
 		
-		echo Kohana::debug($this);
-
 		// Load the options
 		$this->load_options($options);
 	}
