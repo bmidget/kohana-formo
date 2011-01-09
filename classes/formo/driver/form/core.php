@@ -22,5 +22,16 @@ class Formo_Driver_Form_Core extends Formo_Driver {
 		// If it's not already defined, define the field's action
 		( ! $this->decorator->attr('action') AND $this->decorator->attr('action', ''));
 	}
+	
+	public function val($value = NULL)
+	{
+		$values = array();
+		foreach ($this->field->get('fields') as $field)
+		{
+			$values[$field->alias()] = $field->val();
+		}
+		
+		return $values;
+	}
 
 }

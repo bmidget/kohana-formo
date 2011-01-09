@@ -46,6 +46,43 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		'pre'     => array(),
 		'display' => array(),
 	);
+	
+	/**
+	 * Add rules to form/field
+	 * 
+	 * @access protected
+	 * @param mixed & $options
+	 * @return void
+	 */
+	protected function add_rules( & $options)
+	{
+		// Allow loading rules, callbacks, filters upon adding a field
+		$validate_options = array('rules', 'triggers', 'filters');
+		// Create the array
+		$validate_settings = array();
+		
+		foreach ($validate_options as $option)
+		{
+			if ( ! empty($options[$option]))
+			{
+				foreach ($options[$option] as $callback => $opts)
+				{
+					if ($opts instanceof Formo_Validator_Item)
+					{
+						// The rules method will suffice for all Formo_Validator_Item objects
+						$this->rules(NULL, $opts);
+						continue;
+					}
+					
+					$args = array(NULL, $callback, $opts);
+					// Otherwise just use the args
+					call_user_func_array(array($field, $method), $args);
+				}
+
+				unset($options[$option]);
+			}
+		}		
+	}
 
 	/**
 	 * Convenience method for setting and retrieving error
@@ -83,8 +120,20 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$this->_errors['errors'] = $errors;
 			return $this;
 		}
-
-		return $this->_errors['errors'];
+		
+		$array = array();
+		
+		if ($this->_errors['error'])
+		{
+			$array['form'] = $this->_errors['error'];
+		}
+		
+		if ($this->_errors['errors'])
+		{
+			$array['fields'] = $this->_errors['errors'];
+		}
+		
+		return $array;
 	}
 
 	/**
@@ -206,7 +255,71 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		// Stop if an error is already set
 		if ($this->error() !== FALSE)
 			return FALSE;
-			
+		
+		// Run this rules if it's not a Form
+		( ! $this instanceof Formo_Form AND $this->run_field_rules());
+		
+		// Validate through each of the field's fields
+		foreach ($this->get('fields') as $field)
+		{
+			// Don't do anything if it's ignored
+			if ($field->get('ignore') === TRUE)
+				continue;
+
+			// Validate everything else
+			if ($field->validate($validate_if_not_sent) === FALSE)
+			{
+				if ($field instanceof Formo_Form)
+				{
+					// If no errors are attached to the subform, continue
+					if ( ! $field_errors = $field->errors())
+						continue;
+
+					// Attach subform errors to the parent's errors
+					$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->errors())));
+				}
+				else
+				{
+					// Attach field's error to its parent
+					$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->error())));
+				}
+			}
+		}
+		
+		// Formo_Form objects run their rules only when the other fields all passed
+		if ($this instanceof Formo_Form AND ! $this->errors())
+		{
+			$this->run_field_rules();
+		}
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
+		}
+
+		$this->driver()->post_validate();
+
+		// What to return depends on if it's a field or form object
+		if ($this instanceof Formo_Form)
+		{
+			// If the form/subform has an error message, return FALSE
+			if ($this->error() !== FALSE)
+				return FALSE;
+
+			// Otherwise return whether the form/subform has no errorss
+			return (bool) $this->errors() === FALSE;
+		}
+		else
+		{
+			// Return whether passed validation based on field's error
+			return (bool) $this->error() === FALSE;
+		}
+	}
+	
+	// Run all the rules associated with this field
+	protected function run_field_rules()
+	{
 		foreach ($this->_validators['rules'] as $rule)
 		{
 			// Make the proper parameteres
@@ -235,65 +348,6 @@ abstract class Formo_Validator_Core extends Formo_Container {
 				// No need to continue if there was an error
 				break;
 			}
-		}
-		
-		foreach ($this->_validators['callbacks'] as $callback)
-		{
-			// Make the proper parameteres
-			$this->pseudo_args($callback->args);
-
-			$callback->execute();
-		}
-
-		// Validate through each of the field's fields
-		foreach ($this->get('fields') as $field)
-		{
-			// Don't do anything if it's ignored
-			if ($field->get('ignore') === TRUE)
-				continue;
-
-			// Validate everything else
-			if ($field->validate($validate_if_not_sent) === FALSE)
-			{
-				if ($field instanceof Formo_Form)
-				{
-					// If no errors are attached to the subform, continue
-					if ( ! $field_errors = $field->errors())
-						continue;
-
-					// Attach subform errors to the parent's errors
-					$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->errors())));
-				}
-				else
-				{
-					// Attach field's error to its parent
-					$this->errors(Arr::merge($this->errors(), array($field->alias() => $field->error())));
-				}
-			}
-		}
-
-		if (isset($benchmark))
-		{
-			// Stop benchmarking
-			Profiler::stop($benchmark);
-		}
-
-		$this->driver()->post_validate();
-
-		// What to return depends on if it's a field or form object
-		if ($this instanceof Formo_Form)
-		{
-			// If the form/subform has an error message, return FALSE
-			if ($this->error() !== FALSE)
-				return FALSE;
-
-			// Otherwise return whether the form/subform has no errorss
-			return (bool) $this->errors() === FALSE;
-		}
-		else
-		{
-			// Return whether passed validation based on field's error
-			return (bool) $this->error() === FALSE;
 		}
 	}
 
@@ -331,8 +385,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$rule = call_user_func(array('Formo', $type), $rule, $args);
 		}
 
+		$prefield = $field;
 		// The field the rule is attached to
-		$field = ($field === NULL) ? $this : $this->find($field);
+		$field = ($field == NULL) ? $this : $this->find($field);
 
 		// Attach the rule to a field
 		$field->add_validator($type, $rule);
