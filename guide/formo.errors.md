@@ -14,7 +14,7 @@ The following adds an error message to a field or form. The first parameter is t
 	$field->error('error_msg', TRUE);
 	// Just attach the message
 	$field->error('This is wrong, wrong wrong');
-	
+
 You retrieve the error with
 
 	$field->error();
@@ -23,7 +23,7 @@ You retrieve the error with
 You can retrieve an array of a form or subforms errors errors with
 
 	$form->errors();
-	
+
 The error messages are hierarchal. Let's explore a form with a subform.
 
 In this example, assume every field has the rule 'not_empty'.
@@ -31,37 +31,53 @@ In this example, assume every field has the rule 'not_empty'.
 	$address = Formo::form()
 		->add('street')
 		->add('zip');
-		
+
 	$form = Formo::form()
 		->add('car', 'select', $hobbies)
 		->add('address', $address);
-		
+
 When the form submits empty, the following errors exist:
 
 	$errors = $form->errors();
 	$errors2 = $address->errors();
 
 Returns
-	
-	
+
+
 	//$errors:
 	array
 	(
-		'car' => 'car must not be empty',
-		'address'	=> array
+		'fields' => array
+		(
+			'car' => 'car must not be empty',
+			'address'	=> array
+			(
+				'street'	=> 'street must not be empty',
+				'zip'		=> 'zip must not be empty',
+			)
+		)
+	)
+
+	//$errors2:
+	array
+	(
+		'fields' => array
 		(
 			'street'	=> 'street must not be empty',
 			'zip'		=> 'zip must not be empty',
 		)
+
 	)
-	
-	//$errors2:
+
+## Form/Subform errors
+
+If the form or subform itself has an error, it is included in the list of field errors under the key 'form'. Here's an example of the errors array where the form has errors:
+
 	array
 	(
-		'street'	=> 'street must not be empty',
-		'zip'		=> 'zip must not be empty',
-	)
-	
+		'form' => 'Unsername or password are incorrect',
+	);
+
 ## Wrap-up
 
 You can attach error messages to any Formo object, but form and subform objects can also fetch an array of all errors inside itself.

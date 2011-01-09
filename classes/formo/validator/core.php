@@ -120,8 +120,20 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$this->_errors['errors'] = $errors;
 			return $this;
 		}
-
-		return $this->_errors['errors'];
+		
+		$array = array();
+		
+		if ($this->_errors['error'])
+		{
+			$array['form'] = $this->_errors['error'];
+		}
+		
+		if ($this->_errors['errors'])
+		{
+			$array['fields'] = $this->_errors['errors'];
+		}
+		
+		return $array;
 	}
 
 	/**
