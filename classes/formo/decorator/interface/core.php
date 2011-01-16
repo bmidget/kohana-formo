@@ -6,5 +6,6 @@ interface Formo_Decorator_Interface_Core {
 	public function __construct(Formo_Container $container, Formo_Driver $driver);
 	public function pre_render();
 	public function generate($view, $prefix);
+	public function name();
 
 }

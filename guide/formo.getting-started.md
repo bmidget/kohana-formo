@@ -45,13 +45,19 @@ Occasionally you may want to use a number as a field's alias. In order to retrie
 
 	$form->{'23'};
 
-You can also have spaces in your aliases.
+[!!] Form, subform and field aliases always replace spaces with underscores. Thus, the aliases `my field` and `my_field` point to the same field object.
+
+These two are identical:
 
 	$form->add('my field', 'text');
+	$form->add('my_field', 'text');
 
-	$form->{'my field'};
+They can be accessed by:
 
-To recap, strings return by alias, integers return by key, and `__get()` returns a field by alias.
+	$form->{'my field'};	
+	$form->{'my_field'};
+
+To recap, strings return by alias, integers return by key, `__get()` returns a field by alias and alias spaces are converted to underscores.
 
 ### Accessing and setting variables
 
