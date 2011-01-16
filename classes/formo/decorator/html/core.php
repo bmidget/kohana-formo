@@ -383,6 +383,21 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		return $view;
 	}
 	
+	/**
+	 * Returns the field's correct name
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function name()
+	{
+		return ($name = $this->attr('name'))
+			// Use the name if it's been specifically set
+			? $name
+			// Otherwise use the alias
+			: $this->container->alias();
+	}
+	
 	public function append()
 	{
 		if (method_exists($this->driver, 'html_append'))

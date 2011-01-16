@@ -182,6 +182,12 @@ abstract class Formo_Container_Core {
 			return $this;
 		}
 
+		// Aliases always have to be underscored instead of spaced
+		if ($variable == 'alias')
+		{
+			$value = str_replace(' ', '_', $value);
+		}
+
 		// Otherwise let the driver do the setting
 		$this->driver()->set($variable, $value);
 
@@ -499,7 +505,7 @@ abstract class Formo_Container_Core {
 		if (func_num_args() == 0)
 			return $this->_defaults['alias'];
 
-		$this->_defaults['alias'] = $alias;
+		$this->_defaults['alias'] = str_replace(' ', '_', $alias);
 		return $this;
 	}
 
@@ -512,6 +518,9 @@ abstract class Formo_Container_Core {
 	 */
 	public function find($alias)
 	{
+		// Always use underscores instead of spaces
+		$alias = str_replace(' ', '_', $alias);
+
 		// If an array wasn't entered, look everywhere
 		if ( ! is_array($alias))
 		{
