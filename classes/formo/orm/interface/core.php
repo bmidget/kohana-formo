@@ -8,5 +8,5 @@
 interface Formo_ORM_interface_Core {
 
 	public function pre_render();
-
+	public function set_field(Formo_Container $field, $value);
 }

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_ORM_Kohana_Core extends Formo_ORM {
+abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 	protected $form;
 	public $model;
@@ -14,6 +14,8 @@ class Formo_ORM_Kohana_Core extends Formo_ORM {
 	// Validation items
 	protected $rules = array();
 	protected $labels = array();
+	// Formo meta data from the model
+	protected $formo = array();
 	
 	protected $fields = array();
 	protected $skip_fields = array();
@@ -34,30 +36,43 @@ class Formo_ORM_Kohana_Core extends Formo_ORM {
 			// Create the array
 			$options = array();
 
-			// Fetch the validation key names from the config file
-			$validation_keys = $this->config()->validation_keys;
-
-			// Look for validation rules as defined by the config file
-			foreach ($validation_keys as $key => $value)
+			if (isset($this->rules[$alias]))
 			{
-				// If they are using the assumed names, do nothing
-				if ($key === $value)
-					continue;
-
-				// Only grab the proper validation settings from field definition
-				$options[$key] = ( ! empty($options[$value]))
-					? $options[$value]
-					: array();
-
-				// No need to carry duplicates for a rule
-				unset($options[$value]);
+				$rules = array();
+				foreach ($this->rules[$alias] as $callback => $rule)
+				{
+					// Set up the rules array
+					$rules[$callback] = $rule;
+				}
 				
-				// Determine the field type
-				$field_type = $this->field_type($alias);
+				// Properly merge rules in to the options array
+				$options += array('rules' => $rules);
 			}
+			
+			if ( ! empty($this->formo[$alias]))
+			{
+				// Merge field-specific formo meta data to the options array
+				$options += $this->formo[$alias];
+			}
+
+			if (empty($options['driver']))
+			{
+				// Default to the default driver
+				$options['driver'] = $this->config()->drivers['default'];
+			}
+
+			$this->form
+				->add($alias, $options);
 		}
+		
+		return $this->form;
 	}
+
+	public function set_field(Formo_Container $field, $value)
+	{
 	
+	}
+
 	/**
 	 * Determine the field type for a table field
 	 * 
@@ -113,6 +128,12 @@ class Formo_ORM_Kohana_Core extends Formo_ORM {
 		// Then load the validate definitions
 		$this->rules = $this->model->rules();
 		$this->labels = $this->model->labels();
+		
+		if (isset($this->model->_formo))
+		{
+			// The formo meta data
+			$this->formo = $this->model->_formo;
+		}
 	}
 
 	/**
@@ -136,5 +157,10 @@ class Formo_ORM_Kohana_Core extends Formo_ORM {
 			? $this->config()->drivers[$class]
 			// Otherwise return the genral form default driver
 			: $this->form->get('config')->default_driver;
+	}
+	
+	public function pre_render()
+	{
+	
 	}
 }
