@@ -266,19 +266,23 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		$alias = $field->alias();
 		$in_model = TRUE;
 
-		if ( ! array_key_exists($alias, $this->model->as_array()) AND ! isset($this->belongs_to['definitions'][$alias]))
+		if (
+				! array_key_exists($alias, $this->model->as_array())
+				AND ! isset($this->belongs_to['definitions'][$alias])
+				AND ! isset($this->has_many['definitions'][$alias])
+			)
 			// Don't add fields that aren't in the model
 			return;
 
 		if (isset($this->has_many['definitions'][$alias]))
 		{
 			// Remove any relationships that have been removed
-			foreach ($this->model->$alias as $row)
+			foreach ($this->model->$alias->find_all() as $row)
 			{
 				$primary_key = $row->primary_key();
 				if ( ! in_array($primary_key, $value))
 				{
-					$this->model->remove($row);
+					$this->model->remove($alias, $row);
 				}
 			}
 
@@ -381,7 +385,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @param mixed array & $options
 	 * @return void
 	 */
-	protected function add_options(ORM $query, array & $options)
+	protected function add_options($alias, ORM $query, array & $options)
 	{
 		// First check to see if there are any query options to limit the records
 		if ($limit = $this->form->$alias->get('records'))
@@ -515,10 +519,24 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				continue;
 
 			$options = array();
-			$this->add_options($query, $options);
+			$this->add_options($alias, $query, $options);
 
 			// Set the options in the field object
 			$this->form->$alias->set('options', $options['options']);
+			
+			// Determine values for has_many relationships at pre_render time
+			if (isset($this->has_many['definitions'][$alias]))
+			{
+				$values = array();
+				foreach ($this->model->$alias->find_all() as $row)
+				{
+					$primary_key = $row->primary_key();
+					// Add the value
+					$values[] = $row->$primary_key;
+				}
+				
+				$this->form->$alias->val($values);
+			}
 		}
 	}
 }
