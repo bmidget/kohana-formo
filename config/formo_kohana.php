@@ -13,8 +13,4 @@ return array
 		'has_one'    => 'select',
 		'default'    => 'text',
 	),
-	'validation_keys' => array
-	(
-		'rules' => 'rules',
-	),
 );
