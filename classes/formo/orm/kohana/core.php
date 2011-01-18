@@ -260,6 +260,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 */
 	public function set_field(Formo_Container $field, $value)
 	{
+		// Empty values should be NULL
+		($value === '' AND $value = NULL);
+
 		$alias = $field->alias();
 		$in_model = TRUE;
 
