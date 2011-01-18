@@ -2,42 +2,144 @@
 
 abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
+	/**
+	 * A parent form or subform
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $form;
+
+	/**
+	 * The model associated with the form
+	 *
+	 * @var mixed
+	 * @access public
+	 */
 	public $model;
-	// Config definition from forno_kohana.php
+
+	/**
+	 * Config definition from forno_kohana.php
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $config;
 
-	// Relationship items
+	/**
+	 * Names of relationship fields
+	 *
+	 * (default value: array('has_many', 'belongs_to', 'has_one'))
+	 *
+	 * @var array
+	 * @access protected
+	 * @static
+	 */
 	protected static $relationship_types = array('has_many', 'belongs_to', 'has_one');
-	// Current relationships
+
+	/**
+	 * Tracks field names that have relationships
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $relational_fields = array();
+
+	/**
+	 * Has One relationships from model
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $has_one = array
 	(
-		'definition' => array(),
+		'definitions' => array(),
 		'foreign_keys' => array(),
 	);
+
+	/**
+	 * Belongs To relationships from model
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $belongs_to = array
 	(
-		'definition' => array(),
+		'definitions' => array(),
 		'foreign_keys' => array(),
 	);
+
+	/**
+	 * Has Many relationships from model
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $has_many = array
 	(
-		'definition' => array(),
+		'definitions' => array(),
 		'foreign_keys' => array(),
 	);
 
-	// Validation items
+	/**
+	 * Rules definitions from model
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $rules = array();
-	// Labes from model
+
+	/**
+	 * Label definitions from model
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $labels = array();
-	// Formo meta data from the model
+
+	/**
+	 * $_formo array from model
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $formo = array();
 
-	// Fields to use
+	/**
+	 * Fields to use
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $fields = array();
-	// Fields to skip
+
+	/**
+	 * Fields to skip
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $skip_fields = array();
 
+	/**
+	 * __construct function.
+	 *
+	 * @access public
+	 * @param mixed $form
+	 * @return void
+	 */
 	public function __construct($form)
 	{
 		$this->form = $form;
@@ -45,7 +147,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 	/**
 	 * Load fields into the form
-	 * 
+	 *
 	 * @access public
 	 * @param mixed ORM $model
 	 * @param mixed array $fields. (default: NULL)
@@ -64,7 +166,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$relational_field = FALSE;
 			// Create the array
 			$options = array();
-			
+
+			// The default is the value from the table
+			$options['value'] = $this->model->$alias;
 			// Add meta data for the field
 			$this->add_meta($alias, $options);
 			// Add rules from rules definition in model
@@ -81,15 +185,15 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$this->form
 				->add($alias, $options);
 		}
-		
+
 		$this->add_has_many();
 
 		return $this->form;
 	}
-	
+
 	/**
 	 * Add rules to field
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed array & $options
@@ -111,10 +215,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		// Properly merge rules in to the options array
 		$options += array('rules' => $rules);
 	}
-	
+
 	/**
 	 * Add meta data defined in model's $_formo array to applicable fields
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed array & $options
@@ -127,14 +231,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$options += $this->formo[$alias];
 		}
 	}
-	
+
 	/**
 	 * Add the correct alias if it isn't already defined
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed array & $options
-	 * @return void
+	 * @return string
 	 */
 	protected function add_alias($alias, array & $options)
 	{
@@ -142,16 +246,63 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			$options['alias'] = $alias;
 		}
+
+		return $options['alias'];
 	}
 
+	/**
+	 * Set all field's values to correspond with formo values
+	 *
+	 * @access public
+	 * @param mixed Formo $field
+	 * @param mixed $value
+	 * @return object
+	 */
 	public function set_field(Formo_Container $field, $value)
 	{
+		$alias = $field->alias();
+		$in_model = TRUE;
 
+		if ( ! array_key_exists($alias, $this->model->as_array()) AND ! isset($this->belongs_to['definitions'][$alias]))
+			// Don't add fields that aren't in the model
+			return;
+
+		if (isset($this->has_many['definitions'][$alias]))
+		{
+			// Remove any relationships that have been removed
+			foreach ($this->model->$alias as $row)
+			{
+				$primary_key = $row->primary_key();
+				if ( ! in_array($primary_key, $value))
+				{
+					$this->model->remove($row);
+				}
+			}
+
+			foreach ($value as $_value)
+			{
+				$record = ORM::factory($this->has_many['definitions'][$alias]['model'], $_value);
+				$this->model->add($alias, $record);
+			}
+
+			return;
+		}
+
+		if (isset($this->belongs_to['definitions'][$alias]))
+		{
+			$field = $this->belongs_to['definitions'][$alias]['foreign_key'];
+			$this->model->$field = $value;
+
+			return;
+		}
+
+		// By default, simply set the value of the field to the form field value
+		$this->model->$alias = $value;
 	}
 
 	/**
 	 * Add relational data to belongs_to fields
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed array & $options
@@ -167,7 +318,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		$field_alias = $this->belongs_to['foreign_keys'][$alias];
 
 		// Add the alias if it wasn't already explicitly defined
-		$this->add_alias($field_alias, $options);
+		$_alias = $this->add_alias($field_alias, $options);
 
 		if (empty($options['driver']))
 		{
@@ -176,32 +327,36 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				? $this->config->drivers['belongs_to']
 				: 'select';
 		}
+
+		// Add to relational_fields array
+		$this->relational_fields[$_alias] = ORM::factory($this->belongs_to['definitions'][$field_alias]['model']);
 		
-		// Load options
-		$query = ORM::factory($this->belongs_to['definition'][$field_alias]['model']);
-		$this->add_options($query, $options);
+		// Also determine the value
+		if ( ! isset($options['value']))
+		{
+			$options['value'] = $this->model->$alias;
+		}
 
 		return;
 	}
-	
+
 	/**
 	 * Add has_many relationships to form
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
 	protected function add_has_many()
 	{
-		foreach ($this->has_many['definition'] as $alias => $values)
+		foreach ($this->has_many['definitions'] as $alias => $values)
 		{
 			$options = array();
 
 			$this->add_meta($alias, $options);
-			// First fetch all the avaliable options
-			$opts = array();
+			$_alias = $this->add_alias($alias, $options);
 
-			$query = ORM::factory($this->has_many['definition'][$alias]['model']);
-			$this->add_options($query, $options);
+			// Add to relational fields array
+			$this->relational_fields[$_alias] = ORM::factory($this->has_many['definitions'][$alias]['model']);
 
 			if (empty($options['driver']))
 			{
@@ -214,10 +369,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$this->form->add($alias, $options);
 		}
 	}
-	
+
 	/**
 	 * Add options for relational fields (checkboxes, radios, select options)
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed ORM $query
 	 * @param mixed array & $options
@@ -231,10 +386,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			$primary_key = $row->primary_key();
 			$primary_val = $row->primary_val();
-			
+
 			$opts[$row->{$primary_val}] = $row->{$primary_key};
 		}
-		
+
 		// Add the options to the field
 		$options['options'] = $opts;
 	}
@@ -294,14 +449,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		// Pull out relationship data
 		foreach (self::$relationship_types as $type)
 		{
-			$this->{$type}['definition'] = $this->model->$type();
+			$this->{$type}['definitions'] = $this->model->$type();
 
-			foreach ($this->{$type}['definition'] as $key => $values)
+			foreach ($this->{$type}['definitions'] as $key => $values)
 			{
 				$value = (isset($values['far_key']))
 					? $values['far_key']
 					: $values['foreign_key'];
-				
+
 				$this->{$type}['foreign_keys'][$value] = $key;
 			}
 		}
@@ -336,8 +491,25 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			: $this->form->get('config')->default_driver;
 	}
 
+	/**
+	 * Fills relational fields with relations to choose from
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function pre_render()
 	{
+		foreach ($this->relational_fields as $alias => $query)
+		{
+			if ($this->form->$alias->get('render') === FALSE OR $this->form->$alias->get('ignore') === TRUE)
+				// Dont' load fields if the field is ignored or not rendered
+				continue;
 
+			$options = array();
+			$this->add_options($query, $options);
+
+			// Set the options in the field object
+			$this->form->$alias->set('options', $options['options']);
+		}
 	}
 }
