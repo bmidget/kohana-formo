@@ -13,7 +13,6 @@ class Formo_Driver_Radios_Core extends Formo_Driver {
 	{
 		foreach ($this->field->get('options') as $label => $options)
 		{
-			echo Kohana::debug($options);
 			$this->field->append(Formo::field($label, 'radio', $options));
 		}
 	}
