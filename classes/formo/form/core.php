@@ -211,7 +211,7 @@ class Formo_Form_Core extends Formo_Validator {
 			}
 
 			// Fetch the namespace for this form
-			$namespaced_input = Arr::get($input, $this->alias(), array());
+			$namespaced_input = Arr::get($input, $this->name(), array());
 
 			if (isset($namespaced_input[$input_key]))
 			{
