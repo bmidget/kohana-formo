@@ -383,6 +383,12 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 */
 	protected function add_options(ORM $query, array & $options)
 	{
+		// First check to see if there are any query options to limit the records
+		if ($limit = $this->form->$alias->get('records'))
+		{
+			$query = call_user_func($limit, $query);
+		}
+
 		// Create the array
 		$opts = array();
 		foreach ($query->find_all() as $row)
