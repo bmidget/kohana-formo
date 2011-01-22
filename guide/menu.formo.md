@@ -14,5 +14,6 @@
 	- [Validation](formo.validation)
 	- [Validation errors](formo.errors)
 	- [Ordering](formo.ordering)
+	- [ORM Integration](formo.orm)
 	- [Jelly Integration](formo.jelly)
 	- [HTML Type](formo.html_type)
