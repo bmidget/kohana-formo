@@ -132,6 +132,17 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @access protected
 	 */
 	protected $skip_fields = array();
+	
+	/**
+	 * Keeps track of field relationships for unloaded records because of K3's ORM limitation
+	 * that doesn't allow adding/removing relationships from unloaded records
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $habtm_relationships = array();
 
 	/**
 	 * __construct function.
@@ -249,7 +260,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 		return $options['alias'];
 	}
-
+	
 	/**
 	 * Set all field's values to correspond with formo values
 	 *
@@ -282,14 +293,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				$primary_key = $row->primary_key();
 				if ( ! in_array($primary_key, $value))
 				{
-					$this->model->remove($alias, $row);
+					$this->habtm_relationship($alias, 'remove', $row);
 				}
 			}
 
 			foreach ($value as $_value)
 			{
 				$record = ORM::factory($this->has_many['definitions'][$alias]['model'], $_value);
-				$this->model->add($alias, $record);
+				$this->habtm_relationship($alias, 'add', $record);
 			}
 
 			return;
@@ -305,6 +316,24 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 		// By default, simply set the value of the field to the form field value
 		$this->model->$alias = $value;
+	}
+
+	/**
+	 * Add/remove relationship to many-to-many fields. This is because ORM currently
+	 * does not support adding relationships to unloaded records
+	 * 
+	 * @access protected
+	 * @return void
+	 */
+	protected function habtm_relationship($alias, $method, $value)
+	{
+		// Save relationship changes to be run after save() method
+		$this->habtm_relationships[] = array
+		(
+			'alias'  => $alias,
+			'method' => $method,
+			'value'  => $value,
+		);
 	}
 
 	/**
@@ -502,6 +531,21 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			? $this->config()->drivers[$class]
 			// Otherwise return the genral form default driver
 			: $this->form->get('config')->default_driver;
+	}
+	
+	/**
+	 * Run add(), remove() on all many-to-many relationships. This is intended to be
+	 * run after saving the model
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function save_rel()
+	{
+		foreach ($this->habtm_relationships as $values)
+		{
+			$this->model->{$values['method']}($values['alias'], $values['value']);
+		}
 	}
 
 	/**
