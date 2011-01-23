@@ -138,16 +138,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Only do anything if the field has rules
 			return;
 
-		$_rules = array();
-		foreach ($rules as $name => $rule)
-		{
-			$_rules[] = array($name, $rule);
-		}
-
 		$this->validation()->label($obj->alias(), $obj->alias());
-		$this->validation()->rules($obj->alias(), $_rules);
+		$this->validation()->rules($obj->alias(), $rules);
 	}
-
+	
 	/**
 	 * Deterine whether data was sent
 	 *
