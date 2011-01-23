@@ -185,13 +185,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$relational_field = FALSE;
 			// Create the array
 			$options = array();
-
 			// The default is the value from the table
 			$options['value'] = $this->model->$alias;
 			// Add meta data for the field
 			$this->add_meta($alias, $options);
-			// Add rules from rules definition in model
-			$this->add_rules($alias, $options);
 			// If the field is a relational field, process it separately
 			$this->process_belongs_to($alias, $options);
 
@@ -207,35 +204,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 		$this->add_has_many();
 		
-		// Load the rules into the form after creating all the fields
-		$this->form->rules($this->rules);
-
 		return $this->form;
-	}
-
-	/**
-	 * Add rules to field
-	 *
-	 * @access protected
-	 * @param mixed $alias
-	 * @param mixed array & $options
-	 * @return void
-	 */
-	protected function add_rules($alias, array & $options)
-	{
-		if (empty($this->rules[$alias]))
-			// Only process fields associated rules
-			return;
-
-		$rules = array();
-		foreach ($this->rules[$alias] as $callback => $rule)
-		{
-			// Set up the rules array
-			$rules[$callback] = $rule;
-		}
-
-		// Properly merge rules in to the options array
-		$options += array('rules' => $rules);
 	}
 
 	/**
@@ -248,10 +217,20 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 */
 	protected function add_meta($alias, array & $options)
 	{
-		if ( ! empty($this->formo[$alias]))
+		$opts = array();
+		if ($settings = Arr::get($this->formo, $alias))
 		{
-			$options += $this->formo[$alias];
+			// First find formo settings for the field
+			$opts = $settings;
 		}
+		
+		if ($rules = Arr::get($this->rules, $alias))
+		{
+			// Then add rules to the options
+			$opts['rules'] = $rules;
+		}
+		
+		$options += $opts;
 	}
 
 	/**
@@ -495,9 +474,6 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 */
 	protected function load_meta()
 	{
-		// Then load the validate definitions
-		$this->read_validation();
-
 		// Pull out relationship data
 		foreach (self::$relationship_types as $type)
 		{
@@ -513,6 +489,8 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			}
 		}
 		
+		$this->rules = $this->model->rules();
+		
 		if (is_callable(array($this->model, 'formo')))
 		{
 			// The formo meta data
@@ -520,12 +498,6 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		}
 	}
 	
-	protected function read_validation()
-	{
-		$this->validation = $this->model->validation();
-		$this->rules = $this->model->rules();
-	}
-
 	/**
 	 * Determine which driver should be used
 	 *
