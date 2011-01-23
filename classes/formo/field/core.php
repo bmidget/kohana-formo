@@ -5,7 +5,7 @@
  *
  * @package  Formo
  */
-class Formo_Field_Core extends Formo_Validator {
+class Formo_Field_Core extends Formo_Validator_Field {
 
 	/**
 	 * Field-specific settings
@@ -48,9 +48,6 @@ class Formo_Field_Core extends Formo_Validator {
 		$orig_options = $options;
 		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 
-		// Add validation rules first
-		$this->add_rules($options);
-		
 		// Add all the options to the object
 		$this->load_options($options);
 
@@ -69,7 +66,7 @@ class Formo_Field_Core extends Formo_Validator {
 		// Render as the default render type
 		return (string) $this->render();
 	}
-
+	
 	/**
 	 * Overloaded sent method
 	 *
@@ -82,7 +79,7 @@ class Formo_Field_Core extends Formo_Validator {
 		// Always return whether the parent was sent
 		return $this->parent()->sent();
 	}
-
+	
 	/**
 	 * Overloaded message_file
 	 *

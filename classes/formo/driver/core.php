@@ -231,9 +231,6 @@ abstract class Formo_Driver_Core {
 		if (func_num_args() === 0)
 			return $this->get_val();
 
-		// Run pre_filters on the value
-		$this->run_pre_filters($value);
-
 		// Set the value
 		$this->set_val($value);
 
@@ -256,25 +253,6 @@ abstract class Formo_Driver_Core {
 			return $this->field->alias();
 
 		return $parent->alias().'['.$this->field->alias().']';
-	}
-
-	/**
-	 * Pre-filter field value
-	 *
-	 * @access protected
-	 * @param mixed & $value
-	 * @return void
-	 */
-	protected function run_pre_filters( & $value)
-	{
-		foreach ($this->field->get_filter('pre') as $filter)
-		{
-			// Resolve pseudo args
-			$this->field->pseudo_args($filter->args, array(':value' => $value));
-
-			// Run the filters
-			$value = $filter->execute();
-		}
 	}
 
 	/**

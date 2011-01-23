@@ -69,11 +69,14 @@ class Formo_Form_Core extends Formo_Validator {
 			$this->set('orm_config', $orm_file);
 		}
 		
-		// Add validation rules first
-		$this->add_rules($options);
+		// Run validator setup
+		$this->setup_validation();
 		
 		// Load the options
 		$this->load_options($options);
+		
+		// Add rules to validation object
+		$this->add_rules();
 	}
 
 	/**
@@ -112,6 +115,8 @@ class Formo_Form_Core extends Formo_Validator {
 		$field = Formo::field($options);
 
 		$this->append($field);
+		$this->add_rules($field);
+		$this->_validation->label($field->alias(), $field->alias());
 
 		return $this;
 	}
@@ -153,7 +158,7 @@ class Formo_Form_Core extends Formo_Validator {
 		return $this;
 	}
 	
-	public function preload(array $input)
+	public function values(array $input)
 	{
 		foreach ($input as $name => $value)
 		{
@@ -167,7 +172,7 @@ class Formo_Form_Core extends Formo_Validator {
 	}
 
 	/**
-	 * Load data, works automatcially with with get/post
+	 * Load data, works automatcially with with post
 	 *
 	 * @access public
 	 * @param mixed array $input. (default: NULL)
@@ -175,20 +180,8 @@ class Formo_Form_Core extends Formo_Validator {
 	 */
 	public function load(array $input = NULL)
 	{
-		($input === NULL AND $input = Arr::get($this->config, 'type', 'post'));
-
-		if (is_string($input))
-		{
-			switch ($input)
-			{
-				case 'get':
-					$input = $_GET;
-					break;
-				case 'post':
-				default:
-					$input = $_POST;
-			}
-		}
+		// Set input to $_POST if it's not explicitly definied
+		($input === NULL AND $input = $_POST);
 
 		if ($this->sent($input) === FALSE)
 			// Stop if input doesn't match the form's fields
@@ -211,7 +204,7 @@ class Formo_Form_Core extends Formo_Validator {
 			}
 
 			// Fetch the namespace for this form
-			$namespaced_input = Arr::get($input, $this->name(), array());
+			$namespaced_input = Arr::get($input, $this->alias(), array());
 
 			if (isset($namespaced_input[$input_key]))
 			{

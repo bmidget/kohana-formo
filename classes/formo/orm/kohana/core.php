@@ -25,6 +25,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @access protected
 	 */
 	protected $config;
+	
+	/**
+	 * The validation object from the model
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $validation;
 
 	/**
 	 * Names of relationship fields
@@ -198,6 +206,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		}
 
 		$this->add_has_many();
+		
+		// Load the rules into the form after creating all the fields
+		$this->form->rules($this->rules);
 
 		return $this->form;
 	}
@@ -485,8 +496,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	protected function load_meta()
 	{
 		// Then load the validate definitions
-		$this->rules = $this->model->rules();
-		$this->labels = $this->model->labels();
+		$this->read_validation();
 
 		// Pull out relationship data
 		foreach (self::$relationship_types as $type)
@@ -502,12 +512,18 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				$this->{$type}['foreign_keys'][$value] = $key;
 			}
 		}
-
-		if (isset($this->model->_formo))
+		
+		if (is_callable(array($this->model, 'formo')))
 		{
 			// The formo meta data
-			$this->formo = $this->model->_formo;
+			$this->formo = $this->model->formo();
 		}
+	}
+	
+	protected function read_validation()
+	{
+		$this->validation = $this->model->validation();
+		$this->rules = $this->model->rules();
 	}
 
 	/**

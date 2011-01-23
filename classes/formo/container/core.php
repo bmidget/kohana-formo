@@ -48,6 +48,7 @@ abstract class Formo_Container_Core {
 		'label'           => NULL,
 		'order'           => FALSE,
 		'type'            => NULL,
+		'rules'           => array(),
 	);
 
 	/**
@@ -64,7 +65,6 @@ abstract class Formo_Container_Core {
 
 	public function __isset($variable)
 	{
-
 		if (array_key_exists($variable, $this->_loaded))
 			return (bool) $this->_loaded[$variable];
 	}
@@ -202,7 +202,7 @@ abstract class Formo_Container_Core {
 	 * @param mixed $value. (default: NULL)
 	 * @return object
 	 */
-	public function load_options($option, $value = NULL)
+	protected function load_options($option, $value = NULL)
 	{
 		// Support array of options
 		if (is_array($option))
@@ -451,6 +451,12 @@ abstract class Formo_Container_Core {
 		foreach ($this->_defaults['fields'] as $field)
 		{
 			$alias = $field->alias();
+			
+			if ($field instanceof Formo_form)
+			{
+				$array[$alias] = $field->as_array($value);
+				continue;
+			}
 
 			// Make concession for grabbing 'value' as that one characteristic
 			if ($value == 'value')
