@@ -38,7 +38,6 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	protected function setup_validation()
 	{
 		$this->_validation = new Validation(array());
-		$this->_validation->label('_form', '_form');
 	}
 
 	/**
@@ -52,15 +51,19 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function __call($method, $args)
 	{
 		if (is_callable(array($this->_validation, $method)))
+		{
 			// Run validation methods inside the validation object
-			return call_user_func_array(array($this->_validation, $method), $args);
+			call_user_func_array(array($this->_validation, $method), $args);
+			
+			return $this;
+		}
 
 		return parent::__call($method, $args);
 	}
-	
+
 	/**
 	 * Access validation object
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -93,16 +96,23 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		if ($require_sent === TRUE AND $this->sent() === FALSE)
 			// If form wasn't sent, and sent is required, doesn't pass validation
 			return FALSE;
-		
+
 		// Tracks if there were errors in any subforms
 		$subform_errors = FALSE;
 		// Tracks if there were any errors inside this form
 		$errors = FALSE;
-		
+
 		// Build the array
 		$array = array();
+
 		foreach ($this->fields() as $field)
 		{
+			if ($field->get('render') === FALSE OR $field->get('ignore') === TRUE)
+				continue;
+
+			// Add the rules
+			$this->add_rules($field);
+
 			if ($field instanceof Formo_Form)
 			{
 				if ( ! $field->validate($require_sent))
@@ -118,6 +128,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			}
 		}
 
+		// Add rules for this form as well
+		$this->add_rules();
+
 		$array[$this->alias()] = $this->val();
 
 		$this->_validation = $this->_validation->copy($array);
@@ -128,8 +141,15 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			: FALSE;
 	}
 
+	/**
+	 * Add rules to the validation object
+	 * 
+	 * @access protected
+	 * @param mixed Formo_Container $field. (default: NULL)
+	 * @return void
+	 */
 	protected function add_rules(Formo_Container $field = NULL)
-	{		
+	{
 		$obj = ($field !== NULL)
 			? $field
 			: $this;
@@ -142,6 +162,51 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		$this->validation()->rules($obj->alias(), $rules);
 	}
 	
+	/**
+	 * Store multiple validation rules
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed array $rules
+	 * @return object
+	 */
+	public function rules($field, array $rules)
+	{
+		$this->val_field($field)->merge('rules', $rules);
+		
+		return $this;
+	}
+	
+	/**
+	 * Store a single validation rule
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $rule
+	 * @param mixed array $params. (default: NULL)
+	 * @return object
+	 */
+	public function rule($field, $rule, array $params = NULL)
+	{
+		$new_rule = array(array($rule, $params));
+		$this->val_field($field)->merge('rules', $new_rule);
+		
+		return $this;
+	}
+	
+	protected function val_field($field)
+	{
+		if ($field instanceof Formo_Container)
+			return $field;
+		
+		if ($field == $this->alias())
+			return $this;
+
+		return $field !== NULL
+			? $this->$field
+			: $this;
+	}
+
 	/**
 	 * Deterine whether data was sent
 	 *

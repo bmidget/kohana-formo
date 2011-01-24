@@ -74,9 +74,6 @@ class Formo_Form_Core extends Formo_Validator {
 		
 		// Load the options
 		$this->load_options($options);
-		
-		// Add rules to validation object
-		$this->add_rules();
 	}
 
 	/**
@@ -115,8 +112,6 @@ class Formo_Form_Core extends Formo_Validator {
 		$field = Formo::field($options);
 
 		$this->append($field);
-		$this->add_rules($field);
-		$this->_validation->label($field->alias(), $field->alias());
 
 		return $this;
 	}

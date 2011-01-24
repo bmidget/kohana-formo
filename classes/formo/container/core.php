@@ -193,6 +193,30 @@ abstract class Formo_Container_Core {
 
 		return $this;
 	}
+	
+	/**
+	 * Merge new array with original array
+	 * 
+	 * @access public
+	 * @param mixed $option
+	 * @param mixed array $new_options
+	 * @return void
+	 */
+	public function merge($option, array $new_options)
+	{
+		$original_option = $this->get($option);
+		
+		if ( ! is_array($original_option))
+		{
+			throw new Kohana_Exception('Merged option must be an array');
+		}
+		
+		$set_options = ($original_option)
+			? array_merge($original_option, $new_options)
+			: $new_options;
+
+		$this->set($option, $set_options);
+	}
 
 	/**
 	 * Load construct options

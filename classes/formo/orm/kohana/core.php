@@ -25,10 +25,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @access protected
 	 */
 	protected $config;
-	
+
 	/**
 	 * The validation object from the model
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -140,17 +140,49 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @access protected
 	 */
 	protected $skip_fields = array();
-	
+
 	/**
 	 * Keeps track of field relationships for unloaded records because of K3's ORM limitation
 	 * that doesn't allow adding/removing relationships from unloaded records
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
 	protected $habtm_relationships = array();
+	
+	/**
+	 * Keeps track of field relationships for unloaded records because of K3's ORM limitation
+	 * that doesn't allow add()/remove() on non-habtml fields
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $has_many_relationships = array();
+
+	/**
+	 * Keeps track of field relationships for unloaded records because of K3's ORM limitation
+	 * that doesn't allow add()/remove() on non-habtml fields
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $has_one_relationships = array();
+
+	/**
+	 * Track whether pre_render has been run
+	 *
+	 * (default value: FALSE)
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $pre_render_run = FALSE;
 
 	/**
 	 * __construct function.
@@ -187,10 +219,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$options = array();
 			// The default is the value from the table
 			$options['value'] = $this->model->$alias;
+			// If the field is a belongs_to field, do some extra processing
+			$this->process_belongs_to($alias, $options);
 			// Add meta data for the field
 			$this->add_meta($alias, $options);
-			// If the field is a relational field, process it separately
-			$this->process_belongs_to($alias, $options);
 
 			if (empty($options['driver']))
 			{
@@ -202,8 +234,8 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				->add($alias, $options);
 		}
 
-		$this->add_has_many();
-		
+		$this->add_has_relationships();
+
 		return $this->form;
 	}
 
@@ -217,20 +249,24 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 */
 	protected function add_meta($alias, array & $options)
 	{
+		$alias = ( ! empty($options['alias']))
+			? $options['alias']
+			: $alias;
+
 		$opts = array();
 		if ($settings = Arr::get($this->formo, $alias))
 		{
 			// First find formo settings for the field
 			$opts = $settings;
 		}
-		
+
 		if ($rules = Arr::get($this->rules, $alias))
 		{
 			// Then add rules to the options
 			$opts['rules'] = $rules;
 		}
-		
-		$options += $opts;
+
+		$options = array_merge($options, $opts);
 	}
 
 	/**
@@ -250,7 +286,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 		return $options['alias'];
 	}
-	
+
 	/**
 	 * Set all field's values to correspond with formo values
 	 *
@@ -275,7 +311,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			// Don't add fields that aren't in the model
 			return;
 
-		if (isset($this->has_many['definitions'][$alias]))
+		// First check is has_many
+		if ($definitions = Arr::get($this->has_many['definitions'], $alias) AND $definitions['through'] === NULL)
+		{
+			$this->has_many_relationship($alias, $value);
+			return;
+		}
+		// Then habtm
+		elseif ($definitions)
 		{
 			// Remove any relationships that have been removed
 			foreach ($this->model->$alias->find_all() as $row)
@@ -289,16 +332,28 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 			foreach ($value as $_value)
 			{
-				$record = ORM::factory($this->has_many['definitions'][$alias]['model'], $_value);
+				$record = ORM::factory($definitions['model'], $_value);
 				$this->habtm_relationship($alias, 'add', $record);
 			}
 
 			return;
 		}
-
-		if (isset($this->belongs_to['definitions'][$alias]))
+		
+		if ($definitions = Arr::get($this->has_one['definitions'], $alias))
 		{
-			$field = $this->belongs_to['definitions'][$alias]['foreign_key'];
+			$record = $this->model->$alias;
+
+			if ($record->pk() != $value)
+			{
+				$this->has_one_relationship($alias, $value);
+			}
+
+			return;
+		}
+		
+		if ($definitions = Arr::get($this->belongs_to['definitions'], $alias))
+		{
+			$field = $definitions['foreign_key'];
 			$this->model->$field = $value;
 
 			return;
@@ -311,7 +366,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	/**
 	 * Add/remove relationship to many-to-many fields. This is because ORM currently
 	 * does not support adding relationships to unloaded records
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -322,6 +377,26 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		(
 			'alias'  => $alias,
 			'method' => $method,
+			'value'  => $value,
+		);
+	}
+	
+	protected function has_many_relationship($alias, $values)
+	{
+		// Save relationship changes to be run after save() method
+		$this->has_many_relationships[] = array
+		(
+			'alias' => $alias,
+			'value' => $values,
+		);
+	}
+
+	protected function has_one_relationship($alias, $value)
+	{
+		// Save relationship changes to be run after save() method
+		$this->has_one_relationships[] = array
+		(
+			'alias'  => $alias,
 			'value'  => $value,
 		);
 	}
@@ -356,7 +431,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 		// Add to relational_fields array
 		$this->relational_fields[$_alias] = ORM::factory($this->belongs_to['definitions'][$field_alias]['model']);
-		
+
 		// Also determine the value
 		if ( ! isset($options['value']))
 		{
@@ -367,32 +442,52 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	}
 
 	/**
-	 * Add has_many relationships to form
+	 * Add has_one relationships to form
 	 *
 	 * @access protected
 	 * @return void
 	 */
-	protected function add_has_many()
+	protected function add_has_one()
 	{
-		foreach ($this->has_many['definitions'] as $alias => $values)
+		foreach ($this->has_one['definitions'] as $alias => $value)
 		{
 			$options = array();
 
 			$this->add_meta($alias, $options);
 			$_alias = $this->add_alias($alias, $options);
 
-			// Add to relational fields array
-			$this->relational_fields[$_alias] = ORM::factory($this->has_many['definitions'][$alias]['model']);
+			// Add relational fields array
+			$this->relational_fields[$_alias] = ORM::factory($this->has_one['definitions'][$alias]['model']);
+		}
+	}
 
-			if (empty($options['driver']))
+	/**
+	 * Add has_many and has_one relationships to form
+	 *
+	 * @access protected
+	 * @return void
+	 */
+	protected function add_has_relationships()
+	{
+		foreach (array('has_many', 'has_one') as $type)
+		{
+			foreach ($this->{$type}['definitions'] as $alias => $value)
 			{
-				// If the driver hasn't already been specified, specify it
-				$options['driver'] = (isset($this->config->drivers['has_many']))
-					? $this->config->drivers['has_many']
-					: 'checkboxes';
-			}
+				$options = array();
 
-			$this->form->add($alias, $options);
+				$this->add_meta($alias, $options);
+				$_alias = $this->add_alias($alias, $options);
+
+				// Add to relational fields array
+				$this->relational_fields[$_alias] = ORM::factory($this->{$type}['definitions'][$alias]['model']);
+
+				if (empty($options['driver']))
+				{
+					$options['driver'] = Arr::get($this->config->drivers, $type, 'checkboxes');
+				}
+
+				$this->form->add($alias, $options);
+			}
 		}
 	}
 
@@ -488,16 +583,16 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 				$this->{$type}['foreign_keys'][$value] = $key;
 			}
 		}
-		
+
 		$this->rules = $this->model->rules();
-		
+
 		if (is_callable(array($this->model, 'formo')))
 		{
 			// The formo meta data
 			$this->formo = $this->model->formo();
 		}
 	}
-	
+
 	/**
 	 * Determine which driver should be used
 	 *
@@ -520,11 +615,11 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			// Otherwise return the genral form default driver
 			: $this->form->get('config')->default_driver;
 	}
-	
+
 	/**
 	 * Run add(), remove() on all many-to-many relationships. This is intended to be
 	 * run after saving the model
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -534,16 +629,68 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			$this->model->{$values['method']}($values['alias'], $values['value']);
 		}
+		
+		foreach ($this->has_many_relationships as $values)
+		{
+			$alias = $values['alias'];
+			$foreign_key = $this->has_many['definitions'][$alias]['foreign_key'];
+			$model = $this->has_many['definitions'][$alias]['model'];
+			$primary_key = ORM::factory($model)->primary_key();
+			
+			$table_name = ORM::factory($model)->table_name();
+			
+			// Remove the appropriate records
+			$remove_query = DB::update($table_name)
+				->set(array($foreign_key => NULL))
+				->where($foreign_key, '=', $this->model->pk());
+			
+			if ($values['value'])
+			{
+				// Add the applicable fields if there is a value
+				$remove_query->where($primary_key, 'NOT IN', (array) $values['value']);
+
+				// Add the appropriate records
+				$add_query = DB::update($table_name)
+					->set(array($foreign_key => $this->model->pk()))
+					->where($primary_key, 'IN', (array) $values['value'])
+					->execute();
+			}
+			
+			$remove_query->execute();
+		}
+
+		foreach ($this->has_one_relationships as $values)
+		{
+			$alias = $values['alias'];
+			$value = $values['value'];
+
+			$foreign_key = $this->has_one['definitions'][$alias]['foreign_key'];
+			$model = $this->has_one['definitions'][$alias]['model'];
+
+			if ($this->model->$alias->pk() != $value)
+			{
+				$this->model->$alias->$foreign_key = NULL;
+				$this->model->$alias->save();
+
+				$record = ORM::factory($model, $value);
+				$record->$foreign_key = $this->model->pk();
+				$record->save();
+			}
+		}
 	}
 
 	/**
-	 * Fills relational fields with relations to choose from
+	 * Fills relational fields with relation options to choose from
 	 *
 	 * @access public
 	 * @return void
 	 */
 	public function pre_render()
 	{
+		if ($this->pre_render_run === TRUE)
+			// Don't run this method more than once per form
+			return;
+
 		foreach ($this->relational_fields as $alias => $query)
 		{
 			if ($this->form->$alias->get('render') === FALSE OR $this->form->$alias->get('ignore') === TRUE)
@@ -555,9 +702,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 			// Set the options in the field object
 			$this->form->$alias->set('options', $options['options']);
-			
+
 			// Determine values for has_many relationships at pre_render time
-			if (isset($this->has_many['definitions'][$alias]))
+			if ($definitions = Arr::get($this->has_many['definitions'], $alias))
 			{
 				$values = array();
 				foreach ($this->model->$alias->find_all() as $row)
@@ -566,9 +713,17 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 					// Add the value
 					$values[] = $row->$primary_key;
 				}
-				
+
 				$this->form->$alias->val($values);
 			}
+			
+			if ($definitions = Arr::get($this->has_one['definitions'], $alias))
+			{
+				$this->form->$alias->val($this->model->$alias->pk());
+			}
 		}
+
+		// Track that this method has been run
+		$this->pre_render_run = TRUE;
 	}
 }
