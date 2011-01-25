@@ -1,5 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Abstract Formo_ORM_Kohana_Core class.
+ *
+ * @package  Formo
+ */
 abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 	/**
@@ -151,7 +156,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @access protected
 	 */
 	protected $habtm_relationships = array();
-	
+
 	/**
 	 * Keeps track of field relationships for unloaded records because of K3's ORM limitation
 	 * that doesn't allow add()/remove() on non-habtml fields
@@ -338,7 +343,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 			return;
 		}
-		
+
 		if ($definitions = Arr::get($this->has_one['definitions'], $alias))
 		{
 			$record = $this->model->$alias;
@@ -350,7 +355,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 			return;
 		}
-		
+
 		if ($definitions = Arr::get($this->belongs_to['definitions'], $alias))
 		{
 			$field = $definitions['foreign_key'];
@@ -380,7 +385,15 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			'value'  => $value,
 		);
 	}
-	
+
+	/**
+	 * Add has_many relationahips to track
+	 *
+	 * @access protected
+	 * @param mixed $alias
+	 * @param mixed $values
+	 * @return void
+	 */
 	protected function has_many_relationship($alias, $values)
 	{
 		// Save relationship changes to be run after save() method
@@ -391,6 +404,14 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		);
 	}
 
+	/**
+	 * Add has_one relationships to track
+	 *
+	 * @access protected
+	 * @param mixed $alias
+	 * @param mixed $value
+	 * @return void
+	 */
 	protected function has_one_relationship($alias, $value)
 	{
 		// Save relationship changes to be run after save() method
@@ -629,21 +650,21 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			$this->model->{$values['method']}($values['alias'], $values['value']);
 		}
-		
+
 		foreach ($this->has_many_relationships as $values)
 		{
 			$alias = $values['alias'];
 			$foreign_key = $this->has_many['definitions'][$alias]['foreign_key'];
 			$model = $this->has_many['definitions'][$alias]['model'];
 			$primary_key = ORM::factory($model)->primary_key();
-			
+
 			$table_name = ORM::factory($model)->table_name();
-			
+
 			// Remove the appropriate records
 			$remove_query = DB::update($table_name)
 				->set(array($foreign_key => NULL))
 				->where($foreign_key, '=', $this->model->pk());
-			
+
 			if ($values['value'])
 			{
 				// Add the applicable fields if there is a value
@@ -655,7 +676,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 					->where($primary_key, 'IN', (array) $values['value'])
 					->execute();
 			}
-			
+
 			$remove_query->execute();
 		}
 
@@ -716,7 +737,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 
 				$this->form->$alias->val($values);
 			}
-			
+
 			if ($definitions = Arr::get($this->has_one['definitions'], $alias))
 			{
 				$this->form->$alias->val($this->model->$alias->pk());

@@ -194,6 +194,13 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		return $this;
 	}
 	
+	/**
+	 * Return the correct field for adding validation
+	 * 
+	 * @access protected
+	 * @param mixed $field
+	 * @return void
+	 */
 	protected function val_field($field)
 	{
 		if ($field instanceof Formo_Container)
