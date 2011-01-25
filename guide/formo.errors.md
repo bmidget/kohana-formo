@@ -36,8 +36,8 @@ In this example, assume every field has the rule 'not_empty'.
 
 When the form submits empty, the following errors exist:
 
-	$errors = $form->errors('validate');
-	$errors2 = $address->errors('validate');
+	$errors = $form->errors();
+	$errors2 = $address->errors();
 
 Returns
 

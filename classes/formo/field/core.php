@@ -66,7 +66,7 @@ class Formo_Field_Core extends Formo_Validator_Field {
 		// Render as the default render type
 		return (string) $this->render();
 	}
-	
+
 	/**
 	 * Overloaded sent method
 	 *
@@ -78,20 +78,6 @@ class Formo_Field_Core extends Formo_Validator_Field {
 	{
 		// Always return whether the parent was sent
 		return $this->parent()->sent();
-	}
-	
-	/**
-	 * Overloaded message_file
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function message_file()
-	{
-		// Always return the parent's message file if this one's isn't defined
-		return $this->get('message_file')
-			? $this->get('message_file')
-			: $this->parent()->message_file();
 	}
 
 }

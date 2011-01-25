@@ -54,7 +54,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			// Run validation methods inside the validation object
 			call_user_func_array(array($this->_validation, $method), $args);
-			
+
 			return $this;
 		}
 
@@ -143,7 +143,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 
 	/**
 	 * Add rules to the validation object
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed Formo_Container $field. (default: NULL)
 	 * @return void
@@ -161,10 +161,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		$this->validation()->label($obj->alias(), $obj->alias());
 		$this->validation()->rules($obj->alias(), $rules);
 	}
-	
+
 	/**
 	 * Store multiple validation rules
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $field
 	 * @param mixed array $rules
@@ -173,13 +173,13 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function rules($field, array $rules)
 	{
 		$this->val_field($field)->merge('rules', $rules);
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Store a single validation rule
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $field
 	 * @param mixed $rule
@@ -190,13 +190,13 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	{
 		$new_rule = array(array($rule, $params));
 		$this->val_field($field)->merge('rules', $new_rule);
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Return the correct field for adding validation
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $field
 	 * @return void
@@ -205,7 +205,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	{
 		if ($field instanceof Formo_Container)
 			return $field;
-		
+
 		if ($field == $this->alias())
 			return $this;
 
@@ -257,7 +257,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			return $this;
 		}
 
-		return Arr::get($this->validation()->errors('validate'), 'form');
+		return Arr::get($this->validation()->errors(), 'form');
 	}
 
 	/**
@@ -269,7 +269,20 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	 */
 	public function errors($file = NULL, $translate = TRUE)
 	{
+		if (func_num_args() === 0)
+		{
+			$file = $this->message_file();
+		}
+
 		return $this->_validation->errors($file, $translate);
+	}
+
+	// Determine which message file to use
+	protected function message_file()
+	{
+		return $this->get('message_file')
+			? $this->get('message_file')
+			: Kohana::config('formo')->message_file;
 	}
 
 }
