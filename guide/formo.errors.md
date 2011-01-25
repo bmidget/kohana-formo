@@ -10,9 +10,7 @@ In addition to this, each form/subform tracks all the errors inside it.
 ## Setting and retrieving error
 The following adds an error message to a field or form. The first parameter is the message and the second optional parameter is whether to translate the message.
 
-	// Translate the message
-	$field->error('error_msg', TRUE);
-	// Just attach the message
+	// Attach an error message
 	$field->error('This is wrong, wrong wrong');
 
 You retrieve the error with
@@ -22,7 +20,7 @@ You retrieve the error with
 ## Form/subform errors
 You can retrieve an array of a form or subforms errors errors with
 
-	$form->errors();
+	$form->errors([$file], [$translate = TRUE]);
 
 The error messages are hierarchal. Let's explore a form with a subform.
 
@@ -38,8 +36,8 @@ In this example, assume every field has the rule 'not_empty'.
 
 When the form submits empty, the following errors exist:
 
-	$errors = $form->errors();
-	$errors2 = $address->errors();
+	$errors = $form->errors('validate');
+	$errors2 = $address->errors('validate');
 
 Returns
 

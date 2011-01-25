@@ -16,7 +16,7 @@ The `load` method will recognize all rules defined inside the ORM model definiti
 
 ### Rules in the model
 
-You should only define rules that apply to the model inside the model, and any other rules that may be associated with a form field inside Formo. To define rules inside the model, use the `$_rules` array just like normal.
+You should only define rules that apply to the model inside the model, and any other rules that may be associated with a form field inside Formo. To define rules inside the model, use the `rules()` method just like normal.
 
 Any rules inside the model will carry over into the form as well.
 
@@ -24,21 +24,25 @@ Any rules inside the model will carry over into the form as well.
 
 Because it's best practice to do things once, your field-specific definitions for models converted to Formo forms, you will likely want to declare Formo-specific definitions inside the model as well.
 
-The parameter to make these definitions in the model is `$_formo`. You can put any setting inside this array.
+The method to make these definitions in the model is `formo()`. You can return an array of any settings inside this method.
 
 	// Inside the model
 	// Notice the declaration must be public
-	public $_formo = array
-	(
-		'user_tokens' => array
+	public function formo()
+	{
+		return array
 		(
-			'render' => FALSE,
-		),
-		'notes' => array
-		(
-			'driver' => 'textarea'
-		),
-	);
+			'user_tokens' => array
+			(
+				'render' => FALSE,
+			),
+			'notes' => array
+			(
+				'driver' => 'textarea'
+			),
+		);
+	}
+	
 	
 ### Flow of using ORM driver with records
 

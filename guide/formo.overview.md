@@ -36,7 +36,7 @@ The container class handles the ability for a form or field to contain other fie
 
 ### Validator
 
-The validator class carries the ability to add and remove rules, callbacks and filters as well as how to run them. This class also keeps track of errors.
+The validator class carries the ability to add and remove rules as well as how to run them. This class also keeps track of errors.
 
 ### Form/Field
 
