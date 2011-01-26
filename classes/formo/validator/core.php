@@ -232,6 +232,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function sent(array $input = NULL)
 	{
 		$input = ($input !== NULL) ? $input : $this->get('input');
+		
+		if (empty($input))
+			return FALSE;
 
 		foreach ((array) $input as $alias => $value)
 		{
