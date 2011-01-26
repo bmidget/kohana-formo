@@ -232,10 +232,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	public function sent(array $input = NULL)
 	{
 		$input = ($input !== NULL) ? $input : $this->get('input');
-		
+
 		if (empty($input))
 			return FALSE;
-
+		
 		foreach ($input as $alias => $value)
 		{
 			if ($this->find($alias) !== NULL)
@@ -244,15 +244,13 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			// Check against a namespace
 			if (is_array($value))
 			{
-				// First determine if namespace is valid
-				if ($this->alias() != $alias AND $this->find($alias) === NULL)
-					// If the namespace doesn't exist in the form, it wasn't sent
-					return FALSE;
-
-				foreach ($value as $_alias => $_value)
+				if ($this->alias() == $alias OR $this->find($alias) !== NULL)
 				{
-					if ($this->find($_alias) !== NULL)
-						return TRUE;
+					foreach ($value as $_alias => $_value)
+					{
+						if ($this->find($_alias) !== NULL)
+							return TRUE;
+					}
 				}
 			}
 		}
