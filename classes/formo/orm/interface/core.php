@@ -3,7 +3,8 @@
 /**
  * Formo_ORM_interface_Core interface.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Decorators
  */
 interface Formo_ORM_interface_Core {
 

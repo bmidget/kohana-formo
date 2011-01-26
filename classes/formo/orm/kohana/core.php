@@ -1,9 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Abstract Formo_ORM_Kohana_Core class.
+ * Abstract Formo_ORM_Kohana_Core class. This is the driver for the official Kohana 3.1.x ORM module
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Decorators
  */
 abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 

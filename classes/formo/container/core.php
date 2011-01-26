@@ -3,7 +3,7 @@
 /**
  * This class makes storing and retrieving objects neat
  *
- * @package  Formo
+ * @package   Formo
  */
 abstract class Formo_Container_Core {
 

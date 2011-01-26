@@ -3,7 +3,8 @@
 /**
  * Formo_Driver_Group_Core class.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Drivers
  */
 class Formo_Driver_Group_Core extends Formo_Driver {
 

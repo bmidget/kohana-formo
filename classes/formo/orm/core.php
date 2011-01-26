@@ -3,7 +3,8 @@
 /**
  * Abstract Formo_ORM_Core class.
  * 
- * @package  Formo
+ * @package   Formo
+ * @category  ORM
  */
 abstract class Formo_ORM_Core implements Formo_ORM_interface {
 

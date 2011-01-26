@@ -3,7 +3,8 @@
 /**
  * The html decorator class for Formo
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Decorators
  */
 class Formo_Decorator_Html_Core extends Formo_Decorator {
 

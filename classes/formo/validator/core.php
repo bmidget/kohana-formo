@@ -3,7 +3,8 @@
 /**
  * Abstract Formo_Validator_Core class.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Validator
  */
 abstract class Formo_Validator_Core extends Formo_Container {
 
@@ -37,7 +38,8 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	 */
 	protected function setup_validation()
 	{
-		$this->_validation = new Validation(array());
+		$this->_validation = Validation::factory(array())
+			->bind(':form', $this);
 	}
 
 	/**
@@ -132,6 +134,12 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		$this->add_rules();
 
 		$array[$this->alias()] = $this->val();
+		
+		if ($driver = $this->orm_driver())
+		{
+			// Bind :model to the model
+			$this->_validation->bind(':model', $driver->model);
+		}
 
 		$this->_validation = $this->_validation->copy($array);
 		$errors = $this->_validation->check() === FALSE;

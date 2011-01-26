@@ -3,7 +3,8 @@
 /**
  * The Formo decorator class
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Decorators
  */
 abstract class Formo_Decorator_Core implements Formo_Decorator_Interface {
 

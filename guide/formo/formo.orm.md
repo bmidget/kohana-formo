@@ -61,7 +61,7 @@ Any form-specific definitions are added:
 
 The form is validated, and the record is saved
 	
-	if ($form->load($_POST)->validate())
+	if ($form->load($_POST)->validate(TRUE))
 	{
 		$user->save();
 	}
@@ -74,7 +74,7 @@ Currently, Kohana's ORM automatically adds and removes relationships the moment 
 
 Because of this ORM shortcoming, Formo will stash relationship changes inside its ORM driver, and you must run the `'save_rel'` method after saving the model.
 
-	if ($form->load($_POST)->validate())
+	if ($form->load($_POST)->validate(TRUE))
 	{
 		$user->save();
 		$form->orm('save_rel', $user);

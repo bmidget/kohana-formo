@@ -3,7 +3,8 @@
 /**
  * Formo_Validator_Field class.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Validator
  */
 abstract class Formo_Validator_Field_Core extends Formo_Container {
 

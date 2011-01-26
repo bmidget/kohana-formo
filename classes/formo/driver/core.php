@@ -3,7 +3,8 @@
 /**
  * Abstract Formo_Driver_Core class.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Drivers
  */
 abstract class Formo_Driver_Core {
 

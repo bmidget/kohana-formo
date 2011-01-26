@@ -3,7 +3,8 @@
 /**
  * Formo_Driver_Checkboxes_Core class.
  *
- * @package  Formo
+ * @package   Formo
+ * @category  Drivers
  */
 class Formo_Driver_Checkboxes_Core extends Formo_Driver {
 

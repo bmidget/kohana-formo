@@ -20,7 +20,7 @@ This is an example of a adding a required file input field that must be an image
 			'Upload::size'      => array(':value', '1M'),
 		));
 		
-	if ($form->load()->validate())
+	if ($form->load()->validate(TRUE))
 	{
 		// This is the raw data from the $_FILES[$filename] array
 		$file_data = $form->logo->val();
