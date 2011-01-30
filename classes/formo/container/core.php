@@ -169,6 +169,12 @@ abstract class Formo_Container_Core {
 			$value = $this->driver()->{'set_'.$variable}($value);
 		}
 
+		// Aliases always have to be underscored instead of spaced
+		if ($variable == 'alias')
+		{
+			$value = str_replace(' ', '_', $value);
+		}
+
 		if (array_key_exists($variable, $this->_defaults))
 		{
 			$this->_defaults[$variable] = $value;
@@ -180,12 +186,6 @@ abstract class Formo_Container_Core {
 			// First look for variables in $_settings
 			$this->_settings[$variable] = $value;
 			return $this;
-		}
-
-		// Aliases always have to be underscored instead of spaced
-		if ($variable == 'alias')
-		{
-			$value = str_replace(' ', '_', $value);
 		}
 
 		// Otherwise let the driver do the setting
