@@ -56,7 +56,7 @@ The general flow goes like this. You first create the record and load its values
 Any form-specific definitions are added:
 
 	$form
-		->add('confirm', 'password', array('rules' => array('matches' => array(':value', 'password'))))
+		->add('confirm', 'password', array('rules' => array(array('matches', array(':validation', 'confirm', 'password')))))
 		->add('save', 'submit');
 
 The form is validated, and the record is saved
