@@ -587,10 +587,14 @@ abstract class Formo_Container_Core {
 	 * @param mixed $search
 	 * @return mixed
 	 */
-	protected function find_order($search)
+	protected function find_order($search, array $fields = NULL)
 	{
+		$fields = ($fields !== NULL)
+			? $fields
+			: $this->_defaults['fields'];
+
 		$i = 0;
-		foreach ($this->_defaults['fields'] as $field)
+		foreach ($fields as $field)
 		{
 			// Return the order if we just found it
 			if ($field->alias() == $search)
@@ -644,7 +648,7 @@ abstract class Formo_Container_Core {
 		// If the new order is a string, it's a comparative order
 		if ( ! ctype_digit($new_order) AND is_string($new_order))
 		{
-			$position = $this->find_order($relative_field);
+			$position = $this->find_order($relative_field, $fields);
 
 			// If the place wasn't found, do nothing
 			if ($position === FALSE)
