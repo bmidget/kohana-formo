@@ -22,5 +22,10 @@ class Formo_Driver_Submit_Core extends Formo_Driver {
 			->attr('name', $this->name())
 			->attr('value', $value);
 	}
+	
+	public function sent()
+	{
+		return $this->field->not_empty() !== FALSE;
+	}
 
 }

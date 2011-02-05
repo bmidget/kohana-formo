@@ -427,7 +427,7 @@ abstract class Formo_Driver_Core {
 		if (Formo::is_set($new_value) === FALSE AND ! $this->field->get('value'))
 			return FALSE;
 
-		return (bool) $new_value;
+		return $new_value !== Formo::NOTSET;
 	}
 
 }

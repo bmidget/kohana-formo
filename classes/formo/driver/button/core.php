@@ -15,7 +15,13 @@ class Formo_Driver_Button_Core extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'button')
 			->attr('name', $this->name())
+			->attr('value', $this->val())
 			->text($this->field->alias());
+	}
+
+	public function sent()
+	{
+		return $this->field->not_empty() !== FALSE;
 	}
 
 }

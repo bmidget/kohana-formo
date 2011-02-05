@@ -77,7 +77,13 @@ class Formo_Field_Core extends Formo_Validator_Field {
 	 */
 	public function sent(array $input = NULL)
 	{
-		// Always return whether the parent was sent
+		if (method_exists($this->driver(), 'sent'))
+		{
+			// The driver may have something to say about this method
+			return $this->driver()->sent();
+		}
+
+		// Let the parent determine if the field was sent
 		return $this->parent()->sent();
 	}
 
