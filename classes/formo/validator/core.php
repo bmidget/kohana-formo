@@ -142,8 +142,9 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		}
 
 		$this->_validation = $this->_validation->copy($array);
-		$errors = $this->_validation->check() === FALSE;
 
+		$errors = $this->determine_errors();
+		
 		return ($subform_errors === FALSE)
 			? $errors === FALSE
 			: FALSE;
@@ -168,6 +169,29 @@ abstract class Formo_Validator_Core extends Formo_Container {
 
 		$this->validation()->label($obj->alias(), $obj->alias());
 		$this->validation()->rules($obj->alias(), $rules);
+	}
+	
+	/**
+	 * Make sure existing errors carry over from validation
+	 * 
+	 * @access protected
+	 * @param mixed $errors
+	 * @param mixed array $existing_errors
+	 * @return boolean
+	 */
+	protected function determine_errors()
+	{
+		$existing_errors = $this->_validation->errors();
+		$errors = $this->_validation->check() === FALSE;
+		
+		if (empty($existing_errors))
+			// If there weren't any errors predefined before validation, return check() result
+			return $errors;
+		
+		foreach ($existing_errors as $key => $values)
+		{
+			$this->_validation->error($key, current($values));
+		}
 	}
 
 	/**
