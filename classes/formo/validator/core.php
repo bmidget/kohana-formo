@@ -269,6 +269,8 @@ abstract class Formo_Validator_Core extends Formo_Container {
 	 */
 	public function error($field = NULL, $message = NULL, array $params = NULL)
 	{
+		$this->_validation->label($field, $field);
+
 		$num_args = func_num_args();
 		if ($num_args !== 0)
 		{
