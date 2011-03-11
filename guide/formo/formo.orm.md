@@ -79,3 +79,28 @@ Because of this ORM shortcoming, Formo will stash relationship changes inside it
 		$user->save();
 		$form->orm('save_rel', $user);
 	}
+
+### Only pulling certain fields from the model into the form
+
+There are two optional parameters in the `formo::orm('load')` method. They are:
+
+1. an array of field aliases
+2. A boolean flag whether those aliases are fields to skip (default is `FALSE`)
+
+If you list an array of fields in the first optional parameter, only those fields will be pulled from the model into the form. But if you set the `skip_fields` flag to `TRUE`, those fields defined in the first optional parameter become a list of fields to skip.
+
+#### Examples of pulling certain fields
+
+How to only pull the `username` and `password` fields:
+
+	$user = ORM::factory('user', 20);
+	
+	$form = Formo::form()
+		->orm('load', $user, array('username', 'password'));
+
+How to pull every field except the password and email fields:
+
+	$user = ORM::factory('user', 20);
+	
+	$form = Formo::form()
+		->orm('load', $user, array('password', 'email'), TRUE);
