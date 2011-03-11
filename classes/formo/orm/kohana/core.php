@@ -210,15 +210,19 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @param mixed array $fields. (default: NULL)
 	 * @return void
 	 */
-	public function load(ORM $model, array $fields = NULL)
+	public function load(ORM $model, array $fields = NULL, $skip_fields = FALSE)
 	{
 		$this->model = $model;
 		$this->config = Kohana::config('formo_kohana');
-		$this->make_fields($fields);
+		$this->make_fields($fields, $skip_fields);
 		$this->load_meta();
 
 		foreach ($model->as_array() as $alias => $value)
 		{
+			if ($this->use_field($alias) === FALSE)
+				// If the field is supposed to be skipped, ignore it altogether
+				continue;
+
 			// The bool that tracks whether the field is relational
 			$relational_field = FALSE;
 			// Create the array
@@ -495,6 +499,10 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			foreach ($this->{$type}['definitions'] as $alias => $value)
 			{
+				if ($this->use_field($alias) === FALSE)
+					// Only use the correct fields
+					continue;
+
 				$options = array();
 
 				$this->add_meta($alias, $options);
@@ -568,19 +576,47 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @param mixed array $fields. (default: NULL)
 	 * @return void
 	 */
-	protected function make_fields(array $fields = NULL)
+	protected function make_fields(array $fields = NULL, $skip_fields = FALSE)
 	{
-		// If no fields were specified, no need to continue
 		if ($fields === NULL)
+			// Only do anything if fields are specified
 			return;
 
-		// If * is set, the rest of the fields are skipped
-		// Like "All but the other fields"
-		if (in_array('*', $fields))
+		if ($skip_fields === TRUE)
+		{
+			// If the skip_field flag is set, fields are fields to skip
 			return $this->skip_fields = $fields;
-
-		// Set the fields to what we're fetching from the model
-		return $this->fields = $fields;
+		}
+		else
+		{
+			// Otherwise fields are a list of fields to use
+			return $this->fields = $fields;
+		}
+	}
+	
+	/**
+	 * Determine if a field should be included
+	 * 
+	 * @access protected
+	 * @param mixed $alias
+	 * @return bool
+	 */
+	protected function use_field($alias)
+	{
+		if (in_array($alias, $this->skip_fields))
+			// If a field has been specified to skip, don't use it
+			return FALSE;
+		
+		if ( ! empty($this->fields))
+		{
+			if ( ! in_array($alias, $this->fields))
+				// The field has to be specifically named to be included
+				// if this->fields is set
+				return FALSE;
+		}
+		
+		// Use the field by default
+		return TRUE;
 	}
 
 	/**
