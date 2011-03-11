@@ -193,7 +193,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			$this->_validation->error($key, current($values));
 		}
 		
-		return (bool) $this->_validation->errors() === FALSE;
+		return (bool) $this->_validation->errors() === TRUE;
 	}
 
 	/**
