@@ -139,6 +139,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			// Bind :model to the model
 			$this->_validation->bind(':model', $driver->model);
+			$this->_validation->labels($driver->model->labels());
 		}
 
 		$this->_validation = $this->_validation->copy($array);
