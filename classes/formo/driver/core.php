@@ -305,6 +305,11 @@ abstract class Formo_Driver_Core {
 		$args = array_slice(func_get_args(), 1);
 		return call_user_func_array(array($this->field->orm_driver(), $method), $args);
 	}
+	
+	public function has_orm()
+	{
+		return empty($this->field->orm) === FALSE;
+	}
 
 	/**
 	 * Runs just prior to rendering a form/field

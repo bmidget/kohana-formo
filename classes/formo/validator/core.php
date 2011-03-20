@@ -135,7 +135,7 @@ abstract class Formo_Validator_Core extends Formo_Container {
 
 		$array[$this->alias()] = $this->val();
 		
-		if ($driver = $this->orm_driver())
+		if ($this->has_orm() AND $driver = $this->orm_driver())
 		{
 			// Bind :model to the model
 			$this->_validation->bind(':model', $driver->model);
