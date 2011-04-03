@@ -310,7 +310,16 @@ abstract class Formo_Validator_Core extends Formo_Container {
 			return $this;
 		}
 
-		return Arr::get($this->validation()->errors(), 'form');
+		$errors = Arr::get($this->validation()->errors(), $this->alias());
+
+		if (isset($errors[0]))
+		{
+			return $errors[0];
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 
 	/**
