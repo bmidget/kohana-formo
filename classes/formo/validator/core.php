@@ -147,12 +147,10 @@ abstract class Formo_Validator_Core extends Formo_Container {
 				$this->_validation->labels($driver->model->labels());
 			}
 			
-			$this->_validation = $this->_validation->copy($array);
+			$validation = $this->_validation->copy($array);
 		}
-		else
-		{
-			$this->_validation = $validation->copy($array);
-		}
+		
+		$this->_validation = $validation;
 
 		$errors = $this->determine_errors();
 		
@@ -313,18 +311,18 @@ abstract class Formo_Validator_Core extends Formo_Container {
 		{
 			if ($num_args === 1)
 			{
-				$field = $this->alias();
+				$field = '_form';
 			}
 
 			$this->_validation->error($field, $message, $params);
 			return $this;
 		}
 
-		$errors = $this->errors();
+		$errors = Arr::get($this->validation()->errors(), $this->alias());
 
-		if (isset($errors[$this->alias()]))
+		if (isset($errors[0]))
 		{
-			return $errors[$this->alias()];
+			return $errors[0];
 		}
 		else
 		{
