@@ -129,20 +129,28 @@ abstract class Formo_Validator_Core extends Formo_Container {
 				$array[$field->alias()] = $field->val();
 			}
 		}
-
-		// Add rules for this form as well
-		$this->add_rules();
-
-		$array[$this->alias()] = $this->val();
 		
-		if ($this->has_orm() AND $driver = $this->orm_driver())
-		{
-			// Bind :model to the model
-			$this->_validation->bind(':model', $driver->model);
-			$this->_validation->labels($driver->model->labels());
-		}
+		$validation = $this->_validation->copy($array);
 
-		$this->_validation = $this->_validation->copy($array);
+		// Only worry about this form's rules if the rest validated
+		if ($validation->check() === TRUE)
+		{
+			// Add rules for this form as well
+			$this->add_rules();
+	
+			$array[$this->alias()] = $this->val();
+			
+			if ($this->has_orm() AND $driver = $this->orm_driver())
+			{
+				// Bind :model to the model
+				$this->_validation->bind(':model', $driver->model);
+				$this->_validation->labels($driver->model->labels());
+			}
+			
+			$validation = $this->_validation->copy($array);
+		}
+		
+		$this->_validation = $validation;
 
 		$errors = $this->determine_errors();
 		
