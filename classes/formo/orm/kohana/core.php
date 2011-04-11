@@ -230,9 +230,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			// The default is the value from the table
 			$options['value'] = $this->model->$alias;
 			// If the field is a belongs_to field, do some extra processing
-			$this->process_belongs_to($alias, $options);
+			$foreign_key = $this->process_belongs_to($alias, $options);
 			// Add meta data for the field
-			$this->add_meta($alias, $options);
+			$this->add_meta($alias, $options, $foreign_key);
 
 			if (empty($options['driver']))
 			{
@@ -257,7 +257,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	 * @param mixed array & $options
 	 * @return void
 	 */
-	protected function add_meta($alias, array & $options)
+	protected function add_meta($alias, array & $options, $foreign_key = NULL)
 	{
 		$alias = ( ! empty($options['alias']))
 			? $options['alias']
@@ -274,6 +274,19 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 		{
 			// Then add rules to the options
 			$opts['rules'] = $rules;
+		}
+
+		if ($foreign_key !== NULL AND $rules = Arr::get($this->rules, $foreign_key))
+		{
+			// Attach foreign key rules
+			if ( ! empty($opts['rules']))
+			{
+				$opts['rules'] = array_merge($rules, $opts['rules']);
+			}
+			else
+			{
+				$opts['rules'] = $rules;
+			}
 		}
 
 		$options = array_merge($options, $opts);
@@ -439,7 +452,9 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 	{
 		if ( ! isset($this->belongs_to['foreign_keys'][$alias]))
 			// No need to process non-belongs-to fields
-			return;
+			return NULL;
+		
+		$foreign_key = $alias;
 
 		// The alias in the model for the field
 		$field_alias = $this->belongs_to['foreign_keys'][$alias];
@@ -464,7 +479,7 @@ abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
 			$options['value'] = $this->model->$alias;
 		}
 
-		return;
+		return $foreign_key;
 	}
 
 	/**
