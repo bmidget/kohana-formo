@@ -63,6 +63,11 @@ class Formo_Form_Core extends Formo_Validator {
 		(empty($options['alias']) AND $options['alias'] = $this->get('config')->form_alias);
 		(empty($options['driver']) AND $options['driver'] = $this->get('config')->form_driver);
 		(empty($options['type']) AND $options['type'] = $this->get('config')->type);
+		
+		// Always process the driver first
+		$driver = $options['driver'];
+		unset($options['driver']);
+		$options = Arr::merge(array('driver' => $driver), $options);
 
 		// Load the orm config file
 		if ($orm_file = Arr::get($this->get('config'), 'ORM') !== NULL)

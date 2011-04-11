@@ -172,7 +172,7 @@ abstract class Formo_Container_Core {
 		// Aliases always have to be underscored instead of spaced
 		if ($variable == 'alias')
 		{
-			$value = str_replace(' ', '_', $value);
+			$value = $this->driver()->format_alias($value);
 		}
 
 		if (array_key_exists($variable, $this->_defaults))

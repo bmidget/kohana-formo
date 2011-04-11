@@ -155,6 +155,11 @@ abstract class Formo_Driver_Core {
 			? $this->field->$variable
 			: $default;
 	}
+	
+	public function format_alias($alias)
+	{
+		return str_replace(' ', '_', $alias);
+	}
 
 	/**
 	 * Called at field's construct. Gives driver chance to do stuff

@@ -22,5 +22,10 @@ class Formo_Driver_Option_Core extends Formo_Driver {
 			$this->field->attr('selected', 'selected');
 		}
 	}
+	
+	public function format_alias($alias)
+	{
+		return $alias;
+	}
 
 }
