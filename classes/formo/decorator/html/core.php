@@ -335,7 +335,7 @@ class Formo_Decorator_Html_Core extends Formo_Decorator {
 		
 		if ($singletag === TRUE)
 		{
-			return '/>'."\n";
+			return $closetag.'>'."\n";
 		}
 		else
 		{
