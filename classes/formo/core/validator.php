@@ -331,7 +331,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	}
 
 	/**
-	 * Convenience method for setting and retrieving error
+	 * Retrieve error messages
 	 *
 	 * @access public
 	 * @param mixed array $errors. (default: NULL)
@@ -339,7 +339,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	public function errors($file = NULL, $translate = TRUE)
 	{
-		if (func_num_args() === 0)
+		if ($file === NULL)
 		{
 			$file = $this->message_file();
 		}
@@ -348,7 +348,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	}
 
 	// Determine which message file to use
-	protected function message_file()
+	public function message_file()
 	{
 		return $this->get('message_file')
 			? $this->get('message_file')

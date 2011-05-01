@@ -72,7 +72,7 @@ class Formo_Core_Field extends Formo_Validator_Field {
 		// Render as the default render type
 		return (string) $this->render();
 	}
-
+	
 	/**
 	 * Overloaded sent method
 	 *
