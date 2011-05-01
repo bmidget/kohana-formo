@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Interface
  */
-class Formo_Core {
+class Formo_Core_Formo {
 
 	/**
 	 * An unset parameter

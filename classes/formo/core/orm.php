@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  ORM
  */
-abstract class Formo_ORM_Core implements Formo_ORM_interface {
+abstract class Formo_Core_ORM implements Formo_ORM_interface {
 
 	/**
 	 * Fetch the proper orm config file

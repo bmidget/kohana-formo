@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Validator
  */
-abstract class Formo_Validator_Core extends Formo_Container {
+abstract class Formo_Core_Validator extends Formo_Container {
 
 	/**
 	 * A validation object for a form

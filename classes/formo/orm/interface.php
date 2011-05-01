@@ -6,4 +6,4 @@
  * @package   Formo
  * @category  Decorators
  */
-interface Formo_ORM_interface extends Formo_ORM_interface_Core {}
+interface Formo_ORM_interface extends Formo_Core_ORM_interface {}

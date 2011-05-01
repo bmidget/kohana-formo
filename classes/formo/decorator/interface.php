@@ -6,4 +6,4 @@
  * @package   Formo
  * @category  Decorators
  */
-interface Formo_Decorator_Interface extends Formo_Decorator_Interface_Core {}
+interface Formo_Decorator_Interface extends Formo_Core_Decorator_Interface {}

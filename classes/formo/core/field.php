@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Forms and Fields
  */
-class Formo_Field_Core extends Formo_Validator_Field {
+class Formo_Core_Field extends Formo_Validator_Field {
 
 	/**
 	 * Field-specific settings

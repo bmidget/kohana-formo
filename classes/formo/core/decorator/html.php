@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Decorators
  */
-class Formo_Decorator_Html_Core extends Formo_Decorator {
+class Formo_Core_Decorator_Html extends Formo_Decorator {
 
 	/**
 	 * List of HTML tags without closing tags

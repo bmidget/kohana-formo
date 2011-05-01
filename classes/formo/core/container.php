@@ -5,7 +5,7 @@
  *
  * @package   Formo
  */
-abstract class Formo_Container_Core {
+abstract class Formo_Core_Container {
 
 	/**
 	 * Class-specific settings

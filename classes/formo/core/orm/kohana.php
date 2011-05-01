@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Decorators
  */
-abstract class Formo_ORM_Kohana_Core extends Formo_ORM {
+abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 
 	/**
 	 * A parent form or subform

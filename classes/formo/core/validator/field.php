@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Validator
  */
-abstract class Formo_Validator_Field_Core extends Formo_Container {
+abstract class Formo_Core_Validator_Field extends Formo_Container {
 
 	public function error($message = NULL, array $params = NULL)
 	{

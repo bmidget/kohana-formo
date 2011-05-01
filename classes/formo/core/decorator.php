@@ -6,7 +6,7 @@
  * @package   Formo
  * @category  Decorators
  */
-abstract class Formo_Decorator_Core implements Formo_Decorator_Interface {
+abstract class Formo_Core_Decorator implements Formo_Decorator_Interface {
 
 	/**
 	 * The Formo field/form object
