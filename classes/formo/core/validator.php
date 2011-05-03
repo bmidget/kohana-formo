@@ -318,15 +318,15 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			return $this;
 		}
 
-		$errors = Arr::get($this->validation()->errors(), $this->alias());
+		$errors = Arr::get($this->errors(), $this->alias());
 
-		if (isset($errors[0]))
+		if (is_array($errors) AND isset($errors[0]))
 		{
 			return $errors[0];
 		}
 		else
 		{
-			return NULL;
+			return $errors;
 		}
 	}
 
