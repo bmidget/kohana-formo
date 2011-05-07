@@ -12,9 +12,10 @@ class Formo_Driver_Text_Core extends Formo_Driver {
 	
 	public function html()
 	{
+		$type = $this->decorator->attr('type');
 		$this->decorator
 			->set('tag', 'input')
-			->attr('type', 'text')
+			->attr('type', (isset ($type) ? $type : 'text'))
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());
 	}
