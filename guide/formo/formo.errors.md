@@ -76,6 +76,22 @@ If the form or subform itself has an error, it is included in the list of field 
 		'form' => 'Unsername or password are incorrect',
 	);
 
+## Passing error message parameters
+
+Follow the instruction in the Kohana guide to pass message parameters to error messages. Here's an example:
+
+	public static function my_rule($validation, $field, $value)
+	{
+		if (condition_not_met())
+		{
+			$validation->error($field, 'rule_name', array($param1_name, $param2_name));
+			return;
+		}
+		
+		return TRUE;
+	}
+	
+[!!] If you explicitly set the error on the validation object in the rule, you need to return `void` instead of `FALSE`.
 ## Wrap-up
 
 You can attach error messages to any Formo object, but form and subform objects can also fetch an array of all errors inside itself.
