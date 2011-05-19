@@ -126,34 +126,34 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			}
 			else
 			{
-				$array[$field->alias()] = $field->val();
+				$array += array($field->alias() => $field->val());
 			}
 		}
-		
+
 		$validation = $this->_validation->copy($array);
 
 		// Only worry about this form's rules if the rest validated
-		if ($validation->check() === TRUE)
+		if ($check = $validation->check() === TRUE)
 		{
 			// Add rules for this form as well
 			$this->add_rules();
-	
+
 			$array[$this->alias()] = $this->val();
-			
+
 			if ($this->has_orm() AND $driver = $this->orm_driver())
 			{
 				// Bind :model to the model
 				$this->_validation->bind(':model', $driver->model);
 				$this->_validation->labels($driver->model->labels());
 			}
-			
+
 			$validation = $this->_validation->copy($array);
 		}
-		
+
 		$this->_validation = $validation;
 
-		$errors = $this->determine_errors();
-		
+		$errors = $this->determine_errors($check);
+
 		return ($subform_errors === FALSE)
 			? $errors === FALSE
 			: FALSE;
@@ -179,30 +179,25 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		$this->validation()->label($obj->alias(), $obj->alias());
 		$this->validation()->rules($obj->alias(), $rules);
 	}
-	
+
 	/**
 	 * Make sure existing errors carry over from validation
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $errors
 	 * @param mixed array $existing_errors
 	 * @return boolean
 	 */
-	protected function determine_errors()
+	protected function determine_errors($check)
 	{
 		$existing_errors = $this->_validation->errors();
-		$errors = $this->_validation->check() === FALSE;
-		
+		$errors = $check === FALSE;
+
 		if (empty($existing_errors))
 			// If there weren't any errors predefined before validation, return check() result
 			return $errors;
-		
-		foreach ($existing_errors as $key => $values)
-		{
-			$this->_validation->error($key, current($values));
-		}
-		
-		return (bool) $this->_validation->errors() === TRUE;
+
+		return (bool) $existing_errors === TRUE;
 	}
 
 	/**
@@ -270,12 +265,12 @@ abstract class Formo_Core_Validator extends Formo_Container {
 
 		if (empty($input))
 			return FALSE;
-		
+
 		foreach ($input as $alias => $value)
 		{
 			if ($this->find($alias) !== NULL)
 				return TRUE;
-			
+
 			// Check against a namespace
 			if (is_array($value))
 			{
