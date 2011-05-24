@@ -126,7 +126,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			}
 			else
 			{
-				$array += array($field->alias() => $field->val());
+				$array[$field->alias()] = $field->val();
 			}
 		}
 
@@ -138,7 +138,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			// Add rules for this form as well
 			$this->add_rules();
 
-			$array[$this->alias()] = $this->val();
+			$array = array($this->alias() => $this->val());
 
 			if ($this->has_orm() AND $driver = $this->orm_driver())
 			{
@@ -190,6 +190,12 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	protected function determine_errors($check)
 	{
+		if ($check === TRUE)
+		{
+			// Run check again because this time it's at the form level
+			$check = $this->_validation->check();
+		}
+		
 		$existing_errors = $this->_validation->errors();
 		$errors = $check === FALSE;
 
