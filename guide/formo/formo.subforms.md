@@ -50,6 +50,8 @@ To do this, use `create_sub`:
 		->add('state');
 		
 	$form->create_sub('address', 'group', array('street', 'city', 'state'), array('before' => 'username'));
+
+[!!] `create_sub()` creates the subform within its parent and returns that subform object.
 	
 In `create_sub`, the parameters are the following:
 

@@ -373,7 +373,7 @@ abstract class Formo_Core_Container {
 		// Append the new subform
 		$this->append($subform);
 
-		return $this;
+		return $subform;
 	}
 
 	/**
