@@ -112,9 +112,6 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			if ($field->get('render') === FALSE OR $field->get('ignore') === TRUE)
 				continue;
 
-			// Add the rules
-			$this->add_rules($field);
-
 			if ($field instanceof Formo_Form)
 			{
 				if ( ! $field->validate($require_sent))
@@ -126,33 +123,28 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			}
 			else
 			{
+				// Add the rules
+				$this->add_rules($field);
 				$array[$field->alias()] = $field->val();
 			}
 		}
 
-		$validation = $this->_validation->copy($array);
+		$this->add_rules();
 
-		// Only worry about this form's rules if the rest validated
-		if ($check = $validation->check() === TRUE)
+		$array[$this->alias()] = $this->val();
+
+		if ($this->has_orm() AND $driver = $this->orm_driver())
 		{
-			// Add rules for this form as well
-			$this->add_rules();
-
-			$array[$this->alias()] = $this->val();
-
-			if ($this->has_orm() AND $driver = $this->orm_driver())
-			{
-				// Bind :model to the model
-				$this->_validation->bind(':model', $driver->model);
-				$this->_validation->labels($driver->model->labels());
-			}
-
-			$validation = $this->_validation->copy($array);
+			// Bind :model to the model
+			$this->_validation->bind(':model', $driver->model);
+			$this->_validation->labels($driver->model->labels());
 		}
+
+		$validation = $this->_validation->copy($array);
 
 		$this->_validation = $validation;
 
-		$errors = $this->determine_errors($check);
+		$errors = $this->determine_errors();
 
 		return ($subform_errors === FALSE)
 			? $errors === FALSE
@@ -166,11 +158,9 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed Formo_Container $field. (default: NULL)
 	 * @return void
 	 */
-	protected function add_rules(Formo_Container $field = NULL, Validation $validation = NULL)
+	protected function add_rules(Formo_Container $field = NULL)
 	{
-		$validation = ($validation !== NULL)
-			? $validation
-			: $this->validation();
+		$validation = $this->validation();
 
 		$obj = ($field !== NULL)
 			? $field
@@ -192,16 +182,11 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed array $existing_errors
 	 * @return boolean
 	 */
-	protected function determine_errors($check)
+	protected function determine_errors()
 	{
-		if ($check === TRUE)
-		{
-			// Run check again because this time it's at the form level
-			$check = $this->_validation->check();
-		}
-		
+		$this->_validation->check();
 		$existing_errors = $this->_validation->errors();
-		$errors = $check === FALSE;
+		$errors = $existing_errors === FALSE;
 
 		if (empty($existing_errors))
 			// If there weren't any errors predefined before validation, return check() result
@@ -322,17 +307,27 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			$this->_validation->error($field, $message, $params);
 			return $this;
 		}
+		
+		return Arr::get($this->errors(), $this->alias());
 
-		$errors = Arr::get($this->errors(), $this->alias());
+		$errors = $this->errors();
+		
+		// The orm error is NULL by default
+		$form_error = NULL;
 
-		if (is_array($errors) AND isset($errors[0]))
+		if ( ! empty($errors[$this->alias()]))
 		{
-			return $errors[0];
+			$other_errors = $errors;
+			// Find out if there were other errors besides the form error
+			unset($other_errors[$this->alias()]);
+
+			if (empty($other_errors))
+			{
+				$form_error = $errors[$this->alias()];
+			}
 		}
-		else
-		{
-			return $errors;
-		}
+
+		return $form_error;
 	}
 
 	/**
@@ -348,8 +343,21 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		{
 			$file = $this->message_file();
 		}
+		
+		$return_errors = $errors = $this->_validation->errors($file, $translate);
 
-		return $this->_validation->errors($file, $translate);
+		if (isset($errors[$this->alias()]))
+		{
+			$other_errors = $errors;
+			unset($other_errors[$this->alias()]);
+			
+			if ( ! empty($other_errors))
+			{
+				unset($return_errors[$this->alias()]);
+			}
+		}
+
+		return $return_errors;
 	}
 
 	// Determine which message file to use
