@@ -19,6 +19,7 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 		
 		$this->decorator
 			->set('tag', 'select')
+			->attr('id', $this->name())
 			->attr('name', $this->name());		
 	}
 

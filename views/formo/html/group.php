@@ -1,9 +1,9 @@
-<div class="group">
-	<h2><?php echo UTF8::ucfirst(str_replace('_', ' ', $group->alias())); ?></h2>
+<fieldset name="<?php echo $group->alias(); ?>">
+	<legend><?php echo UTF8::ucfirst(str_replace('_', ' ', $group->alias())); ?></legend>
 	<?php if ($group->error): ?>
-		<div>There were errors with this section</div>
+		<div class="error-message">There were errors with this section</div>
 	<?php endif; ?>
 	<?php foreach ($group->fields() as $group): ?>
 		<?php echo $group->generate(); ?>
 	<?php endforeach; ?>
-</div>
+</fieldset>

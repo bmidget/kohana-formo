@@ -15,6 +15,7 @@ class Formo_Core_Driver_Search extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'search')
+			->attr('id', $this->name())
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());
 	}

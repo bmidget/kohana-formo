@@ -1,13 +1,9 @@
 <?php echo $open; ?>
-	<label>
-		<?php echo $label; ?>
-		<span class="field">
-			<?php if ($field->get('editable') === TRUE): ?>
-				<?php echo $field->add_class('input')->attr('rows', 10)->render(); ?>
-			<?php else: ?>
-				<span><?php echo $field->val(); ?></span>
-			<?php endif; ?>
-		</span>
-	</label>
-	<?php echo $message; ?>
+	<?php echo $label; ?>
+	<?php if ($field->get('editable') === TRUE): ?>
+		<?php echo $field->attr('rows', 10)->render(); ?>
+	<?php else: ?>
+		<span id="<?php echo $field->name(); ?>" class="field"><?php echo $field->val(); ?></span>
+	<?php endif; ?>
+	<?php if($field->error()) echo $message; ?>
 <?php echo $close; ?>

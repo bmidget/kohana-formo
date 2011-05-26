@@ -15,6 +15,7 @@ class Formo_Core_Driver_Radio extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'radio')
+			->attr('id', $this->name())
 			->attr('name', $this->field->parent()->name())
 			->attr('value', $this->field->val());
 

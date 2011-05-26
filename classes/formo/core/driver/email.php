@@ -15,6 +15,7 @@ class Formo_Core_Driver_Email extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'email')
+			->attr('id', $this->name())
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());
 	}

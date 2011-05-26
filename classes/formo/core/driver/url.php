@@ -15,6 +15,7 @@ class Formo_Core_Driver_Url extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'url')
+			->attr('id', $this->name())
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());
 	}

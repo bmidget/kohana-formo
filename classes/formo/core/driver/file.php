@@ -21,6 +21,7 @@ class Formo_Core_Driver_File extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'file')
+			->attr('id', $this->name())
 			->attr('name', $this->field->alias());
 	}
 	

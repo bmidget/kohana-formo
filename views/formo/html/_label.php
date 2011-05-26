@@ -1,1 +1,1 @@
-<span class="label"><?php echo UTF8::ucfirst($field->label()); ?>:</span>
+<label for="<?php echo $field->name(); ?>"><?php echo UTF8::ucfirst(str_replace('_', ' ', $field->label())); ?></label>

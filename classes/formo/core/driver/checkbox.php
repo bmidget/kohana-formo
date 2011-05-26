@@ -28,6 +28,7 @@ class Formo_Core_Driver_Checkbox extends Formo_Driver {
 		$this->decorator
 			->set('tag', 'input')
 			->attr('type', 'checkbox')
+			->attr('id', $this->name())
 			->attr('name', $this->field->parent()->name().'[]')
 			->attr('value', $this->field->val());
 
