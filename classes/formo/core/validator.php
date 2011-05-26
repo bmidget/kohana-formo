@@ -138,7 +138,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			// Add rules for this form as well
 			$this->add_rules();
 
-			$array = array($this->alias() => $this->val());
+			$array[$this->alias()] = $this->val();
 
 			if ($this->has_orm() AND $driver = $this->orm_driver())
 			{
@@ -166,8 +166,12 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed Formo_Container $field. (default: NULL)
 	 * @return void
 	 */
-	protected function add_rules(Formo_Container $field = NULL)
+	protected function add_rules(Formo_Container $field = NULL, Validation $validation = NULL)
 	{
+		$validation = ($validation !== NULL)
+			? $validation
+			: $this->validation();
+
 		$obj = ($field !== NULL)
 			? $field
 			: $this;
@@ -176,8 +180,8 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			// Only do anything if the field has rules
 			return;
 
-		$this->validation()->label($obj->alias(), $obj->alias());
-		$this->validation()->rules($obj->alias(), $rules);
+		$validation->label($obj->alias(), $obj->alias());
+		$validation->rules($obj->alias(), $rules);
 	}
 
 	/**
