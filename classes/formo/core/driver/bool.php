@@ -20,14 +20,16 @@ class Formo_Core_Driver_Bool extends Formo_Driver {
 		return $this->val() == TRUE;
 	}
 	
-	public function getval()
+	public function get_val()
 	{
-		// If the form was sent but the field wasn't set, return empty array as value
-		if ($this->field->sent() AND Formo::is_set($this->field->get('new_value')) === TRUE)
+		$new_value = $this->field->get('new_value');
+
+		// If the form was sent but the field wasn't set, return FALSE
+		if ($this->field->sent() AND Formo::is_set($new_value) === FALSE)
 			return FALSE;
 			
 		// Otherwise return the value that's set
-		return (Formo::is_set($this->field->get('new_value', $new_value)) === TRUE)
+		return (Formo::is_set($new_value) === TRUE)
 			? (bool) $new_value
 			: (bool) $this->field->get('value');
 	}
