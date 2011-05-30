@@ -25,14 +25,16 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 		}
 	}
 
-	public function getval()
+	public function get_val()
 	{
+		$new_value = $this->field->get('new_value');
+
 		// If the form was sent but the field wasn't set, return empty array as value
-		if ($this->field->sent() AND Formo::is_set($this->field->get('new_value')) === FALSE)
+		if ($this->field->sent() AND Formo::is_set($new_value) === FALSE)
 			return array();
 
 		// Otherwise return the value that's set
-		return (Formo::is_set($this->field->get('new_value'), $new_value) === TRUE)
+		return (Formo::is_set($new_value, $new_value) === TRUE)
 			? (array) $new_value
 			: (array) $this->field->get('value');
 	}
