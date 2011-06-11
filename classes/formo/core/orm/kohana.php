@@ -645,7 +645,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		// Pull out relationship data
 		foreach (self::$relationship_types as $type)
 		{
-			$this->{$type}['definitions'] = $this->model->$type();
+			$this->{$type}['definitions'] = $this->model->$kind();
 
 			foreach ($this->{$type}['definitions'] as $key => $values)
 			{

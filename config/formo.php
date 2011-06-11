@@ -11,9 +11,9 @@ return array
 	// Default from alias
 	'form_alias'             => 'form',
 	// Default field driver
-	'default_driver'         => 'text',
-	// Default render type
-	'type'                   => 'html',
+	'default_driver'         => 'input',
+	// Default render kind
+	'kind'                   => 'html',
 	// Close single html tags (TRUE = <br/>. FALSE = <br>)
 	'close_single_html_tags' => TRUE,
 	// Default subform driver
@@ -31,4 +31,10 @@ return array
 	// If set to true, all Validate helper functions are auto-preceded
 	// by :value if it's not explicitly set
 	'validate_compatible'    => TRUE,
+	'html5_rules' => array
+	(
+		'email' => array(array('email')),
+		'tel'   => array(array('phone')),
+		'url'   => array(array('url')),
+	),
 );

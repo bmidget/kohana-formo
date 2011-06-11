@@ -9,7 +9,7 @@
 class Formo_Core_Driver_Text extends Formo_Driver {
 
 	protected $view = 'text';
-	
+		
 	public function html()
 	{
 		$this->decorator

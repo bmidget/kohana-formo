@@ -99,6 +99,8 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			// If form wasn't sent, and sent is required, doesn't pass validation
 			return FALSE;
 
+		$this->driver()->pre_validate();
+
 		// Tracks if there were errors in any subforms
 		$subform_errors = FALSE;
 		// Tracks if there were any errors inside this form
@@ -123,12 +125,14 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			}
 			else
 			{
+				$field->pre_validate();
 				// Add the rules
 				$this->add_rules($field);
 				$array[$field->alias()] = $field->val();
 			}
 		}
 
+		$this->pre_validate();
 		$this->add_rules();
 
 		$array[$this->alias()] = $this->val();

@@ -62,7 +62,7 @@ class Formo_Core_Form extends Formo_Validator {
 		// Set the default alias and driver if necessary
 		(empty($options['alias']) AND $options['alias'] = $this->get('config')->form_alias);
 		(empty($options['driver']) AND $options['driver'] = $this->get('config')->form_driver);
-		(empty($options['type']) AND $options['type'] = $this->get('config')->type);
+		(empty($options['kind']) AND $options['kind'] = $this->get('config')->kind);
 		
 		// Always process the driver first
 		$driver = $options['driver'];
@@ -108,10 +108,11 @@ class Formo_Core_Form extends Formo_Validator {
 		$options = func_get_args();
 		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 
+
 		// If a driver is named but not an alias, make the driver text and the alias the driver
 		if (empty($options['driver']))
 		{
-			$options['driver'] = Arr::get($this->config, 'default_driver', 'text');
+			$options['driver'] = Arr::get(Kohana::config('formo'), 'default_driver', 'input');
 		}
 
 		// Create the new field

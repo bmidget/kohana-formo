@@ -47,7 +47,7 @@ abstract class Formo_Core_Container {
 		'driver_instance' => NULL,
 		'label'           => NULL,
 		'order'           => FALSE,
-		'type'            => NULL,
+		'kind'            => NULL,
 		'rules'           => array(),
 	);
 
@@ -387,7 +387,7 @@ abstract class Formo_Core_Container {
 	{
 		// Set the field's parent
 		$field->set('parent', $this);
-		$field->set('type', $this->get('type'));
+		$field->set('kind', $this->get('kind'));
 		$this->_defaults['fields'][] = $field;
 
 		// Look for order and process it for ordering this field
@@ -423,7 +423,7 @@ abstract class Formo_Core_Container {
 	public function prepend($item)
 	{
 		$item->_defaults['parent'] = $this;
-		$item->set('type', $this->get('type'));
+		$item->set('kind', $this->get('kind'));
 
 		array_unshift($this->_defaults['fields'], $item);
 
@@ -742,12 +742,12 @@ abstract class Formo_Core_Container {
 	 * @param mixed $type
 	 * @return void
 	 */
-	public function type($type)
+	public function kind($kind)
 	{
-		$this->driver()->decorator($type);
+		$this->driver()->decorator($kind);
 		foreach ($this->fields() as $field)
 		{
-			$field->decorator($type);
+			$field->decorator($kind);
 		}
 
 		return $this;

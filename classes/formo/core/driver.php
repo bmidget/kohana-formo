@@ -78,14 +78,14 @@ abstract class Formo_Core_Driver {
 	{
 		// Load the field instance
 		$this->field = $field;
-
+		
 		// Determine the original decorator type
-		$type = ($type = $this->field->get('type'))
-			? $type
+		$kind = ($kind = $this->field->get('kind'))
+			? $kind
 			// Fall back on the default form type
-			: Kohana::config('formo')->type;
+			: Kohana::config('formo')->kind;
 
-		$this->decorator($type);
+		$this->decorator($kind);
 	}
 
 	/**
@@ -175,7 +175,18 @@ abstract class Formo_Core_Driver {
 	 * @access public
 	 * @return void
 	 */
-	public function pre_validate(){}
+	public function pre_validate()
+	{
+		// Add not_empty rule for 'required'
+		if ($this->field->get('required') === TRUE)
+		{
+			$val_field = ($this->field instanceof Formo_Form)
+				? $this->field
+				: $this->field->parent();
+			
+			$val_field->rule($this->field->alias(), 'not_empty');
+		}
+	}
 
 	/**
 	 * Called just after running validate()
