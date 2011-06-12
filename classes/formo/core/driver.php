@@ -149,7 +149,7 @@ abstract class Formo_Core_Driver {
 			// If the variable is inside the decorator, return that
 			// and only do so if not doing a shallow look
 			return $this->decorator->get($variable);
-
+		
 		// Otherwise return the field value if it's set, or the default value if it's not
 		return (isset($this->field->$variable))
 			? $this->field->$variable

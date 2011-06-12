@@ -33,8 +33,22 @@ return array
 	'validate_compatible'    => TRUE,
 	'html5_rules' => array
 	(
-		'email' => array(array('email')),
-		'tel'   => array(array('phone')),
-		'url'   => array(array('url')),
+		'email'         => array(array('email')),
+		'tel'           => array(array('phone')),
+		'url'           => array(array('url')),
+		'date'          => array(array('date')),
+		'datetime'      => array(array('date')),
+		'datetimelocal' => array(array('date')),
+		'color'         => array(array('regex', array(':value', '/^#[\da-fA-F]{6}$|([\da-fA-F])\1\1$/'))),
+		'week'          => array(array('regex', array(':value', '/^\d{4}-[Ww](?:0[1-9]|[1-4][0-9]|5[0-2])$/'))),
+		'time'          => array(array('regex', array(':value', '/^(?:([0-1]?[0-9])|([2][0-3])):(?:[0-5]?[0-9])(?::([0-5]?[0-9]))?$/'))),
+		'month'         => array(array('regex', array(':value', '/^\d{4}-(?:0[1-9]|1[0-2])$/'))),
+		'range'         => array(array('Formo_Validator::range', array(':value', ':min', ':max', ':step'))),
+		'number'        => array(array('Formo_Validator::range', array(':value', ':min', ':max', ':step'))),
+	),
+	'html5_bindings' => array
+	(
+		'range'  => array(':min' => array('attr', 'min'), ':max' =>  array('attr', 'max'), ':step' => array('attr', 'step')),
+		'number' => array(':min' => array('attr', 'min'), ':max' =>  array('attr', 'max'), ':step' => array('attr', 'step')),
 	),
 );

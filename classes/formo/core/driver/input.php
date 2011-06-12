@@ -42,6 +42,11 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 			// Attach rules to the field's parent
 			$this->field->parent()->rules($this->field->alias(), $rules);
 		}
+		
+		if ($bindings = Kohana::config('formo.html5_bindings.'.$this->get_type()))
+		{
+			$this->field->set('bindings', $bindings);
+		}
 	}
 
 }

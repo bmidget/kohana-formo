@@ -49,6 +49,7 @@ abstract class Formo_Core_Container {
 		'order'           => FALSE,
 		'kind'            => NULL,
 		'rules'           => array(),
+		'bindings'        => array(),
 	);
 
 	/**
