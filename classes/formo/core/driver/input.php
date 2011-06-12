@@ -8,7 +8,7 @@
  */
 class Formo_Core_Driver_Input extends Formo_Driver {
 
-	protected $view = 'text';
+	protected $view = 'input';
 	
 	protected function get_type()
 	{
