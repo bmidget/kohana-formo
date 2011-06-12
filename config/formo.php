@@ -43,12 +43,13 @@ return array
 		'week'          => array(array('regex', array(':value', '/^\d{4}-[Ww](?:0[1-9]|[1-4][0-9]|5[0-2])$/'))),
 		'time'          => array(array('regex', array(':value', '/^(?:([0-1]?[0-9])|([2][0-3])):(?:[0-5]?[0-9])(?::([0-5]?[0-9]))?$/'))),
 		'month'         => array(array('regex', array(':value', '/^\d{4}-(?:0[1-9]|1[0-2])$/'))),
-		'range'         => array(array('Formo_Validator::range', array(':value', ':min', ':max', ':step'))),
-		'number'        => array(array('Formo_Validator::range', array(':value', ':min', ':max', ':step'))),
-	),
-	'html5_bindings' => array
-	(
-		'range'  => array(':min' => array('attr', 'min'), ':max' =>  array('attr', 'max'), ':step' => array('attr', 'step')),
-		'number' => array(':min' => array('attr', 'min'), ':max' =>  array('attr', 'max'), ':step' => array('attr', 'step')),
+		'range'         => array(
+			array('digit'),
+			array('Formo_Validator::range', array(':field', ':form')),
+		),
+		'number'        => array(
+			array('digit'),
+			array('Formo_Validator::range', array(':field', ':form')),
+		),
 	),
 );

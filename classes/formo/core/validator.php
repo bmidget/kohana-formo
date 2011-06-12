@@ -173,23 +173,6 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		if ( ! $rules = $obj->get('rules'))
 			// Only do anything if the field has rules
 			return;
-		
-		if ($bindings = $obj->get('bindings'))
-		{
-			foreach ($bindings as $key => $value)
-			{
-				if (is_array($value))
-				{
-					$method = $value[0];
-					$arg = $value[1];
-					$validation->bind($key, $obj->$method($arg));
-				}
-				else
-				{
-					$validation->bind($key, $obj->get($value));
-				}
-			}
-		}
 
 		$validation->label($obj->alias(), $obj->alias());
 		$validation->rules($obj->alias(), $rules);
@@ -389,9 +372,15 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			: Kohana::config('formo')->message_file;
 	}
 	
-	public static function range($value, $min, $max, $step)
+	public static function range($field, $form)
 	{
-		echo Debug::vars($value, $min, $max);
+		$value = $form->$field->val();
+		$max = $form->$field->attr('max');
+		$min = $form->$field->attr('min');
+		$step = $form->$field->attr('step');
+		
+		echo Debug::vars($value, $max, $min, $step);
+		
 		// It has to be a number
 		if ( ! is_int($value) AND ! ctype_digit($value))
 			return FALSE;
@@ -403,7 +392,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			return FALSE;
 
 		// Use the default step of 1
-		($step === NULL AND $step = 1);
+		( ! $step AND $step = 1);
 
 		return strpos(($value - $min) / $step, '.') === FALSE;
 	}
