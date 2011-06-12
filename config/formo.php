@@ -31,7 +31,7 @@ return array
 	// If set to true, all Validate helper functions are auto-preceded
 	// by :value if it's not explicitly set
 	'validate_compatible'    => TRUE,
-	'html5_rules' => array
+	'input_rules' => array
 	(
 		'email'         => array(array('email')),
 		'tel'           => array(array('phone')),

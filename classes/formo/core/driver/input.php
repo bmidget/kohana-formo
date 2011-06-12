@@ -20,7 +20,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	public function pre_validate()
 	{
 		parent::pre_validate();
-		$this->_add_html5_rules();
+		$this->_add_input_rules();
 	}
 	
 	public function html()
@@ -32,10 +32,10 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 			->attr('value', $this->field->val());
 	}
 	
-	protected function _add_html5_rules()
+	protected function _add_input_rules()
 	{
 		// Grab the rules from the formo config
-		$rules = Arr::path(Kohana::config('formo'), 'html5_rules.'.$this->get_type());
+		$rules = Arr::path(Kohana::config('formo'), 'input_rules.'.$this->get_type());
 
 		if ($rules)
 		{

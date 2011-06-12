@@ -379,8 +379,6 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		$min = $form->$field->attr('min');
 		$step = $form->$field->attr('step');
 		
-		echo Debug::vars($value, $max, $min, $step);
-		
 		// It has to be a number
 		if ( ! is_int($value) AND ! ctype_digit($value))
 			return FALSE;
