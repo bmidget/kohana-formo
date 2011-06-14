@@ -20,7 +20,7 @@ class Formo_Core_Driver_Radio extends Formo_Driver {
 
 		if ($this->field->parent()->val() == $this->field->val())
 		{
-			$this->field->attr('checked', 'checked');
+			$this->field->view()->attr('checked', 'checked');
 		}
 	}
 

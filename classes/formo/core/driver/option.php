@@ -19,7 +19,7 @@ class Formo_Core_Driver_Option extends Formo_Driver {
 
 		if ($this->field->parent()->val() == $this->field->val())
 		{
-			$this->field->attr('selected', 'selected');
+			$this->field->view()->attr('selected', 'selected');
 		}
 	}
 	
