@@ -12,8 +12,8 @@ class Formo_Core_Driver_Option extends Formo_Driver {
 
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'option')
+		$this->view()
+			->set_var('tag', 'option')
 			->text($this->field->alias())
 			->attr('value', $this->field->val());
 

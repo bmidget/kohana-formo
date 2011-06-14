@@ -1,8 +1,8 @@
-<?php echo $form->open(); ?>
-	<?php if ($error = $form->error() AND $error !== TRUE): ?>
-		<span class="error-message"><?php echo UTF8::ucfirst($form->error()); ?></span>
+<?php echo $field->open(); ?>
+	<?php if ($error = $field->error() AND $error !== TRUE): ?>
+		<span class="error-message"><?php echo UTF8::ucfirst($field->error()); ?></span>
 	<?php endif; ?>
-	<?php foreach ($form->fields() as $field): ?>
-		<?php echo $field->generate(); ?>
+	<?php foreach ($field->fields() as $_field): ?>
+		<?php echo $_field->render(); ?>
 	<?php endforeach; ?>
-<?php echo $form->close(); ?>
+<?php echo $field->close(); ?>

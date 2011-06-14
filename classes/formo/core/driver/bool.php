@@ -44,18 +44,18 @@ class Formo_Core_Driver_Bool extends Formo_Driver {
 	public function check()
 	{
 		// Set this value to 1
-		$this->field->set('value', TRUE);
+		$this->field->set_var('value', TRUE);
 	}
 	
 	public function uncheck()
 	{
-		$this->field->set('value', 0);
+		$this->field->set_var('value', 0);
 	}
 	
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'checkbox')
 			->attr('name', $this->name())
 			->attr('value', 1);
@@ -64,7 +64,7 @@ class Formo_Core_Driver_Bool extends Formo_Driver {
 		
 		if ($this->field->checked())
 		{
-			$this->decorator->attr('checked', 'checked');
+			$this->view()->attr('checked', 'checked');
 		}
 	}
 

@@ -14,14 +14,14 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 	// Setup the html object
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'form');
+		$this->view()
+			->set_var('tag', 'form');
 
 		// If it's not already defined, the form's type is 'post'
-		( ! $this->decorator->attr('method') AND $this->decorator->attr('method', 'post'));
+		( ! $this->view()->attr('method') AND $this->view()->attr('method', 'post'));
 
 		// If it's not already defined, define the field's action
-		( ! $this->decorator->attr('action') AND $this->decorator->attr('action', ''));
+		( ! $this->view()->attr('action') AND $this->view()->attr('action', ''));
 	}
 	
 	public function val($value = NULL)
