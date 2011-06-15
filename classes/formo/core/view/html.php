@@ -190,10 +190,13 @@ class Formo_Core_View_HTML extends Formo_View {
 	
 	protected function make_id()
 	{
-		$id = strtolower(str_replace(' ', '-', $this->label()));
+		$id = $this->alias();
 
 		if ( ! $parent = $this->_container->parent())
 			// If there isn't a parent, don't namespace the name
+			return $id;
+		
+		if ($parent->alias() == Kohana::config('formo')->form_alias)
 			return $id;
 
 		return $parent->alias().'-'.$id;
