@@ -29,5 +29,17 @@ class Formo_Core_Driver_File extends Formo_Driver {
 		// Check for the appropriate "$_FILES" entry
 		$this->set_var('new_value', $value['name']);
 	}
+	
+	public function get_val()
+	{
+		$new_value = $this->field->get('new_value');
+
+		if (Formo::is_set($new_value) === TRUE)
+			return $new_value;
+		
+		return ($val = $this->field->get('value'))
+			? $val
+			: array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => '', 'size' => '');
+	}
 
 }
