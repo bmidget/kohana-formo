@@ -17,7 +17,7 @@
 	 - [Validation errors](formo.errors)
 	 - [Field validation](formo.validation-field)
  - Rendering HTML Forms
-	 - [HTML Type](formo.html_type)
+	 - [HTML Kind](formo.html_kind)
 	 - [Rendering](formo.rendering)
 	 - [HTML views](formo.html-views)
  - [ORM Integration](formo.orm)
