@@ -12,8 +12,8 @@ class Formo_Core_Driver_Text extends Formo_Driver {
 		
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'text')
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());

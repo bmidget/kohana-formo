@@ -17,8 +17,8 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 			$this->field->append(Formo::field($label, 'option', $options));
 		}
 		
-		$this->decorator
-			->set('tag', 'select')
+		$this->view()
+			->set_var('tag', 'select')
 			->attr('name', $this->name());		
 	}
 

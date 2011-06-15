@@ -1,7 +1,9 @@
-The HTML Type
+The HTML Kind
 =============
 
-You will likely use the HTML decorator in your formo forms. This is an overview of the functionality it adds to Formo objects.
+You will likely use the HTML view in your formo forms. This is an overview of the functionality it adds to Formo objects. The view object is passed into the view file as `$field` and is accessible everywhere else with `view()`.
+
+	$view_obj = $form->username->view();
 
 ### Open
 
@@ -17,17 +19,17 @@ Likewise, you will often need to only render the object's closing tag:
 
 ### Render
 
-To render the HTML DOM object, use `render()`:
+To render the HTML DOM object, use `html()`:
 
-	echo $field->render();
+	echo $field->html();
 
 For more about rendering forms, see the [rendering section](formo.rendering);
 
 ### Generate
 
-To generate a view file using a field or form object, use `generate()`:
+To generate a view file using a field or form object, use `render()`:
 
-	echo $form->generate();
+	echo $form->render();
 
 For more about generating forms, see the [rendering section](formo.rendering);
 

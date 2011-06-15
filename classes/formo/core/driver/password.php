@@ -12,8 +12,8 @@ class Formo_Core_Driver_Password extends Formo_Driver {
 
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'password')
 			->attr('name', $this->name());
 	}

@@ -1,1 +1,1 @@
-<div><?php echo $field->render(); ?></div>
+<div><?php echo $field->html(); ?></div>

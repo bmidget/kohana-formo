@@ -12,8 +12,8 @@ class Formo_Core_Driver_Button extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'button')
+		$this->view()
+			->set_var('tag', 'button')
 			->attr('name', $this->name())
 			->attr('value', $this->val())
 			->text($this->field->alias());

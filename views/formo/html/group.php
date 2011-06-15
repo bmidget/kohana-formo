@@ -4,6 +4,6 @@
 		<span class="error-message"><?php echo UTF8::ucfirst($group->error()); ?></span>
 	<?php endif; ?>
 	<?php foreach ($group->fields() as $group): ?>
-		<?php echo $group->generate(); ?>
+		<?php echo $group->render(); ?>
 	<?php endforeach; ?>
 </div>
