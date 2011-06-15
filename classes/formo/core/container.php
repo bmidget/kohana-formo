@@ -699,6 +699,17 @@ abstract class Formo_Core_Container {
 		// Return the new driver instance
 		return $instance;
 	}
+	
+	/**
+	 * Retrieve the view file
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function view()
+	{
+		return $this->driver()->view();
+	}
 
 	/**
 	 * Load an orm driver instance
