@@ -247,6 +247,9 @@ abstract class Formo_Core_Driver {
 	 */
 	public function name()
 	{
+		if ( ! Kohana::config('formo')->namespaces)
+			return $this->field->alias();
+
 		if ( ! $parent = $this->field->parent())
 			// If there isn't a parent, don't namespace the name
 			return $this->field->alias();
