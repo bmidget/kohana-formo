@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-abstract class Formo_Core_View_HTML extends Formo_View {
+class Formo_Core_View_HTML extends Formo_View {
 
 	/**
 	 * The formo_container object
@@ -324,20 +324,6 @@ abstract class Formo_Core_View_HTML extends Formo_View {
 		{
 			return '</'.$this->_vars['tag'].'>'."\n";
 		}
-	}
-
-	/**
-	 * Return this object
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $file. (default: NULL)
-	 * @param mixed array $data. (default: NULL)
-	 * @return void
-	 */
-	public static function factory($file = NULL, array $data = NULL)
-	{
-		return new Formo_View($file, $data);
 	}
 
 	/**

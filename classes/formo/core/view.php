@@ -89,20 +89,6 @@ abstract class Formo_Core_View extends View {
 	}
 
 	/**
-	 * Return this object
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $file. (default: NULL)
-	 * @param mixed array $data. (default: NULL)
-	 * @return void
-	 */
-	public static function factory($file = NULL, array $data = NULL)
-	{
-		return new Formo_View($file, $data);
-	}
-
-	/**
 	 * Inject $field into new scope
 	 *
 	 * @access public
