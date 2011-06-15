@@ -40,10 +40,6 @@ class Formo_Core_Driver_File extends Formo_Driver {
 		return ($val = $this->field->get('value'))
 			? $val
 			: array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => '', 'size' => '');
-
-		return (Formo::is_set($new_value) === TRUE)
-			? $new_value
-			: $old_value;
 	}
 
 }
