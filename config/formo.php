@@ -28,6 +28,8 @@ return array
 	'orm_driver'             => 'Formo_ORM_Kohana',
 	// Config file for the ORM driver
 	'orm_config'             => 'formo_kohana',
+	// Auto-generate IDs on form elements
+	'auto_id'                => FALSE,
 	// If set to true, all Validate helper functions are auto-preceded
 	// by :value if it's not explicitly set
 	'validate_compatible'    => TRUE,

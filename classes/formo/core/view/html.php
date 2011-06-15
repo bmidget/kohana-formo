@@ -187,6 +187,31 @@ class Formo_Core_View_HTML extends Formo_View {
 
 		return $this;
 	}
+	
+	protected function make_id()
+	{
+		$id = strtolower(str_replace(' ', '-', $this->label()));
+
+		if ( ! $parent = $this->_container->parent())
+			// If there isn't a parent, don't namespace the name
+			return $id;
+
+		return $parent->alias().'-'.$id;
+	}
+	
+	/**
+	 * Auto-create the id if necessary
+	 * 
+	 * @access protected
+	 * @return void
+	 */
+	protected function auto_id()
+	{
+		if (Kohana::config('formo')->auto_id AND ! $this->attr('id'))
+		{
+			$this->attr('id', $this->make_id());
+		}
+	}
 
 	/**
 	 * Set or return the text
@@ -325,6 +350,12 @@ class Formo_Core_View_HTML extends Formo_View {
 			return '</'.$this->_vars['tag'].'>'."\n";
 		}
 	}
+	
+	public function pre_render()
+	{
+		$this->auto_id();
+		return parent::pre_render();
+	}
 
 	/**
 	 * Return HTML element
@@ -334,6 +365,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	 */
 	public function html()
 	{
+		$this->auto_id();
 		$singletag = in_array($this->_vars['tag'], $this->_singles);
 
 		$str = $this->open();

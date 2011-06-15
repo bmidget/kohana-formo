@@ -1,5 +1,5 @@
 <?php echo $open; ?>
-	<label>
+	<label<?php if ($id = $field->attr('id')) echo ' for="'.$id.'"'; ?>>
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
