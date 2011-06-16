@@ -206,7 +206,9 @@ class Formo_Core_Form extends Formo_Validator {
 			}
 
 			// Fetch the namespace for this form
-			$namespaced_input = Arr::get($input, $this->alias(), array());
+			$namespaced_input = Kohana::config('formo')->namespaces === TRUE
+				? Arr::get($input, $this->alias(), array())
+				: $input;
 
 			if (isset($namespaced_input[$input_key]))
 			{
