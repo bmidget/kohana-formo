@@ -12,14 +12,14 @@ class Formo_Core_Driver_Option extends Formo_Driver {
 
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'option')
+		$this->view()
+			->set_var('tag', 'option')
 			->text($this->field->alias())
 			->attr('value', $this->field->val());
 
 		if ($this->field->parent()->val() == $this->field->val())
 		{
-			$this->field->attr('selected', 'selected');
+			$this->field->view()->attr('selected', 'selected');
 		}
 	}
 	

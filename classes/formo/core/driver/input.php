@@ -25,8 +25,8 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', $this->get_type())
 			->attr('name', $this->name())
 			->attr('value', $this->field->val());

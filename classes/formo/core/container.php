@@ -684,7 +684,7 @@ abstract class Formo_Core_Container {
 			return $instance;
 
 		// Build the class name
-		$driver_class_name = Kohana::config('formo')->driver_prefix.UTF8::ucfirst($driver);
+		$driver_class_name = Kohana::config('formo')->driver_prefix.ucfirst($driver);
 
 		$instance = new $driver_class_name($this);
 
@@ -698,6 +698,17 @@ abstract class Formo_Core_Container {
 
 		// Return the new driver instance
 		return $instance;
+	}
+	
+	/**
+	 * Retrieve the view file
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function view()
+	{
+		return $this->driver()->view();
 	}
 
 	/**

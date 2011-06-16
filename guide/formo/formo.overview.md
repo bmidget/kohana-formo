@@ -24,7 +24,7 @@ This document explains the structure of a Formo object and gives basic informati
 		- Form/Field
 			- ORM
 			- Driver
-				- Decorator
+				- View
 			
 ### Formo
 
@@ -50,8 +50,8 @@ The ORM object acts as a driver and interface to connectivity with an ORM librar
 
 Drivers handle form and field-specific functionality. For instance, a group of checkbox fields is checked for being not_empty differently from a password field.
 
-### Decorator
+### View
 
-The decorator adds extra functionality to a form or field object. An example of a decorator is the HTML decorator that adds `attr()` and `add_class()` and also renders forms and fields as HTML DOM objects.
+The view adds extra functionality to a form or field object. An example of a decorator is the HTML decorator that adds `attr()` and `add_class()` and also renders forms and fields as HTML DOM objects.
 
 [Continue to Getting Started >](formo.getting-started)

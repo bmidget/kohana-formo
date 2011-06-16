@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-abstract class Formo_Decorator extends Formo_Core_Decorator {}
+class Formo_View_HTML extends Formo_Core_View_HTML {}

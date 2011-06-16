@@ -14,15 +14,15 @@ class Formo_Core_Driver_Submit extends Formo_Driver {
 	{
 		$value = ($val = $this->field->get('value'))
 			? $val
-			: $this->decorator->label();
+			: $this->view()->label();
 			
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'submit')
 			->attr('name', $this->name())
 			->attr('value', $value);
 	}
-	
+
 	public function sent()
 	{
 		return $this->field->not_empty() !== FALSE;

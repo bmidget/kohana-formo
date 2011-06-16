@@ -12,15 +12,15 @@ class Formo_Core_Driver_Radio extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'radio')
 			->attr('name', $this->field->parent()->name())
 			->attr('value', $this->field->val());
 
 		if ($this->field->parent()->val() == $this->field->val())
 		{
-			$this->field->attr('checked', 'checked');
+			$this->field->view()->attr('checked', 'checked');
 		}
 	}
 

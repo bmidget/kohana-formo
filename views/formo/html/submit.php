@@ -1,3 +1,3 @@
 <?php echo $open; ?>
-	<?php echo $field->render(); ?>
+	<?php echo $field->html(); ?>
 <?php echo $close; ?>

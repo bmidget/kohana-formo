@@ -25,15 +25,15 @@ class Formo_Core_Driver_Checkbox extends Formo_Driver {
 	// Setup the html field
 	public function html()
 	{
-		$this->decorator
-			->set('tag', 'input')
+		$this->view()
+			->set_var('tag', 'input')
 			->attr('type', 'checkbox')
 			->attr('name', $this->field->parent()->name().'[]')
 			->attr('value', $this->field->val());
 
 		if ($this->field->checked())
 		{
-			$this->decorator->attr('checked', 'checked');
+			$this->view()->attr('checked', 'checked');
 		}
 	}
 

@@ -9,12 +9,12 @@
 abstract class Formo_Core_Driver {
 
 	/**
-	 * Decorator object
+	 * View object
 	 *
 	 * @var object
 	 * @access protected
 	 */
-	protected $decorator;
+	protected $_view;
 
 	/**
 	 * Field or form object
@@ -68,7 +68,7 @@ abstract class Formo_Core_Driver {
 	}
 
 	/**
-	 * Populate the field and decorator objects
+	 * Populate the field and view objects
 	 *
 	 * @access public
 	 * @param mixed Formo_Container $field
@@ -79,44 +79,35 @@ abstract class Formo_Core_Driver {
 		// Load the field instance
 		$this->field = $field;
 		
-		// Determine the original decorator type
+		// Determine the original view type
 		$kind = ($kind = $this->field->get('kind'))
 			? $kind
 			// Fall back on the default form type
 			: Kohana::config('formo')->kind;
 
-		$this->decorator($kind);
+		$this->make_view($kind);
 	}
 
 	/**
-	 * Run methods on the decorator object
-	 *
-	 * @access public
-	 * @param mixed $method
-	 * @param mixed $args
-	 * @return void
-	 */
-	public function __call($func, $args)
-	{
-		// At this point we need to run the method through the decorator
-		$method = new ReflectionMethod($this->decorator, $func);
-		return $method->invokeArgs($this->decorator, $args);
-	}
-
-	/**
-	 * Create the decorator instance
+	 * Create the view instance
 	 *
 	 * @access public
 	 * @param mixed $type
 	 * @return void
 	 */
-	public function decorator($type)
+	public function make_view($type)
 	{
 		// Make the class name
-		$class = 'Formo_Decorator_'.ucfirst($type);
+		$class = 'Formo_View_'.$type;
 
 		// Create the actual decorator object
-		$this->decorator = new $class($this->field, $this);
+		$this->_view = new $class();
+		$this->_view->_container  = $this->field;
+	}
+	
+	public function view()
+	{
+		return $this->_view;
 	}
 	
 	/**
@@ -128,16 +119,12 @@ abstract class Formo_Core_Driver {
 	 */
 	public function append()
 	{
-		$this->decorator->append();
+		$this->view()->append();
 	}
 
 	public function set($variable, $value)
 	{
-		// If the variable is inside the decorator, set that
-		if (isset($this->decorator->$variable))
-			$this->decorator->set($variable, $value);
-
-		// Otherwise just set the field value
+		// Just set the field value
 		$this->field->$variable = $value;
 
 		return $this->field;
@@ -145,12 +132,7 @@ abstract class Formo_Core_Driver {
 
 	public function get($variable, $default, $shallow_look = FALSE)
 	{
-		if ($shallow_look !== TRUE AND isset($this->decorator->$variable))
-			// If the variable is inside the decorator, return that
-			// and only do so if not doing a shallow look
-			return $this->decorator->get($variable);
-		
-		// Otherwise return the field value if it's set, or the default value if it's not
+		// Return the field value if it's set, or the default value if it's not
 		return (isset($this->field->$variable))
 			? $this->field->$variable
 			: $default;
@@ -265,6 +247,9 @@ abstract class Formo_Core_Driver {
 	 */
 	public function name()
 	{
+		if ( ! Kohana::config('formo')->namespaces)
+			return $this->field->alias();
+
 		if ( ! $parent = $this->field->parent())
 			// If there isn't a parent, don't namespace the name
 			return $this->field->alias();
@@ -340,27 +325,13 @@ abstract class Formo_Core_Driver {
 			$this->field->orm_driver()->pre_render();
 		}
 
-		$this->decorator->pre_render();
+		$this->view()->pre_render();
 
 		return $this->field;
 	}
 
 	/**
-	 * Render the field
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function render()
-	{
-		// First run and do any pre_render stuff
-		$this->pre_render();
-
-		return $this->decorator->render();
-	}
-
-	/**
-	 * Run when open is called on the decorator
+	 * Run when open is called on the view
 	 *
 	 * @access public
 	 * @return void
@@ -370,7 +341,7 @@ abstract class Formo_Core_Driver {
 		// First run and do any pre_render stuff
 		$this->pre_render();
 
-		return $this->decorator->open();
+		return $this->view()->open();
 	}
 
 	/**
@@ -379,7 +350,7 @@ abstract class Formo_Core_Driver {
 	 * @access public
 	 * @return void
 	 */
-	public function generate($view_file = FALSE, $view_prefix = NULL)
+	public function render($view_file = FALSE, $view_prefix = NULL)
 	{
 		if ($this->field->get('render', NULL) === FALSE)
 			return;
@@ -396,7 +367,13 @@ abstract class Formo_Core_Driver {
 		// Skip the prefix if view prefix is FALSE
 		$skip_prefix = $view_prefix === FALSE;
 
-		return $this->decorator->generate($view, $prefix);
+		$this->view()
+			->set('open', View::factory("$prefix/_open_tag", array('field' => $this->view())))
+			->set('close', View::factory("$prefix/_close_tag", array('field' => $this->view())))
+			->set('message', View::factory("$prefix/_message", array('field' => $this->view())))
+			->set('label', View::factory("$prefix/_label", array('field' => $this->view())));
+
+		return $this->view()->render("$prefix/$view");
 	}
 
 	protected function get_view($view = FALSE)

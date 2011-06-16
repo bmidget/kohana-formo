@@ -1,12 +1,12 @@
 <?php echo $open; ?>
-	<label>
+	<label<?php if ($id = $field->attr('id')) echo ' for="'.$id.'"'; ?>>
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
 				<?php echo $field->open(); ?>
 					<option value=""></option>
 					<?php foreach ($field->fields() as $option): ?>
-						<?php echo $option->generate()?>
+						<?php echo $option->render()?>
 					<?php endforeach; ?>
 				<?php echo $field->close(); ?>
 			<?php else: ?>

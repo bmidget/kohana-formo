@@ -60,7 +60,7 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 			}
 		}
 
-		$this->field->set('value', $new_value);
+		$this->field->set_var('value', $new_value);
 	}
 
 	public function uncheck(array $aliases)
@@ -74,7 +74,7 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 			unset($new_value[array_search($value, $new_value)]);
 		}
 
-		$this->field->set('value', $new_value);
+		$this->field->set_var('value', $new_value);
 	}
 
 	public function html()
