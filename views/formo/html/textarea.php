@@ -1,9 +1,9 @@
 <?php echo $open; ?>
-	<label<?php if ($id = $field->attr('id')) echo ' for="'.$id.'"'; ?>>
+	<label<?php if ($id = $view->attr('id')) echo ' for="'.$id.'"'; ?>>
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
-				<?php echo $field->add_class('input')->attr('rows', 10)->html(); ?>
+				<?php echo $view->add_class('input')->attr('rows', 10)->html(); ?>
 			<?php else: ?>
 				<span><?php echo $field->val(); ?></span>
 			<?php endif; ?>

@@ -1,9 +1,9 @@
 <div class="group">
-	<h2><?php echo UTF8::ucfirst(str_replace('_', ' ', $group->alias())); ?></h2>
-	<?php if ($error = $group->error() AND $error !== TRUE): ?>
-		<span class="error-message"><?php echo UTF8::ucfirst($group->error()); ?></span>
+	<h2><?php echo UTF8::ucfirst(str_replace('_', ' ', $field->alias())); ?></h2>
+	<?php if ($error = $field->error() AND $error !== TRUE): ?>
+		<span class="error-message"><?php echo $field->error(); ?></span>
 	<?php endif; ?>
-	<?php foreach ($group->fields() as $group): ?>
-		<?php echo $group->render(); ?>
+	<?php foreach ($field->fields() as $field): ?>
+		<?php echo $view->render(); ?>
 	<?php endforeach; ?>
 </div>
