@@ -8,11 +8,11 @@
  */
 class Formo_Core_Driver_Input extends Formo_Driver {
 
-	protected $view = 'input';
+	protected $_view_file = 'input';
 	
 	protected function get_type()
 	{
-		return ($type = $this->field->get('type'))
+		return ($type = $this->_field->get('type'))
 			? $type
 			: 'text';
 	}
@@ -25,11 +25,11 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	
 	public function html()
 	{
-		$this->view()
+		$this->_view
 			->set_var('tag', 'input')
 			->attr('type', $this->get_type())
 			->attr('name', $this->name())
-			->attr('value', $this->field->val());
+			->attr('value', $this->_field->val());
 	}
 	
 	protected function _add_input_rules()
@@ -40,12 +40,12 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 		if ($rules)
 		{
 			// Attach rules to the field's parent
-			$this->field->parent()->rules($this->field->alias(), $rules);
+			$this->_field->parent()->rules($this->_field->alias(), $rules);
 		}
 		
 		if ($bindings = Kohana::config('formo.html5_bindings.'.$this->get_type()))
 		{
-			$this->field->set('bindings', $bindings);
+			$this->_field->set('bindings', $bindings);
 		}
 	}
 

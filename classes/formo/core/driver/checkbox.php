@@ -8,32 +8,32 @@
  */
 class Formo_Core_Driver_Checkbox extends Formo_Driver {
 
-	protected $view = 'checkbox';
+	protected $_view_file = 'checkbox';
 	public $empty_input = TRUE;
 
 	public function checked()
 	{
-		$parent_newval = $this->field->parent()->get('new_value');
-		$parent_value = $this->field->parent()->get('value');
+		$parent_newval = $this->_field->parent()->get('new_value');
+		$parent_value = $this->_field->parent()->get('value');
 
-		if (Formo::is_set($parent_newval) === FALSE AND ! $this->field->parent(Formo::PARENT)->sent())
+		if (Formo::is_set($parent_newval) === FALSE AND ! $this->_field->parent(Formo::PARENT)->sent())
 			return in_array($this->val(), (array) $parent_value);
 
-		return (in_array($this->field->val(), (array) $parent_newval));
+		return (in_array($this->_field->val(), (array) $parent_newval));
 	}
 
 	// Setup the html field
 	public function html()
 	{
-		$this->view()
+		$this->_view
 			->set_var('tag', 'input')
 			->attr('type', 'checkbox')
-			->attr('name', $this->field->parent()->name().'[]')
-			->attr('value', $this->field->val());
+			->attr('name', $this->_field->parent()->name().'[]')
+			->attr('value', $this->_field->val());
 
-		if ($this->field->checked())
+		if ($this->_field->checked())
 		{
-			$this->view()->attr('checked', 'checked');
+			$this->_view->attr('checked', 'checked');
 		}
 	}
 

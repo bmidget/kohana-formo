@@ -8,13 +8,13 @@
  */
 class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
-	protected $view = 'checkboxes';
+	protected $_view_file = 'checkboxes';
 	public $empty_input = TRUE;
 
 	public function load($values)
 	{
 		// If this field is not being rendered, do nothing
-		if ($this->field->get('render') === FALSE)
+		if ($this->_field->get('render') === FALSE)
 			return;
 
 		$this->val($values);
@@ -27,16 +27,16 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
 	public function get_val()
 	{
-		$new_value = $this->field->get('new_value');
+		$new_value = $this->_field->get('new_value');
 
 		// If the form was sent but the field wasn't set, return empty array as value
-		if ($this->field->sent() AND Formo::is_set($new_value) === FALSE)
+		if ($this->_field->sent() AND Formo::is_set($new_value) === FALSE)
 			return array();
 
 		// Otherwise return the value that's set
 		return (Formo::is_set($new_value, $new_value) === TRUE)
 			? (array) $new_value
-			: (array) $this->field->get('value');
+			: (array) $this->_field->get('value');
 	}
 
 	public function not_empty()
@@ -48,10 +48,10 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
 	public function check(array $aliases)
 	{
-		$new_value = (array) $this->field->get('value');
+		$new_value = (array) $this->_field->get('value');
 		foreach ($aliases as $alias)
 		{
-			$options = $this->field->get('options');
+			$options = $this->_field->get('options');
 			$value = $options[$alias]['value'];
 
 			if ( ! in_array($value, $new_value))
@@ -60,28 +60,28 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 			}
 		}
 
-		$this->field->set_var('value', $new_value);
+		$this->_field->set_var('value', $new_value);
 	}
 
 	public function uncheck(array $aliases)
 	{
-		$new_value = (array) $this->field->get('value');
+		$new_value = (array) $this->_field->get('value');
 		foreach ($aliases as $alias)
 		{
-			$options = $this->field->get('options');
+			$options = $this->_field->get('options');
 			$value = $options[$alias]['value'];
 
 			unset($new_value[array_search($value, $new_value)]);
 		}
 
-		$this->field->set_var('value', $new_value);
+		$this->_field->set_var('value', $new_value);
 	}
 
 	public function html()
 	{
-		foreach ($this->field->get('options') as $alias => $options)
+		foreach ($this->_field->get('options') as $alias => $options)
 		{
-			$this->field->append(Formo::field($alias, 'checkbox', $options));
+			$this->_field->append(Formo::field($alias, 'checkbox', $options));
 		}
 	}
 

@@ -8,13 +8,13 @@
  */
 class Formo_Core_Driver_Radios extends Formo_Driver {
 
-	protected $view = 'radios';
+	protected $_view_file = 'radios';
 	
 	public function html()
 	{
-		foreach ($this->field->get('options') as $label => $options)
+		foreach ($this->_field->get('options') as $label => $options)
 		{
-			$this->field->append(Formo::field($label, 'radio', $options));
+			$this->_field->append(Formo::field($label, 'radio', $options));
 		}
 	}
 

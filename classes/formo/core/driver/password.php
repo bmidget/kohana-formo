@@ -8,11 +8,11 @@
  */
 class Formo_Core_Driver_Password extends Formo_Driver {
 
-	protected $view = 'text';
+	protected $_view_file = 'text';
 
 	public function html()
 	{
-		$this->view()
+		$this->_view
 			->set_var('tag', 'input')
 			->attr('type', 'password')
 			->attr('name', $this->name());

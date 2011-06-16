@@ -8,15 +8,15 @@
  */
 class Formo_Core_Driver_Text extends Formo_Driver {
 
-	protected $view = 'text';
+	protected $_view_file = 'text';
 		
 	public function html()
 	{
-		$this->view()
+		$this->_view
 			->set_var('tag', 'input')
 			->attr('type', 'text')
 			->attr('name', $this->name())
-			->attr('value', $this->field->val());
+			->attr('value', $this->_field->val());
 	}
 
 }

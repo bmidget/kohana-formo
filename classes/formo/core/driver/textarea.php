@@ -8,13 +8,13 @@
  */
 class Formo_Core_Driver_Textarea extends Formo_Driver {
 
-	protected $view = 'textarea';
+	protected $_view_file = 'textarea';
 	
 	public function html()
 	{
-		$this->view()
+		$this->_view
 			->set_var('tag', 'textarea')
-			->set_var('text', $this->field->val())
+			->set_var('text', $this->_field->val())
 			->attr('name', $this->name());
 	}
 
