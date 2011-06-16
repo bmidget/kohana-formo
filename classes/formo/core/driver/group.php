@@ -13,6 +13,13 @@ class Formo_Core_Driver_Group extends Formo_Driver {
 
 	public function val($value = NULL)
 	{
+		$values = array();
+		foreach ($this->_field->get('fields') as $field)
+		{
+			$values[$field->alias()] = $field->val();
+		}
+		
+		return $values;
 	}
 
 }
