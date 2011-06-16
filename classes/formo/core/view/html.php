@@ -8,7 +8,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	 * @var mixed
 	 * @access protected
 	 */
-	public $_container;
+	public $_field;
 
 	/**
 	 * List of HTML tags without closing tags
@@ -192,7 +192,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	{
 		$id = $this->alias();
 
-		if ( ! $parent = $this->_container->parent())
+		if ( ! $parent = $this->_field->parent())
 			// If there isn't a parent, don't namespace the name
 			return $id;
 		
@@ -359,6 +359,11 @@ class Formo_Core_View_HTML extends Formo_View {
 		$this->auto_id();
 		return parent::pre_render();
 	}
+	
+	public function field()
+	{
+		return $this->_field;
+	}
 
 	/**
 	 * Return HTML element
@@ -376,7 +381,7 @@ class Formo_Core_View_HTML extends Formo_View {
 		if ( ! $singletag)
 		{
 			$str.= $this->_vars['text'];
-			foreach ($this->_container->fields() as $field)
+			foreach ($this->_field->fields() as $field)
 			{
 				$str.= $field->view->html();
 			}

@@ -1,1 +1,1 @@
-<span class="error-message"><?php echo UTF8::ucfirst($field->error()); ?></span>
+<span class="error-message"><?php echo $field->error(); ?></span>

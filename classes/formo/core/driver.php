@@ -102,7 +102,7 @@ abstract class Formo_Core_Driver {
 
 		// Create the actual decorator object
 		$this->_view = new $class();
-		$this->_view->_container  = $this->field;
+		$this->_view->_field  = $this->field;
 	}
 	
 	public function view()
@@ -368,10 +368,10 @@ abstract class Formo_Core_Driver {
 		$skip_prefix = $view_prefix === FALSE;
 
 		$this->view()
-			->set('open', View::factory("$prefix/_open_tag", array('field' => $this->view())))
-			->set('close', View::factory("$prefix/_close_tag", array('field' => $this->view())))
-			->set('message', View::factory("$prefix/_message", array('field' => $this->view())))
-			->set('label', View::factory("$prefix/_label", array('field' => $this->view())));
+			->set('open', View::factory("$prefix/_open_tag", array('view' => $this->view(), 'field' => $this->field)))
+			->set('close', View::factory("$prefix/_close_tag", array('view' => $this->view(), 'field' => $this->field)))
+			->set('message', View::factory("$prefix/_message", array('view' => $this->view(), 'field' => $this->field)))
+			->set('label', View::factory("$prefix/_label", array('view' => $this->view(), 'field' => $this->field)));
 
 		return $this->view()->render("$prefix/$view");
 	}
