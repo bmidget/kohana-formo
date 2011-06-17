@@ -11,6 +11,6 @@ return array
 		'has_many'   => 'checkboxes',
 		'belongs_to' => 'select',
 		'has_one'    => 'select',
-		'default'    => 'text',
+		'default'    => 'input',
 	),
 );
