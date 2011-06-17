@@ -30,7 +30,7 @@ class Formo_Core_Driver_File extends Formo_Driver {
 		$this->set_var('new_value', $value['name']);
 	}
 	
-	public function get_val()
+	protected function _get_val()
 	{
 		$new_value = $this->_field->get('new_value');
 

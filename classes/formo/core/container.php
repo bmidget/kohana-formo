@@ -226,14 +226,14 @@ abstract class Formo_Core_Container {
 	 * @param mixed $value. (default: NULL)
 	 * @return object
 	 */
-	protected function load_options($option, $value = NULL)
+	protected function _load_options($option, $value = NULL)
 	{
 		// Support array of options
 		if (is_array($option))
 		{
 			foreach ($option as $_option => $_value)
 			{
-				$this->load_options($_option, $_value);
+				$this->_load_options($_option, $_value);
 			}
 
 			return $this;
@@ -587,7 +587,7 @@ abstract class Formo_Core_Container {
 	 * @param mixed $search
 	 * @return mixed
 	 */
-	protected function find_order($search, array $fields = NULL)
+	protected function _find_order($search, array $fields = NULL)
 	{
 		$fields = ($fields !== NULL)
 			? $fields
@@ -614,7 +614,7 @@ abstract class Formo_Core_Container {
 	 * @param mixed $field
 	 * @return mixed
 	 */
-	protected function find_fieldkey($field)
+	protected function _find_fieldkey($field)
 	{
 		foreach ($this->_defaults['fields'] as $key => $value)
 		{
@@ -648,7 +648,7 @@ abstract class Formo_Core_Container {
 		// If the new order is a string, it's a comparative order
 		if ( ! ctype_digit($new_order) AND is_string($new_order))
 		{
-			$position = $this->find_order($relative_field, $fields);
+			$position = $this->_find_order($relative_field, $fields);
 
 			// If the place wasn't found, do nothing
 			if ($position === FALSE)

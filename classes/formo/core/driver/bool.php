@@ -20,7 +20,7 @@ class Formo_Core_Driver_Bool extends Formo_Driver {
 		return $this->val() == TRUE;
 	}
 	
-	public function get_val()
+	protected function _get_val()
 	{
 		$new_value = $this->_field->get('new_value');
 

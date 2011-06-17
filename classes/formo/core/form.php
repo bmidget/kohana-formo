@@ -76,10 +76,10 @@ class Formo_Core_Form extends Formo_Validator {
 		}
 		
 		// Run validator setup
-		$this->setup_validation();
+		$this->_setup_validation();
 		
 		// Load the options
-		$this->load_options($options);
+		$this->_load_options($options);
 	}
 
 	/**
@@ -96,13 +96,13 @@ class Formo_Core_Form extends Formo_Validator {
 	{
 		// If Formo instnace was passed
 		if ($alias instanceof Formo_Form)
-			return $this->add_object($alias);
+			return $this->_add_object($alias);
 
 		if ($driver instanceof Formo_Form)
-			return $this->add_object($driver->alias($alias));
+			return $this->_add_object($driver->alias($alias));
 
 		if ($value instanceof Formo_Form)
-			return $this->add_object($value->set('driver', $driver)->alias($alias));
+			return $this->_add_object($value->set('driver', $driver)->alias($alias));
 
 		$orig_options = $options;
 		$options = func_get_args();
@@ -151,7 +151,7 @@ class Formo_Core_Form extends Formo_Validator {
 	 * @param mixed Formo $subform
 	 * @return object
 	 */
-	protected function add_object(Formo_Container $subform)
+	protected function _add_object(Formo_Container $subform)
 	{
 		($subform instanceof Formo_Form AND $subform->bind('_settings', 'input', $this->_settings['input']));
 

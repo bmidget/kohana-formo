@@ -197,7 +197,7 @@ abstract class Formo_Core_Driver {
 	 * @access protected
 	 * @return void
 	 */
-	protected function get_val()
+	protected function _get_val()
 	{
 		$new_value = $this->_field->get('new_value');
 
@@ -213,7 +213,7 @@ abstract class Formo_Core_Driver {
 	 * @param mixed $value
 	 * @return void
 	 */
-	protected function set_val($value)
+	protected function _set_val($value)
 	{
 		$this->_field->set('new_value', $value);
 	}
@@ -228,13 +228,13 @@ abstract class Formo_Core_Driver {
 	public function val($value = NULL)
 	{
 		if (func_num_args() === 0)
-			return $this->get_val();
+			return $this->_get_val();
 
 		// Set the value
-		$this->set_val($value);
+		$this->_set_val($value);
 
 		// Run ORM methods
-		$this->set_orm_fields($value);
+		$this->_set_orm_fields($value);
 
 		return $this;
 	}
@@ -264,7 +264,7 @@ abstract class Formo_Core_Driver {
 	 * @param mixed $value
 	 * @return void
 	 */
-	protected function set_orm_fields($value)
+	protected function _set_orm_fields($value)
 	{
 		if ($orm = $this->_field->model(TRUE))
 		{
@@ -359,10 +359,10 @@ abstract class Formo_Core_Driver {
 		$this->pre_render();
 
 		// Prefix acts as a templating system for views
-		$prefix = $this->get_view_prefix($view_prefix);
+		$prefix = $this->_get_view_prefix($view_prefix);
 
 		// Determine the view file
-		$view = $this->get_view($view_file);
+		$view = $this->_get_view($view_file);
 
 		// Skip the prefix if view prefix is FALSE
 		$skip_prefix = $view_prefix === FALSE;
@@ -391,7 +391,7 @@ abstract class Formo_Core_Driver {
 		return $this->_view->render("$prefix/$view");
 	}
 
-	protected function get_view($view = FALSE)
+	protected function _get_view($view = FALSE)
 	{
 		// The defined view file takes precendence over the default one
 		// and the parameter passed into generate() takes first precedence
@@ -404,7 +404,7 @@ abstract class Formo_Core_Driver {
 				: $this->_view_file;
 	}
 
-	protected function get_view_prefix($prefix = NULL)
+	protected function _get_view_prefix($prefix = NULL)
 	{
 		// If the specified prefix is FALSE, no prefix
 		if ($prefix === FALSE)

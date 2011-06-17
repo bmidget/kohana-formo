@@ -25,7 +25,7 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 		}
 	}
 
-	public function get_val()
+	protected function _get_val()
 	{
 		$new_value = $this->_field->get('new_value');
 

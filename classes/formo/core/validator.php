@@ -36,7 +36,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @access protected
 	 * @return void
 	 */
-	protected function setup_validation()
+	protected function _setup_validation()
 	{
 		$this->_validation = Validation::factory(array())
 			->bind(':form', $this);
@@ -127,13 +127,13 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			{
 				$field->pre_validate();
 				// Add the rules
-				$this->add_rules($field);
+				$this->_add_rules($field);
 				$array[$field->alias()] = $field->val();
 			}
 		}
 
 		$this->pre_validate();
-		$this->add_rules();
+		$this->_add_rules();
 
 		$array[$this->alias()] = $this->val();
 
@@ -148,7 +148,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 
 		$this->_validation = $validation;
 
-		$errors = $this->determine_errors();
+		$errors = $this->_determine_errors();
 
 		return ($subform_errors === FALSE)
 			? $errors === FALSE
@@ -162,7 +162,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed Formo_Container $field. (default: NULL)
 	 * @return void
 	 */
-	protected function add_rules(Formo_Container $field = NULL)
+	protected function _add_rules(Formo_Container $field = NULL)
 	{
 		$validation = $this->validation();
 
@@ -186,7 +186,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed array $existing_errors
 	 * @return boolean
 	 */
-	protected function determine_errors()
+	protected function _determine_errors()
 	{
 		$this->_validation->check();
 		$existing_errors = $this->_validation->errors();
@@ -209,7 +209,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	public function rules($field, array $rules)
 	{
-		$this->val_field($field)->merge('rules', $rules);
+		$this->_val_field($field)->merge('rules', $rules);
 
 		return $this;
 	}
@@ -226,7 +226,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	public function rule($field, $rule, array $params = NULL)
 	{
 		$new_rule = array(array($rule, $params));
-		$this->val_field($field)->merge('rules', $new_rule);
+		$this->_val_field($field)->merge('rules', $new_rule);
 
 		return $this;
 	}
@@ -238,7 +238,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed $field
 	 * @return void
 	 */
-	protected function val_field($field)
+	protected function _val_field($field)
 	{
 		if ($field instanceof Formo_Container)
 			return $field;

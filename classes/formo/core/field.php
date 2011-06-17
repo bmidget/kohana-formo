@@ -55,7 +55,7 @@ class Formo_Core_Field extends Formo_Validator_Field {
 		$options = Arr::merge(array('driver' => $driver), $options);
 
 		// Add all the options to the object
-		$this->load_options($options);
+		$this->_load_options($options);
 
 		// Run the driver's post_construct() method
 		$this->driver()->post_construct();

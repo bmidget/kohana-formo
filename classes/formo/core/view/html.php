@@ -188,7 +188,7 @@ class Formo_Core_View_HTML extends Formo_View {
 		return $this;
 	}
 	
-	protected function make_id()
+	protected function _make_id()
 	{
 		$id = $this->alias();
 
@@ -208,11 +208,11 @@ class Formo_Core_View_HTML extends Formo_View {
 	 * @access protected
 	 * @return void
 	 */
-	protected function auto_id()
+	protected function _auto_id()
 	{
 		if (Kohana::config('formo')->auto_id AND ! $this->attr('id'))
 		{
-			$this->attr('id', $this->make_id());
+			$this->attr('id', $this->_make_id());
 		}
 	}
 
@@ -279,7 +279,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	 * @access protected
 	 * @return void
 	 */
-	protected function attr_to_str()
+	protected function _attr_to_str()
 	{
 		$classes_str = implode(' ', $this->_vars['classes']);
 
@@ -326,7 +326,7 @@ class Formo_Core_View_HTML extends Formo_View {
 		// return the string tag
 		return '<'
 			 . $this->_vars['tag']
-			 . $this->attr_to_str()
+			 . $this->_attr_to_str()
 			 . (($singletag === TRUE)
 			    // Do not end the tag if it's a single tag
 			    ? NULL
@@ -356,7 +356,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	
 	public function pre_render()
 	{
-		$this->auto_id();
+		$this->_auto_id();
 		return parent::pre_render();
 	}
 	
@@ -373,7 +373,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	 */
 	public function html()
 	{
-		$this->auto_id();
+		$this->_auto_id();
 		$singletag = in_array($this->_vars['tag'], $this->_singles);
 
 		$str = $this->open();

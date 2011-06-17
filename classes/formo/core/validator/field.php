@@ -44,6 +44,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	public function validate($value = NULL)
 	{
 		$this->_validation();
+		$this->driver()->pre_validate();
 		
 		$value = (func_num_args())
 			? $value
