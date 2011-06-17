@@ -17,7 +17,7 @@ class Formo_Core_Field extends Formo_Validator_Field {
 	protected $_settings = array
 	(
 		// The field's driver
-		'driver'       => 'text',
+		'driver'       => 'input',
 		// The wah this field is rendered
 		'render_type'  => 'html',
 		// Whether the field should be rendered
