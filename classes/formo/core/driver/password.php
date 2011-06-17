@@ -8,7 +8,7 @@
  */
 class Formo_Core_Driver_Password extends Formo_Driver {
 
-	protected $_view_file = 'text';
+	protected $_view_file = 'input';
 
 	public function html()
 	{
