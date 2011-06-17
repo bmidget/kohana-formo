@@ -1,1 +1,1 @@
-<span class="label"><?php echo $view->label(); ?>:</span>
+<span class="label"><?php echo $this->label(); ?>:</span>

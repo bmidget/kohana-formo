@@ -1,9 +1,11 @@
 The HTML Kind
 =============
 
-You will likely use the HTML view in your formo forms. This is an overview of the functionality it adds to Formo objects. The view object is passed into the view file as `$field` and is accessible everywhere else with `view()`.
+You will likely use the HTML view in your formo forms. This is an overview of the functionality it adds to Formo objects. The view object is passed into the view file as `$this` and is accessible everywhere else with `view()`.
 
 	$view_obj = $form->username->view();
+
+[!!] The field object is passed to the view file as `$field`.
 
 ### Open
 

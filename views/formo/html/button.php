@@ -1,3 +1,3 @@
 <?php echo $open; ?>
-	<?php echo $view->html(); ?>
+	<?php echo $this->html(); ?>
 <?php echo $close; ?>

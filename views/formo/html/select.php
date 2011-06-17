@@ -1,14 +1,14 @@
 <?php echo $open; ?>
-	<label<?php if ($id = $view->attr('id')) echo ' for="'.$id.'"'; ?>>
+	<label<?php if ($id = $this->attr('id')) echo ' for="'.$id.'"'; ?>>
 		<?php echo $label; ?>
 		<span class="field">
 			<?php if ($field->get('editable') === TRUE): ?>
-				<?php echo $view->open(); ?>
+				<?php echo $this->open(); ?>
 					<option value=""></option>
 					<?php foreach ($field->fields() as $option): ?>
 						<?php echo $option->render()?>
 					<?php endforeach; ?>
-				<?php echo $view->close(); ?>
+				<?php echo $this->close(); ?>
 			<?php else: ?>
 				<span><?php echo $field->val(); ?></span>
 			<?php endif; ?>

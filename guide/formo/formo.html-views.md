@@ -15,3 +15,5 @@ The view files are based on a prefix system to make generating specific forms ea
 When rendering a form as HTML, form/subform and field objects are passed to the views in a more usable state as `Formo_View_HTML` objects. Think of these objects as **HTML DOM objects**.
 
 These objects are manipulated much like jQuery DOM objects and use similar syntax.
+
+[!!] Note that the view file can access its view object with `$this` context, and the formo field object is also passed into the view as `$field`.

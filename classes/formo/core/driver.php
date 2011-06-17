@@ -366,12 +366,27 @@ abstract class Formo_Core_Driver {
 
 		// Skip the prefix if view prefix is FALSE
 		$skip_prefix = $view_prefix === FALSE;
+		
 
 		$this->_view
-			->set('open', View::factory("$prefix/_open_tag", array('view' => $this->_view, 'field' => $this->_field)))
-			->set('close', View::factory("$prefix/_close_tag", array('view' => $this->_view, 'field' => $this->_field)))
-			->set('message', View::factory("$prefix/_message", array('view' => $this->_view, 'field' => $this->_field)))
-			->set('label', View::factory("$prefix/_label", array('view' => $this->_view, 'field' => $this->_field)));
+			->bind('open', $open)
+			->bind('close', $close)
+			->bind('message', $message)
+			->bind('label', $label);
+		
+		$prefix = rtrim($prefix, '/');
+
+		$open = Formo_View::factory("$prefix/_open_tag", array('view' => $this->_view));
+		$open->_field = $this->_field;
+
+		$close = Formo_View::factory("$prefix/_close_tag", array('view' => $this->_view));
+		$close->_field = $this->_field;
+
+		$message = Formo_View::factory("$prefix/_message", array('view' => $this->_view));
+		$message->_field = $this->_field;
+
+		$label = Formo_View::factory("$prefix/_label", array('view' => $this->_view));
+		$label->_field = $this->_field;
 
 		return $this->_view->render("$prefix/$view");
 	}

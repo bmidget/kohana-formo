@@ -81,6 +81,43 @@ abstract class Formo_Core_View extends View {
 			$this->_field->driver()->html_append();
 		}
 	}
+	
+	public static function factory($file = NULL, array $data = NULL)
+	{
+		return new Formo_View($file, $data);
+	}
+	
+	protected function _capture($kohana_view_filename, array $kohana_view_data)
+	{
+		// Import the view variables to local namespace
+		extract($kohana_view_data, EXTR_SKIP);
+
+		if (View::$_global_data)
+		{
+			// Import the global view variables to local namespace
+			extract(View::$_global_data, EXTR_SKIP);
+		}
+
+		// Capture the view output
+		ob_start();
+
+		try
+		{
+			// Load the view within the current scope
+			include $kohana_view_filename;
+		}
+		catch (Exception $e)
+		{
+			// Delete the output buffer
+			ob_end_clean();
+
+			// Re-throw the exception
+			throw $e;
+		}
+
+		// Get the captured output and close the buffer
+		return ob_get_clean();
+	}
 
 	/**
 	 * Inject $field into new scope
@@ -97,10 +134,20 @@ abstract class Formo_Core_View extends View {
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
 		
-		$this->set('view', $this);
 		$this->set('field', $this->_field);
 
-		$return = parent::render($file);
+		if ($file !== NULL)
+		{
+			$this->set_filename($file);
+		}
+
+		if (empty($this->_file))
+		{
+			throw new Kohana_View_Exception('You must set the file to use within your view before rendering');
+		}
+
+		// Combine local and global data and capture the output
+		$return = $this->_capture($this->_file, $this->_data);
 
 		if (isset($benchmark))
 		{

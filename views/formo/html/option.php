@@ -1,1 +1,1 @@
-<?php echo $view->html(); ?>
+<?php echo $this->html(); ?>
