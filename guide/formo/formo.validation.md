@@ -55,6 +55,13 @@ Parameter string	|	What is passed
 `:form`				|	The parent form
 `:model`			|	The model object (only applicable when using ORM)
 
+## 'Required' and the 'not_empty' rule
+
+Kohana's Validation class uses a special rule to make a field be required. The rule is `not_empty`. You can add this rule the same as any other rule to your form and fields, but you can also set the same rule up by using the shortcut parameter `required`:
+
+	$form = Formo::form()
+		->add('email', array('type' => 'email', 'required' => TRUE))
+
 ## Form/subform-level rules
 
 Rules that exist at the form or subform level have the following difference from rules at the field level:
