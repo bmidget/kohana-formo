@@ -453,7 +453,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		if ( ! isset($this->_belongs_to['foreign_keys'][$alias]))
 			// No need to process non-belongs-to fields
 			return NULL;
-		
+
 		$foreign_key = $alias;
 
 		// The alias in the model for the field
@@ -471,7 +471,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		}
 
 		// Add to relational_fields array
-		$this->relational_fields[$_alias] = ORM::factory($this->_belongs_to['definitions'][$field_alias]['model']);
+		$this->_relational_fields[$_alias] = ORM::factory($this->_belongs_to['definitions'][$field_alias]['model']);
 
 		// Also determine the value
 		if ( ! isset($options['value']))
@@ -498,7 +498,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 			$_alias = $this->_add_alias($alias, $options);
 
 			// Add relational fields array
-			$this->relational_fields[$_alias] = ORM::factory($this->_has_one['definitions'][$alias]['model']);
+			$this->_relational_fields[$_alias] = ORM::factory($this->_has_one['definitions'][$alias]['model']);
 		}
 	}
 
@@ -512,7 +512,8 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 	{
 		foreach (array('has_many', 'has_one') as $type)
 		{
-			foreach ($this->{$type}['definitions'] as $alias => $value)
+			$_type = "_$type";
+			foreach ($this->{$_type}['definitions'] as $alias => $value)
 			{
 				if ($this->_use_field($alias) === FALSE)
 					// Only use the correct fields
@@ -524,7 +525,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 				$_alias = $this->_add_alias($alias, $options);
 
 				// Add to relational fields array
-				$this->relational_fields[$_alias] = ORM::factory($this->{$type}['definitions'][$alias]['model']);
+				$this->_relational_fields[$_alias] = ORM::factory($this->{$_type}['definitions'][$alias]['model']);
 
 				if (empty($options['driver']))
 				{
@@ -645,15 +646,16 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		// Pull out relationship data
 		foreach (self::$_relationship_types as $type)
 		{
-			$this->{$type}['definitions'] = $this->model->$type();
+			$_type = "_$type";
+			$this->{$_type}['definitions'] = $this->model->$type();
 
-			foreach ($this->{$type}['definitions'] as $key => $values)
+			foreach ($this->{$_type}['definitions'] as $key => $values)
 			{
 				$value = (isset($values['far_key']))
 					? $values['far_key']
 					: $values['foreign_key'];
 
-				$this->{$type}['foreign_keys'][$value] = $key;
+				$this->{$_type}['foreign_keys'][$value] = $key;
 			}
 		}
 
