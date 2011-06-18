@@ -779,7 +779,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 			$this->_form->$alias->set('options', $options['options']);
 
 			// Determine values for has_many relationships at pre_render time
-			if ($definitions = Arr::get($this->_has_many['definitions'], $alias))
+			if ($this->_form->$alias->val_isset() === FALSE AND $definitions = Arr::get($this->_has_many['definitions'], $alias))
 			{
 				$values = array();
 				foreach ($this->model->$alias->find_all() as $row)
@@ -792,7 +792,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 				$this->_form->$alias->val($values);
 			}
 
-			if ($definitions = Arr::get($this->_has_one['definitions'], $alias))
+			if ($this->_form->$alias->val_isset() === FALSE AND $definitions = Arr::get($this->_has_one['definitions'], $alias))
 			{
 				$this->_form->$alias->val($this->model->$alias->pk());
 			}

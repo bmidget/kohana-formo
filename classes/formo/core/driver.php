@@ -78,7 +78,7 @@ abstract class Formo_Core_Driver {
 	{
 		// Load the field instance
 		$this->_field = $field;
-		
+
 		// Determine the original view type
 		$kind = ($kind = $this->_field->get('kind'))
 			? $kind
@@ -237,6 +237,11 @@ abstract class Formo_Core_Driver {
 		$this->_set_orm_fields($value);
 
 		return $this;
+	}
+	
+	public function val_isset()
+	{
+		return Formo::is_set($this->_field->get('new_value'));
 	}
 	
 	/**
