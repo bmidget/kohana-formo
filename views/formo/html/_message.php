@@ -1,1 +1,1 @@
-<span class="error-message"><?php echo $field->error(); ?></span>
+<span class="error-message"><?php echo $this->error(); ?></span>

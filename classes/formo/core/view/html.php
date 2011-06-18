@@ -389,4 +389,5 @@ class Formo_Core_View_HTML extends Formo_View {
 
 		return $str.= $this->close();
 	}
+	
 }

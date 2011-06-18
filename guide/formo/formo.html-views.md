@@ -4,7 +4,7 @@ At render time, every form and field is passed into view files for rendering. Th
 
 Formo makes rendering parts of your form extremely flexible and allows you to mix whatever blend of Object-Oriented and straight-text approaches you prefer in defining your fields.
 
-Forms, subforms and field view objects are passed to views as the variable `$field`.
+Forms, subforms and field view objects are accessible to views as the variable `$this`.
 
 The view files are based on a prefix system to make generating specific forms easier.
 
@@ -16,4 +16,4 @@ When rendering a form as HTML, form/subform and field objects are passed to the 
 
 These objects are manipulated much like jQuery DOM objects and use similar syntax.
 
-[!!] Note that the view file can access its view object with `$this` context, and the formo field object is also passed into the view as `$field`.
+[!!] Note that the view file can access its view object with `$this` context`.

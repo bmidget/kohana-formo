@@ -1,9 +1,9 @@
 <div class="group">
-	<h2><?php echo str_replace('_', ' ', $field->alias()); ?></h2>
-	<?php if ($error = $field->error() AND $error !== TRUE): ?>
-		<span class="error-message"><?php echo $field->error(); ?></span>
+	<h2><?php echo str_replace('_', ' ', $this->alias()); ?></h2>
+	<?php if ($error = $this->error() AND $error !== TRUE): ?>
+		<span class="error-message"><?php echo $this->error(); ?></span>
 	<?php endif; ?>
-	<?php foreach ($field->fields() as $_field): ?>
+	<?php foreach ($this->fields() as $_field): ?>
 		<?php echo $_field->render(); ?>
 	<?php endforeach; ?>
 </div>

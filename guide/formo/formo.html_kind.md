@@ -5,25 +5,23 @@ You will likely use the HTML view in your formo forms. This is an overview of th
 
 	$view_obj = $form->username->view();
 
-[!!] The field object is passed to the view file as `$field`.
-
 ### Open
 
-You will often need to render the HTML DOM object's opening tag only — complete with attributes and styles.
+You will often need to render the HTML DOM object's opening tag only — complete with attributes and styles. In the view:
 
-	echo $form->open();
+	echo $this->open();
 
 ### Close
 
-Likewise, you will often need to only render the object's closing tag:
+Likewise, you will often need to only render the object's closing tag. In the view:
 
-	echo $form->close();
+	echo $this->close();
 
 ### Render
 
-To render the HTML DOM object, use `html()`:
+To render the HTML DOM object, use `html()`. In the view:
 
-	echo $field->html();
+	echo $this->html();
 
 For more about rendering forms, see the [rendering section](formo.rendering);
 
@@ -31,7 +29,7 @@ For more about rendering forms, see the [rendering section](formo.rendering);
 
 To generate a view file using a field or form object, use `render()`:
 
-	echo $form->render();
+	echo $field->render();
 
 For more about generating forms, see the [rendering section](formo.rendering);
 
@@ -43,23 +41,23 @@ HTML attributes, such as `style="height:25px" class="someclass" id="something"`,
 
 To set an attribute, use `attr($attr_name, $attr_value)`:
 
-	$form->attr('method', 'post');
+	$field->view()->attr('method', 'post');
 
 To retrive an attribute, use `attr($attr_name)`:
 
-	$method = $form->attr('method');
+	$method = $field->view()->attr('method');
 
 If you want to remove an attribute, set it to `NULL`:
 
-	$form->attr('id', NULL);
+	$field->view()->attr('id', NULL);
 
 If you want the attribute to remain but be empty, use an empty string:
 
-	$form->attr('action', '');
+	$field->view()->attr('action', '');
 
 You can set multiple attributes at a time with an array:
 
-	$form->attr(array(
+	$field->view()->attr(array(
 		'method' => 'post',
 		'action' => '',
 		'id' => 'my-special-form',
@@ -69,19 +67,19 @@ You can set multiple attributes at a time with an array:
 
 To set a style for a HTML DOM element, use `css($style_name, $style_value)`:
 
-	$form->email->css('width', '300px');
+	$form->email->view()->css('width', '300px');
 
 To retrive a style, use `css($style_name)`:
 
-	$width = $form->username->css('width');
+	$width = $form->username->view()->css('width');
 
 To remove a style, set it to `NULL`:
 
-	$form->password->css('font-weight', NULL);
+	$form->password->view()->css('font-weight', NULL);
 
 You can set multiple styles at a time with an array:
 
-	$form->email->css(array(
+	$form->email->view()->css(array(
 		'width' => '200px',
 		'background-color' => '#eee',
 		'border' => '1px solid #999,
@@ -91,41 +89,41 @@ You can set multiple styles at a time with an array:
 
 You can set a class or classes using `attr()`, but it will override whatever classes have previously been set:
 
-	$form->attr('class', 'oneclass twoclass');
+	$field->view()->attr('class', 'oneclass twoclass');
 
 Use `add_class($classname)` to add a class:
 
-	$form->email->add_class('email');
+	$form->email->view()->add_class('email');
 
 You can set multiple classes at a time with either an array or space-separated class names:
 
-	$form->email->add_class('email specialfield');
-	$form->email->add_class(array('email', 'specialfield'));
+	$form->email->view()->add_class('email specialfield');
+	$form->email->view()->add_class(array('email', 'specialfield'));
 
 Use `remove_class($classname)` to remove a class:
 
-	$form->username->remove_class('sucks');
+	$form->username->view()->remove_class('sucks');
 
 You can remove multiple classes at a time with either an array or space-separated class names:
 
-	$form->username->remove_class('sucks specialfield');
-	$form->username->remove_class(array('sucks', 'specialfield'));
+	$form->username->view()->remove_class('sucks specialfield');
+	$form->username->view()->remove_class(array('sucks', 'specialfield'));
 
 ### Labels
 
 Use `label()` to retrieve the field's label. This will return the variable `label` if it's been set, and `alias` if `label` hasn't been set.
 
-	$label = $field->label();
+	$label = $field->view()->label();
 
 ### Text
 
 You can set the inner text of a HTML object with `text($text)`:
 
-	$form->comment->text('Enter your comment here');
+	$form->comment->view()->text('Enter your comment here');
 
 You can remove text by setting it to `NULL` or an empty string:
 
-	$form->comment->text(NULL);
+	$form->comment->view()->text(NULL);
 
 Retrieve an object's text with `text()`:
 
@@ -135,12 +133,12 @@ Retrieve an object's text with `text()`:
 
 To add a string to the end of the object's inner text, use `text('.=', $string)`:
 
-	$field->text('.=', ' - I meant what I said');
+	$field->view()->text('.=', ' - I meant what I said');
 
 To add a string to the beginning of the object's inner text, use `text('=.', $string)`:
 
-	$field->text('=.', 'PAY ATTENTION TO THIS: ');
+	$field->view()->text('=.', 'PAY ATTENTION TO THIS: ');
 
 To run a callback on the object's inner text, use `text('callback', $callback)`:
 
-	$field->text('callback', 'trim');
+	$field->view()->text('callback', 'trim');

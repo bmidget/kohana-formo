@@ -134,8 +134,6 @@ abstract class Formo_Core_View extends View {
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
 		
-		$this->set('field', $this->_field);
-
 		if ($file !== NULL)
 		{
 			$this->set_filename($file);
@@ -156,6 +154,84 @@ abstract class Formo_Core_View extends View {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Access Formo field 'fields()`
+	 * 
+	 * @access public
+	 * @return array
+	 */
+	public function fields()
+	{
+		return $this->_field->fields();
+	}
+	
+	/**
+	 * Access Formo field 'val()`
+	 * 
+	 * @access public
+	 * @return mixed
+	 */
+	public function val()
+	{
+		return $this->_field->val();
+	}
+	
+	
+	/**
+	 * Access Formo field 'get()`
+	 * 
+	 * @access public
+	 * @return mixed
+	 */
+	public function get($variable, $default = FALSE, $shallow_look = FALSE)
+	{
+		return $this->_field->get($variable, $default, $shallow_look);
+	}
+	
+	/**
+	 * Retrieve error
+	 * 
+	 * @access public
+	 * @return mixed
+	 */
+	public function error()
+	{
+		return $this->_field->error();
+	}
+	
+	/**
+	 * Retrieve driver
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function driver()
+	{
+		return $this->_field->get('driver');
+	}
+	
+	/**
+	 * Retrieve editable setting
+	 * 
+	 * @access public
+	 * @return boolean
+	 */
+	public function editable()
+	{
+		return $this->_field->get('editable');
+	}
+	
+	/**
+	 * Retrieve alias
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function alias()
+	{
+		return $this->_field->alias();
 	}
 
 }
