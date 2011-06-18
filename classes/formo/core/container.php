@@ -643,7 +643,7 @@ abstract class Formo_Core_Container {
 		$fields = $field->parent()->get('fields');
 
 		// Delete the current place
-		unset($fields[$this->find_fieldkey($field->alias())]);
+		unset($fields[$this->_find_fieldkey($field->alias())]);
 
 		// If the new order is a string, it's a comparative order
 		if ( ! ctype_digit($new_order) AND is_string($new_order))
