@@ -25,9 +25,9 @@ To render the HTML DOM object, use `html()`. In the view:
 
 For more about rendering forms, see the [rendering section](formo.rendering);
 
-### Generate
+### Render
 
-To generate a view file using a field or form object, use `render()`:
+To render a view file using a field or form object, use `render()`:
 
 	echo $field->render();
 
