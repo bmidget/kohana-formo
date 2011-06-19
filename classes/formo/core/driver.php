@@ -350,7 +350,7 @@ abstract class Formo_Core_Driver {
 	}
 
 	/**
-	 * Generate a view from a field or form object
+	 * Render a view from a field or form object
 	 *
 	 * @access public
 	 * @return void
@@ -399,7 +399,7 @@ abstract class Formo_Core_Driver {
 	protected function _get_view($view = FALSE)
 	{
 		// The defined view file takes precendence over the default one
-		// and the parameter passed into generate() takes first precedence
+		// and the parameter passed into render() takes first precedence
 		return ($view !== FALSE)
 			// Always choose the passed view if it exists
 			? $view
