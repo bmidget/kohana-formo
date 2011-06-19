@@ -119,7 +119,7 @@ $form->find('bar');
 
 When you render a Formo object, the object will be converted from pure data to a usable object. For instance, if you wish to render your form as html using the defined view files, do:
 
-	$form->generate();
+	$form->render();
 
 This example will convert every field into a HTML DOM object and that object is sent to their defined view files.
 
