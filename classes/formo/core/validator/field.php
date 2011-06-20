@@ -60,6 +60,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	public function validate($require_sent = FALSE)
 	{
 		$this->_validation();
+		$this->driver()->pre_validate();
 		$this->_add_rules();
 
 		return $this->_validation()->check();
@@ -108,6 +109,8 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	
 	public function validation($value = NULL)
 	{
+		$this->driver()->pre_validate();
+
 		$array = (func_num_args())
 			? array($this->alias() => $value)
 			: array();
