@@ -74,10 +74,10 @@ class Formo_Core_Form extends Formo_Validator {
 		{
 			$this->set('orm_config', $orm_file);
 		}
-		
+
 		// Run validator setup
 		$this->_setup_validation();
-		
+
 		// Load the options
 		$this->_load_options($options);
 	}

@@ -107,26 +107,23 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		$has_errors = FALSE;
 		// Keep all the error messages
 		$error_messages = array();
-		
-		$this->pre_validate();
-		
+
 		foreach ($this->fields() as $field)
 		{
-
 			if ($field->get('render') === FALSE OR $field->get('ignore') === TRUE)
 				continue;
 
-			if ( ! $field->validate())
+			if ( ! $field->validate($require_sent))
 			{
 				$has_errors = TRUE;
 				$error_messages[$field->alias()] = $field->error();
 			}
 		}
-		
+
 		if ($has_errors === FALSE)
 		{
 			$this->_add_rules($this);
-			$has_errors = $this->_determine_errors();
+			$has_errors = $this->_determine_errors() === FALSE;
 		}
 
 /*
@@ -137,7 +134,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			$this->_validation->labels($driver->model->labels());
 		}
 */
-		return $has_errors;
+		return $has_errors === FALSE;
 	}
 
 	/**
