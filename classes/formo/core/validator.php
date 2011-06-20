@@ -104,55 +104,40 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		// Tracks if there were errors in any subforms
 		$subform_errors = FALSE;
 		// Tracks if there were any errors inside this form
-		$errors = FALSE;
-
-		// Build the array
-		$array = array();
-
+		$has_errors = FALSE;
+		// Keep all the error messages
+		$error_messages = array();
+		
+		$this->pre_validate();
+		
 		foreach ($this->fields() as $field)
 		{
+
 			if ($field->get('render') === FALSE OR $field->get('ignore') === TRUE)
 				continue;
 
-			if ($field instanceof Formo_Form)
+			if ( ! $field->validate())
 			{
-				if ( ! $field->validate($require_sent))
-				{
-					$subform_errors = TRUE;
-				}
-
-				continue;
-			}
-			else
-			{
-				$field->pre_validate();
-				// Add the rules
-				$this->_add_rules($field);
-				$array[$field->alias()] = $field->val();
+				$has_errors = TRUE;
+				$error_messages[$field->alias()] = $field->error();
 			}
 		}
+		
+		if ($has_errors === FALSE)
+		{
+			$this->_add_rules($this);
+			$has_errors = $this->_determine_errors();
+		}
 
-		$this->pre_validate();
-		$this->_add_rules();
-
-		$array[$this->alias()] = $this->val();
-
+/*
 		if ($this->has_orm() AND $driver = $this->orm_driver())
 		{
 			// Bind :model to the model
 			$this->_validation->bind(':model', $driver->model);
 			$this->_validation->labels($driver->model->labels());
 		}
-
-		$validation = $this->_validation->copy($array);
-
-		$this->_validation = $validation;
-
-		$errors = $this->_determine_errors();
-
-		return ($subform_errors === FALSE)
-			? $errors === FALSE
-			: FALSE;
+*/
+		return $has_errors;
 	}
 
 	/**
@@ -188,15 +173,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	protected function _determine_errors()
 	{
-		$this->_validation->check();
-		$existing_errors = $this->_validation->errors();
-		$errors = $existing_errors === FALSE;
-
-		if (empty($existing_errors))
-			// If there weren't any errors predefined before validation, return check() result
-			return $errors;
-
-		return (bool) $existing_errors === TRUE;
+		return $this->_validation->check();
 	}
 
 	/**

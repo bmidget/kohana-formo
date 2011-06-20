@@ -15,7 +15,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 		if (func_num_args() !== 0)
 			return $this->parent()->error($this->alias(), $message, $params);
 
-		$errors = $this->parent()->errors();
+		$errors = $this->_validation()->errors();
 
 		return Arr::get($errors, $this->alias());
 	}
@@ -77,13 +77,13 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	
 	protected function _validation()
 	{
-		if ( ! empty($this->_validation))
+		if (empty($this->_validation))
 		{
-			return $this->_validation;
+			$this->_validation = new Validation(array());
+			$this->_validation->rules($this->alias(), $this->get('rules'));
 		}
-		
-		$this->_validation = new Validation(array());
-		$this->_validation->rules($this->alias(), $this->get('rules'));
+
+		return $this->_validation;
 	}
 
 }
