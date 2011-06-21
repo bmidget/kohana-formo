@@ -107,6 +107,13 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 		return $this->_validation;
 	}
 	
+	/**
+	 * Return a validation object with copied rules, labels, etc
+	 * 
+	 * @access public
+	 * @param mixed $value. (default: NULL)
+	 * @return void
+	 */
 	public function validation($value = NULL)
 	{
 		$this->driver()->pre_validate();
@@ -125,10 +132,18 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if ($file === NULL)
 		{
-			$file = $this->parent()->get('message_file');
+			// First check for fiel-specific message_file
+			$file = $this->get('message_file');
 			
 			if ($file === NULL)
 			{
+				// Then look for parent message_file
+				$file = $this->parent()->get('message_file');
+			}
+			
+			if ($file === NULL)
+			{
+				// Finally default on ocnfig default
 				$file = Kohana::config('formo')->message_file;
 			}
 		}
