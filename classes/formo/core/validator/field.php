@@ -8,14 +8,30 @@
  */
 abstract class Formo_Core_Validator_Field extends Formo_Container {
 
+	/**
+	 * Validation instance used for actual from values
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_validation;
 
+	/**
+	 * Return the field error or set the error
+	 * 
+	 * @access public
+	 * @param mixed $message. (default: NULL)
+	 * @param mixed array $params. (default: NULL)
+	 * @return void
+	 */
 	public function error($message = NULL, array $params = NULL)
 	{
 		if (func_num_args() !== 0)
-			return $this->parent()->error($this->alias(), $message, $params);
+		{
+			$this->_validation()->error($field, $message, $params);
+		}
 
-		$errors = $this->parent()->errors();
+		$errors = $this->errors();
 
 		return Arr::get($errors, $this->alias());
 	}
@@ -41,19 +57,29 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	 * @param mixed $require_sent. (default: FALSE)
 	 * @return void
 	 */
-	public function validate($value = NULL)
+	public function validate($require_sent = FALSE)
 	{
 		$this->_validation();
 		$this->driver()->pre_validate();
-		
-		$value = (func_num_args())
-			? $value
-			: $this->val();
-		
-		$vals = array($this->alias() => $value);
-		$this->_validation = $this->_validation->copy($vals);
+		$this->_add_rules();
 
-		return $this->_validation->check();
+		return $this->_validation()->check();
+	}
+	
+	/**
+	 * Add rules and labels to local validation object
+	 * 
+	 * @access protected
+	 * @return void
+	 */
+	protected function _add_rules(Validation $validation = NULL)
+	{
+		$validation = ($validation === NULL)
+			? $this->_validation()
+			: $validation;
+
+		$validation->label($this->alias(), $this->alias());
+		$validation->rules($this->alias(), $this->get('rules'));
 	}
 	
 	/**
@@ -64,26 +90,65 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	 */
 	public function errors($file = NULL, $translate = TRUE)
 	{
-		if ($file === NULL)
-		{
-			$file = $this->parent()->message_file();
-		}
+		$file = $this->_get_message_file($file);
 
-		$errors = $this->_validation->errors($file, $translate);
-		$error = Arr::get($errors, $this->alias());
+		$errors = $this->_validation()->errors($file, $translate);
 
-		return Arr::get($errors, $this->alias());
+		return $errors;
 	}
 	
 	protected function _validation()
 	{
-		if ( ! empty($this->_validation))
+		if (empty($this->_validation))
 		{
-			return $this->_validation;
+			$this->_validation = new Validation(array($this->alias() => $this->val()));
+		}
+
+		return $this->_validation;
+	}
+	
+	/**
+	 * Return a validation object with copied rules, labels, etc
+	 * 
+	 * @access public
+	 * @param mixed $value. (default: NULL)
+	 * @return void
+	 */
+	public function validation($value = NULL)
+	{
+		$this->driver()->pre_validate();
+
+		$array = (func_num_args())
+			? array($this->alias() => $value)
+			: array();
+
+		$validation = new Validation($array);
+		$this->_add_rules($validation);
+
+		return $validation;
+	}
+	
+	protected function _get_message_file($file)
+	{
+		if ($file === NULL)
+		{
+			// First check for fiel-specific message_file
+			$file = $this->get('message_file');
+			
+			if ($file === NULL)
+			{
+				// Then look for parent message_file
+				$file = $this->parent()->get('message_file');
+			}
+			
+			if ($file === NULL)
+			{
+				// Finally default on ocnfig default
+				$file = Kohana::config('formo')->message_file;
+			}
 		}
 		
-		$this->_validation = new Validation(array());
-		$this->_validation->rules($this->alias(), $this->get('rules'));
+		return $file;
 	}
 
 }

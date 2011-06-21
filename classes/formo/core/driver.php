@@ -314,7 +314,9 @@ abstract class Formo_Core_Driver {
 	
 	public function has_orm()
 	{
-		return empty($this->_field->orm) === FALSE;
+		return ($this->_field instanceof Formo_Form)
+			? empty($this->_field->orm) === FALSE
+			: empty($this->_field->parent()->orm) === FALSE;
 	}
 
 	/**

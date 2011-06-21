@@ -1,38 +1,34 @@
 # Validating a single field
 
-You can run validtion against an individual field.
+It's simple to do validation against a sigle field. It works just like validating the full form.
+
 ### Validate
 
-[!!] In this context, the individual field never checks if the form was actually sent. It only returns validation based on its value or a given value.
+Just like at the form level, you can pass in a true variable to require the field to be sent to pass validation.
 
-The `validate` method for a field accepts one optional parameter for a value to validate against By default, the field will validate against its current value.
+	$field_validated = $form->username->validate(TRUE);
 
-Here's an example using the field's value
+Otherwise you can just validate the field against its current value
 
-	if ($form->username->validate())
+	$form->username->val($some_value);
+	$field_validated = $form->username->validate();
+
+### Validating field against another value
+
+Sometimes you will wish to check whether a field would pass validation on a value that hasn't yet been set to the field. Something like this:
+
+	if ($field_passed_validation)
 	{
-	
+		$form->$field->val($new_val);
 	}
 
-And here's an en example validating using another value
+Or another common use for this scenario is ajax validation where you need to check if just one field would pass validation.
 
-	if ($form->username->validate($value))
-	{
-		// If $value is a valid parameter, set the field value to its
-		$form->username->val($value);
-	}
+#### Work with a validation object with rules, labels copied
 
-### Field error
+The way you do this is to retrieve a validation object you can check against. Here's an example. Notice a full validation object is retrieved that you can work with.
 
-To retrieve the string for the fields' error, use `errors()`. It accepts two optional parameters:
-
-- **file** [default: `NULL`] - The name of the message file. If `NULL`, then the default file from the config is used
-- **translate** [default: TRUE] - Whether to translate the message
-
-An example:
-
-	if ($form->username->validate($value) === FALSE)
-	{
-		// Echo the error message
-		echo $form->username->errors();
-	}
+	// Retrieve a validation object and populate it with the value $some_username
+	$val = $form->username->validation($some_username);
+	$passed = $val->check();
+	$errors = $val->errors($message_file);
