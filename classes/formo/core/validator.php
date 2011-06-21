@@ -125,15 +125,6 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			$this->_add_rules($this);
 			$has_errors = $this->_determine_errors() === FALSE;
 		}
-
-/*
-		if ($this->has_orm() AND $driver = $this->orm_driver())
-		{
-			// Bind :model to the model
-			$this->_validation->bind(':model', $driver->model);
-			$this->_validation->labels($driver->model->labels());
-		}
-*/
 		return $has_errors === FALSE;
 	}
 
