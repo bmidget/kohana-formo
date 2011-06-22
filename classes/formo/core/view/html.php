@@ -356,6 +356,16 @@ class Formo_Core_View_HTML extends Formo_View {
 	
 	public function pre_render()
 	{
+		if ($attr = $this->_field->get('attr'))
+		{
+			$this->attr($attr);
+		}
+		
+		if ($css = $this->_field->get('css'))
+		{
+			$this->css($css);
+		}
+
 		$this->_auto_id();
 		return parent::pre_render();
 	}
