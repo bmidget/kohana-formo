@@ -155,7 +155,7 @@ class Formo_Core_Form extends Formo_Validator {
 	{
 		foreach ($array as $field => $data)
 		{
-			$this->$field->set($data);
+			$this->$field->set($field, $data);
 		}
 		
 		return $this;
