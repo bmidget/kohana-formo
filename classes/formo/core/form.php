@@ -143,6 +143,23 @@ class Formo_Core_Form extends Formo_Validator {
 
 		return $this->add($settings);
 	}
+	
+	/**
+	 * Run 'set' on each field as $key
+	 * 
+	 * @access public
+	 * @param mixed array $array
+	 * @return void
+	 */
+	public function set_all(array $array)
+	{
+		foreach ($array as $field => $data)
+		{
+			$this->$field->set($data);
+		}
+		
+		return $this;
+	}
 
 	/**
 	 * Add a subform to the form
