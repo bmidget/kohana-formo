@@ -149,7 +149,7 @@ abstract class Formo_Core_Container {
 	 * @param mixed $value
 	 * @return object
 	 */
-	public function set($variable, $value, $force_into_field = FALSE)
+	public function set($variable, $value = NULL, $force_into_field = FALSE)
 	{
 		// Support array of key => values
 		if (is_array($variable))
