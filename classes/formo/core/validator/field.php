@@ -78,7 +78,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 			? $this->_validation()
 			: $validation;
 
-		$validation->label($this->alias(), $this->alias());
+		$validation->label($this->alias(), $this->view()->label());
 		$validation->rules($this->alias(), $this->get('rules'));
 	}
 	

@@ -147,7 +147,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			// Only do anything if the field has rules
 			return;
 
-		$validation->label($obj->alias(), $obj->alias());
+		$validation->label($obj->alias(), $obj->view()->label());
 		$validation->rules($obj->alias(), $rules);
 	}
 
