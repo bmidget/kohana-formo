@@ -78,7 +78,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 
 		$validation = new Validation($values);
 		$this->_add_rules($validation);
-		
+
 		return $validation;
 	}
 
@@ -145,14 +145,12 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	protected function _add_rules(Validation $validation)
 	{
-		if ( ! $rules = $obj->get('rules'))
+		if ( ! $rules = $this->get('rules'))
 			// Only do anything if the field has rules
 			return;
 
 		$validation->label($obj->alias(), $obj->view()->label());
 		$validation->rules($obj->alias(), $rules);
-		
-		return $validation;
 	}
 
 	/**
@@ -165,6 +163,9 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	protected function _determine_errors()
 	{
+		if ($this->_validation->errors())
+			return FALSE;
+
 		return $this->_validation->check();
 	}
 
@@ -265,42 +266,29 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed array $param_names. (default: NULL)
 	 * @return object or string
 	 */
-	public function error($field = NULL, $message = NULL, array $params = NULL)
+	public function error($field_alias = NULL, $message = NULL, array $params = NULL)
 	{
-		$this->_validation->label($field, $field);
-
 		$num_args = func_num_args();
 		if ($num_args !== 0)
 		{
 			if ($num_args === 1)
 			{
-				$field = '_form';
+				$message = $field_alias;
+				$params = (array) $message;
+				$field_alias = $this->alias();
+
+				$this->_validation->label($this->alias(), $this->view()->label());
+				$this->_validation->error($this->alias(), $message, $params);
+			}
+			else
+			{
+				$this->$field_alias->error($message, $params);
 			}
 
-			$this->_validation->error($field, $message, $params);
 			return $this;
 		}
-		
+
 		return Arr::get($this->errors(), $this->alias());
-
-		$errors = $this->errors();
-		
-		// The orm error is NULL by default
-		$form_error = NULL;
-
-		if ( ! empty($errors[$this->alias()]))
-		{
-			$other_errors = $errors;
-			// Find out if there were other errors besides the form error
-			unset($other_errors[$this->alias()]);
-
-			if (empty($other_errors))
-			{
-				$form_error = $errors[$this->alias()];
-			}
-		}
-
-		return $form_error;
 	}
 
 	/**
@@ -316,14 +304,14 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		{
 			$file = $this->message_file();
 		}
-		
+
 		$return_errors = $errors = $this->_validation->errors($file, $translate);
 
 		if (isset($errors[$this->alias()]))
 		{
 			$other_errors = $errors;
 			unset($other_errors[$this->alias()]);
-			
+
 			if ( ! empty($other_errors))
 			{
 				unset($return_errors[$this->alias()]);
@@ -340,17 +328,17 @@ abstract class Formo_Core_Validator extends Formo_Container {
 			? $this->get('message_file')
 			: Kohana::config('formo')->message_file;
 	}
-	
+
 	public static function range($field, $form)
 	{
 		$value = $form->$field->val();
 		$max = $form->$field->attr('max');
 		$min = $form->$field->attr('min');
 		$step = $form->$field->attr('step');
-		
+
 		if ($min AND $value <= $min)
 			return FALSE;
-		
+
 		if ($max AND $value >= $max)
 			return FALSE;
 
