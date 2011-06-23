@@ -69,9 +69,17 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @access public
 	 * @return void
 	 */
-	public function validation()
+	public function validation(array $values = NULL)
 	{
-		return $this->_validation;
+		if (func_num_args() === 0)
+		{
+			$values = $this->as_array('value');
+		}
+
+		$validation = new Validation($values);
+		$this->_add_rules($validation);
+		
+		return $validation;
 	}
 
 	/**
@@ -122,7 +130,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 
 		if ($has_errors === FALSE)
 		{
-			$this->_add_rules($this);
+			$this->_add_rules($this->_validation);
 			$has_errors = $this->_determine_errors() === FALSE;
 		}
 		return $has_errors === FALSE;
@@ -135,20 +143,16 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed Formo_Container $field. (default: NULL)
 	 * @return void
 	 */
-	protected function _add_rules(Formo_Container $field = NULL)
+	protected function _add_rules(Validation $validation)
 	{
-		$validation = $this->validation();
-
-		$obj = ($field !== NULL)
-			? $field
-			: $this;
-
 		if ( ! $rules = $obj->get('rules'))
 			// Only do anything if the field has rules
 			return;
 
 		$validation->label($obj->alias(), $obj->view()->label());
 		$validation->rules($obj->alias(), $rules);
+		
+		return $validation;
 	}
 
 	/**
