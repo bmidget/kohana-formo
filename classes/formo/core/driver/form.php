@@ -17,6 +17,9 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 		$this->_view
 			->set_var('tag', 'form');
 
+		// If the action hasn't been set, set it to the current uri
+		( ! $this->_view->attr('action') AND URL::site(Request::current()->detect_uri()));
+
 		// If it's not already defined, the form's type is 'post'
 		( ! $this->_view->attr('method') AND $this->_view->attr('method', 'post'));
 
