@@ -193,6 +193,54 @@ abstract class Formo_Core_Container {
 
 		return $this;
 	}
+
+	/**
+	 * Run 'set' on each field as $key
+	 * 
+	 * @access public
+	 * @param mixed array $array
+	 * @return void
+	 */
+	public function set_all(array $array)
+	{
+		foreach ($array as $field => $data)
+		{
+			$this->$field->set($data);
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Run a method on a field
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function run($field, $method, array $args = NULL)
+	{
+		$method = new ReflectionMethod($this->$field, $method);
+		$method->invokeArgs($this->$field, (array) $args);
+		
+		return $this;
+	}
+	
+	/**
+	 * Run method on a field for each item in the array
+	 * 
+	 * @access public
+	 * @param mixed array $array
+	 * @return void
+	 */
+	public function run_all(array $array)
+	{
+		foreach ($array as $data)
+		{
+			$this->run(Arr::get($data, 0), Arr::get($data, 1), Arr::get($data, 2, array()));
+		}
+		
+		return $this;
+	}
 	
 	/**
 	 * Merge new array with original array
