@@ -516,12 +516,15 @@ abstract class Formo_Core_Container {
 	 * @param mixed $value. (default: NULL)
 	 * @return array
 	 */
-	public function as_array($value = NULL)
+	public function as_array($value = NULL, array $fields = NULL)
 	{
 		// Create the empty array to fill
 		$array = array();
 		foreach ($this->_defaults['fields'] as $field)
 		{
+			if ($fields AND ! in_array($field->alias(), $fields))
+				continue;
+
 			$alias = $field->alias();
 			
 			if ($field instanceof Formo_form)
