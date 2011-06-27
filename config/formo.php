@@ -41,7 +41,7 @@ return array
 		'date'           => array(array('date')),
 		'datetime'       => array(array('date')),
 		'datetime-local' => array(array('date')),
-		'color'          => array(array('regex', array(':value', '/^#[\da-fA-F]{6}$|([\da-fA-F])\1\1$/'))),
+		'color'          => array(array('color')),
 		'week'           => array(array('regex', array(':value', '/^\d{4}-[Ww](?:0[1-9]|[1-4][0-9]|5[0-2])$/'))),
 		'time'           => array(array('regex', array(':value', '/^(?:([0-1]?[0-9])|([2][0-3])):(?:[0-5]?[0-9])(?::([0-5]?[0-9]))?$/'))),
 		'month'          => array(array('regex', array(':value', '/^\d{4}-(?:0[1-9]|1[0-2])$/'))),
