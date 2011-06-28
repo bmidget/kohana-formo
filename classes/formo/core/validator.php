@@ -131,6 +131,8 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		if ($has_errors === FALSE)
 		{
 			$this->_add_rules($this->_validation);
+			// Add this value to the validation object
+			$this->_validation[$this->alias()] = $this->val();
 			$has_errors = $this->_determine_errors() === FALSE;
 		}
 		return $has_errors === FALSE;
