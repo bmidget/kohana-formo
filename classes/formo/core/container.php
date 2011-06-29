@@ -436,7 +436,7 @@ abstract class Formo_Core_Container {
 		// Set the field's parent
 		$field->set('parent', $this);
 		$field->set('kind', $this->get('kind'));
-		$this->_defaults['fields'][] = $field;
+		$this->_defaults['fields'][$field->alias()] = $field;
 
 		// Look for order and process it for ordering this field
 		if ($field->get('order') !== FALSE)
