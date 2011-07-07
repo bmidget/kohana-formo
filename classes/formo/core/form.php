@@ -57,7 +57,7 @@ class Formo_Core_Form extends Formo_Validator {
 		$options = Formo::args(__CLASS__, __FUNCTION__, $options);
 
 		// Load the config file
-		$this->set('config', Kohana::config('formo'));
+		$this->set('config', Kohana::$config->load('formo'));
 
 		// Set the default alias and driver if necessary
 		(empty($options['alias']) AND $options['alias'] = $this->get('config')->form_alias);
@@ -112,7 +112,7 @@ class Formo_Core_Form extends Formo_Validator {
 		// If a driver is named but not an alias, make the driver text and the alias the driver
 		if (empty($options['driver']))
 		{
-			$options['driver'] = Arr::get(Kohana::config('formo'), 'default_driver', 'input');
+			$options['driver'] = Arr::get(Kohana::$config->load('formo'), 'default_driver', 'input');
 		}
 
 		// Create the new field
@@ -206,7 +206,7 @@ class Formo_Core_Form extends Formo_Validator {
 			}
 
 			// Fetch the namespace for this form
-			$namespaced_input = Kohana::config('formo')->namespaces === TRUE
+			$namespaced_input = Kohana::$config->load('formo')->namespaces === TRUE
 				? Arr::get($input, $this->alias(), array())
 				: $input;
 
@@ -241,7 +241,7 @@ class Formo_Core_Form extends Formo_Validator {
 	public function __toString()
 	{
 		// Render as the default render type
-		return $this->render(Kohana::config('formo')->render_type);
+		return $this->render(Kohana::$config->load('formo')->render_type);
 	}
 
 }

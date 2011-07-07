@@ -735,7 +735,7 @@ abstract class Formo_Core_Container {
 			return $instance;
 
 		// Build the class name
-		$driver_class_name = Kohana::config('formo')->driver_prefix.ucfirst($driver);
+		$driver_class_name = Kohana::$config->load('formo')->driver_prefix.ucfirst($driver);
 
 		$instance = new $driver_class_name($this);
 
@@ -779,7 +779,7 @@ abstract class Formo_Core_Container {
 			return $instance;
 
 		// Get the driver neame
-		$driver = Kohana::config('formo')->orm_driver;
+		$driver = Kohana::$config->load('formo')->orm_driver;
 
 		// Create the new instance
 		$instance = new $driver($this);

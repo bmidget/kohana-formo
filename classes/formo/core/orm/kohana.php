@@ -213,7 +213,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 	public function load(ORM $model, array $fields = NULL, $skip_fields = FALSE)
 	{
 		$this->model = $model;
-		$this->_config = Kohana::config('formo_kohana');
+		$this->_config = Kohana::$config->load('formo_kohana');
 		$this->_make_fields($fields, $skip_fields);
 		$this->_load_meta();
 
@@ -558,8 +558,13 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		foreach ($query->find_all() as $row)
 		{
 			$primary_key = $row->primary_key();
-			$primary_val = $row->primary_val();
 
+			// Look for the primary value from the model
+			$primary_val = ($_primary_val = $row->primary_val())
+				? $_primary_val
+				: Kohana::$config->load('orm_primary_val');
+
+			// Use the primary value
 			$opts[$row->{$primary_val}] = $row->{$primary_key};
 		}
 

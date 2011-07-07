@@ -83,7 +83,7 @@ abstract class Formo_Core_Driver {
 		$kind = ($kind = $this->_field->get('kind'))
 			? $kind
 			// Fall back on the default form type
-			: Kohana::config('formo')->kind;
+			: Kohana::$config->load('formo')->kind;
 
 		$this->make_view($kind);
 	}
@@ -252,7 +252,7 @@ abstract class Formo_Core_Driver {
 	 */
 	public function name()
 	{
-		if ( ! Kohana::config('formo')->namespaces)
+		if ( ! Kohana::$config->load('formo')->namespaces)
 			return $this->_field->alias();
 
 		if ( ! $parent = $this->_field->parent())
@@ -432,7 +432,7 @@ abstract class Formo_Core_Driver {
 		}
 
 		// If prefix is still set to NULL and config file has one defined, use the config prefix
-		if ($prefix === NULL AND $_prefix = Kohana::config('formo')->view_prefix)
+		if ($prefix === NULL AND $_prefix = Kohana::$config->load('formo')->view_prefix)
 		{
 			$prefix = $_prefix;
 		}

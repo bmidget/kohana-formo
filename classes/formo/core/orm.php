@@ -16,7 +16,7 @@ abstract class Formo_Core_ORM implements Formo_ORM_interface {
 	 */
 	protected function _config()
 	{
-		return Kohana::config(Kohana::config('formo')->orm_config);
+		return Kohana::$config->load(Kohana::$config->load('formo')->orm_config);
 	}
 
 }

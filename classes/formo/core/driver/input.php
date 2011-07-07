@@ -35,7 +35,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	protected function _add_input_rules()
 	{
 		// Grab the rules from the formo config
-		$rules = Arr::path(Kohana::config('formo'), 'input_rules.'.$this->get_type());
+		$rules = Arr::path(Kohana::$config->load('formo'), 'input_rules.'.$this->get_type());
 
 		if ($rules)
 		{
@@ -43,7 +43,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 			$this->_field->parent()->rules($this->_field->alias(), $rules);
 		}
 		
-		if ($bindings = Kohana::config('formo.html5_bindings.'.$this->get_type()))
+		if ($bindings = Kohana::$config->load('formo.html5_bindings.'.$this->get_type()))
 		{
 			$this->_field->set('bindings', $bindings);
 		}

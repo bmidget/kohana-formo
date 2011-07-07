@@ -144,7 +144,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 			if ($file === NULL)
 			{
 				// Finally default on ocnfig default
-				$file = Kohana::config('formo')->message_file;
+				$file = Kohana::$config->load('formo')->message_file;
 			}
 		}
 		

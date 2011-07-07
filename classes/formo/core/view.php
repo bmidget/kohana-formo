@@ -60,7 +60,7 @@ abstract class Formo_Core_View extends View {
 			: $this->_field->alias();
 
 		// Translate if needed
-		return  (Kohana::config('formo')->translate === TRUE)
+		return  (Kohana::$config->load('formo')->translate === TRUE)
 			? __($label)
 			: $label;
 	}

@@ -328,7 +328,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	{
 		return $this->get('message_file')
 			? $this->get('message_file')
-			: Kohana::config('formo')->message_file;
+			: Kohana::$config->load('formo')->message_file;
 	}
 
 	public static function range($field, $form)

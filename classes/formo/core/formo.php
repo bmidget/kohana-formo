@@ -81,7 +81,7 @@ class Formo_Core_Formo {
 	 */
 	public static function render_obj($type, $options)
 	{
-		$class = Kohana::config('formo')->render_classes[$type];
+		$class = Kohana::$config->load('formo')->render_classes[$type];
 		return new $class($options);
 	}
 

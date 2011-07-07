@@ -28,6 +28,8 @@ return array
 	'orm_driver'             => 'Formo_ORM_Kohana',
 	// Config file for the ORM driver
 	'orm_config'             => 'formo_kohana',
+	// The default ORM primary val because this bug still isn't fixed in ORM
+	'orm_primary_val'            => 'name',
 	// Auto-generate IDs on form elements
 	'auto_id'                => FALSE,
 	// If set to true, all Validate helper functions are auto-preceded
