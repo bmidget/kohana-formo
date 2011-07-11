@@ -57,7 +57,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	 * @param mixed $require_sent. (default: FALSE)
 	 * @return void
 	 */
-	public function validate($require_sent = FALSE)
+	public function validate($require_sent = TRUE)
 	{
 		$this->_validation();
 		$this->driver()->pre_validate();

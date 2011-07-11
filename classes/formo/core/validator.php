@@ -101,7 +101,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed array $array. (default: NULL)
 	 * @return void
 	 */
-	public function validate($require_sent = FALSE)
+	public function validate($require_sent = TRUE)
 	{
 		if ($require_sent === TRUE AND $this->sent() === FALSE)
 			// If form wasn't sent, and sent is required, doesn't pass validation

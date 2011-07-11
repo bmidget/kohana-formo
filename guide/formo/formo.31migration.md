@@ -17,9 +17,3 @@ Rules that were previously defined as objects can easily be converted to validat
 Becomes
 
 	array('not_empty', NULL)
-
-### Force validation
-
-The option inside the `validate` method is now handled opposite as it was previously. Now the method validates whether or not the form was sent by default and must be passed `TRUE` to validate only if sent:
-
-	if ($form->validate(TRUE))
