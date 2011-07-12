@@ -138,4 +138,32 @@ class Formo_Core_Formo {
 		return $val !== Formo::NOTSET;
 	}
 
+	/**
+	 * Convert array values to a select_list
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed array $array
+	 * @return array
+	 */
+	public static function select_list(array $array)
+	{
+		$assoc_array = array();
+
+		foreach ($array as $key => $value)
+		{
+			if ( ! is_array($value))
+			{
+				$assoc_array += array($key => $value);
+			}
+			else
+			{
+				$_value = array_values(array_pad($value, 2, NULL));
+				$assoc_array[$_value[0]] = $_value[1];
+			}
+		}
+
+		return $assoc_array;
+	}
+
 }
