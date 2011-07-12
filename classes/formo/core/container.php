@@ -174,6 +174,12 @@ abstract class Formo_Core_Container {
 		{
 			$value = $this->driver()->format_alias($value);
 		}
+		
+		if ($variable == 'val')
+		{
+			$this->val($value);
+			return $this;
+		}
 
 		if (array_key_exists($variable, $this->_defaults))
 		{
