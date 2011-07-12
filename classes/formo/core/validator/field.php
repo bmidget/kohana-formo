@@ -28,6 +28,8 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if (func_num_args() !== 0)
 		{
+			$field = $this->alias();
+			$this->_validation()->label($this->alias(), $this->view()->label());
 			$this->_validation()->error($field, $message, $params);
 		}
 
