@@ -685,8 +685,18 @@ abstract class Formo_Core_Container {
 	 * @param mixed $relative_field. (default: NULL)
 	 * @return object
 	 */
-	public function order($field, $new_order, $relative_field = NULL)
+	public function order($field, $new_order => 0, $relative_field = NULL)
 	{
+		if (is_array($field))
+		{
+			foreach ($field as $_field => $value)
+			{
+				$this->order($_field, $value);
+			}
+			
+			return;
+		}
+
 		// Find the field if necessary
 		$field = (is_object($field) === FALSE) ? $this->find($field) : $field;
 
@@ -715,7 +725,7 @@ abstract class Formo_Core_Container {
 
 		return $this;
 	}
-
+	
 	/**
 	 * Return or create a new driver instance
 	 *
