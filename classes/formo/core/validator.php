@@ -101,7 +101,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 * @param mixed array $array. (default: NULL)
 	 * @return void
 	 */
-	public function validate($require_sent = FALSE)
+	public function validate($require_sent = TRUE)
 	{
 		if ($require_sent === TRUE AND $this->sent() === FALSE)
 			// If form wasn't sent, and sent is required, doesn't pass validation
@@ -302,25 +302,13 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	 */
 	public function errors($file = NULL, $translate = TRUE)
 	{
-		if ($file === NULL)
+		$errors = array();
+		foreach ($this->fields() as $field)
 		{
-			$file = $this->message_file();
+			$errors += $field->errors($file, $translate);
 		}
 
-		$return_errors = $errors = $this->_validation->errors($file, $translate);
-
-		if (isset($errors[$this->alias()]))
-		{
-			$other_errors = $errors;
-			unset($other_errors[$this->alias()]);
-
-			if ( ! empty($other_errors))
-			{
-				unset($return_errors[$this->alias()]);
-			}
-		}
-
-		return $return_errors;
+		return $errors;
 	}
 
 	// Determine which message file to use

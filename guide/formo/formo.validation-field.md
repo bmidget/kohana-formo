@@ -4,14 +4,14 @@ It's simple to do validation against a sigle field. It works just like validatin
 
 ### Validate
 
-Just like at the form level, you can pass in a true variable to require the field to be sent to pass validation.
+Just like at the form level by default the field is required to be sent to pass validation.
 
-	$field_validated = $form->username->validate(TRUE);
+	$field_validated = $form->username->validate();
 
-Otherwise you can just validate the field against its current value
+Otherwise you can just validate the field against its current value by passing `FALSE`
 
 	$form->username->val($some_value);
-	$field_validated = $form->username->validate();
+	$field_validated = $form->username->validate(FALSE);
 
 ### Validating field against another value
 

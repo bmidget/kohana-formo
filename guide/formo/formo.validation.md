@@ -33,10 +33,10 @@ Since you will generally check validation rules after adding an input array, `va
 Here are some examples:
 
 	// Attach error messages and check if form passes validation, and require the form to be sent
-	if ($form->load()->validate(TRUE))
+	if ($form->load()->validate())
 
 	// Attach error messages and check if form passes validation even if it wasn't sent
-	if ($form->validate())
+	if ($form->validate(FALSE))
 
 # Formo validation
 
@@ -76,7 +76,7 @@ An example of a rule at the form level could be a login form where `username` an
 		->add('password', 'password', array('rules' => array(array('not_empty'))))
 		->add('submit', 'submit');
 
-	if ($form->load($_POST)->validate(TRUE))
+	if ($form->load($_POST)->validate())
 	{
 
 	}

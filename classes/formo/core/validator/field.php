@@ -28,6 +28,8 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if (func_num_args() !== 0)
 		{
+			$field = $this->alias();
+			$this->_validation()->label($this->alias(), $this->view()->label());
 			$this->_validation()->error($field, $message, $params);
 		}
 
@@ -57,7 +59,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	 * @param mixed $require_sent. (default: FALSE)
 	 * @return void
 	 */
-	public function validate($require_sent = FALSE)
+	public function validate($require_sent = TRUE)
 	{
 		$this->_validation();
 		$this->driver()->pre_validate();

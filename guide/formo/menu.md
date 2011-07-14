@@ -21,3 +21,9 @@
 	 - [Rendering](formo.rendering)
 	 - [HTML views](formo.html-views)
  - [ORM Integration](formo.orm)
+ - Examples
+ 	- [Text Input](formo.ex.input)
+ 	- [Select](formo.ex.select)
+ 	- [Checkboxes](formo.ex.checkboxes)
+ 	- [Radios](formo.ex.radios)
+ 	- [Bool](formo.ex.bool)
