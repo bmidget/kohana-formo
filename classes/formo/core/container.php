@@ -78,7 +78,6 @@ abstract class Formo_Core_Container {
 	 */
 	public function fields($field = NULL)
 	{
-		$unordered = array();
 		$ordered = array();
 
 		foreach ($this->get('fields') as $field)
