@@ -550,7 +550,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		// First check to see if there are any query options to limit the records
 		if ($limit = $this->_form->$alias->get('records'))
 		{
-			$query = call_user_func($limit, $query);
+			$query = $limit($query);
 		}
 
 		// Create the array

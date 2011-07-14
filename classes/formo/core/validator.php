@@ -55,7 +55,8 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		if (is_callable(array($this->_validation, $method)))
 		{
 			// Run validation methods inside the validation object
-			call_user_func_array(array($this->_validation, $method), $args);
+			$method = new ReflectionMethod($this->_validation, $method);
+			$method->invokeArgs($this->_validation, $args);
 
 			return $this;
 		}

@@ -309,7 +309,10 @@ abstract class Formo_Core_Driver {
 	public function orm($method)
 	{
 		$args = array_slice(func_get_args(), 1);
-		return call_user_func_array(array($this->_field->orm_driver(), $method), $args);
+
+		$orm = $this->_field->orm_driver();
+		$method = new ReflectionMethod($orm, $method);
+		return $method->invokeArgs($orm, (array) $args);
 	}
 	
 	public function has_orm()

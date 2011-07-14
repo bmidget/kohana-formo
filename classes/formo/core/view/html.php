@@ -260,7 +260,7 @@ class Formo_Core_View_HTML extends Formo_View {
 				$this->_vars['text'] = $vals[1].$this->_vars['text'];
 				break;
 			case 'callback':
-				$this->_vars['text'] = call_user_func($vals[1], $this->_vars['text']);
+				$this->_vars['text'] = $vals[1]($this->_vars['text']);
 				break;
 			}
 
