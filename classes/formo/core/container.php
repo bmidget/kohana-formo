@@ -122,7 +122,7 @@ abstract class Formo_Core_Container {
 			if ($find_by == 'item' AND $search == $field->alias())
 				return $field;
 
-			if ($option AND $find_by == 'item' AND call_user_func($option, $search) == $field->alias())
+			if ($option AND $find_by = $option($search) == $field->alias())
 				return $field;
 		}
 	}
@@ -137,7 +137,9 @@ abstract class Formo_Core_Container {
 	 */
 	public function __call($func, $args)
 	{
-		return call_user_func_array(array($this->driver(), $func), $args);
+		$driver = $this->driver();
+		$method = new ReflectionMethod($driver, $func);
+		return $method->invokeArgs($driver, (array) $args);
 	}
 
 	/**
@@ -442,17 +444,12 @@ abstract class Formo_Core_Container {
 		{
 			$order = $field->get('order');
 			$args = array($field);
-			if (is_array($order))
-			{
-				$args[] = key($order);
-				$args[] = current($order);
-			}
-			else
-			{
-				$args[] = $order;
-			}
+			$args = (array) $order;
+			array_unshift($args, $field);
+			$args = array_pad($args, 3, NULL);
 
-			call_user_func_array(array($this, 'order'), $args);
+			$method = new ReflectionMethod($this, 'order');
+			$method->invokeArgs($this, $args);
 		}
 
 		$field->driver()->append();
@@ -690,7 +687,12 @@ abstract class Formo_Core_Container {
 		{
 			foreach ($field as $_field => $_value)
 			{
-				$this->order($_field, $_value);
+				$args = (array) $_value;
+				array_unshift($args, $_field);
+				$args = array_pad($args, 3, NULL);
+				
+				$method = new ReflectionMethod($this, 'order');
+				$method->invokeArgs($this, $args);
 			}
 			
 			return $this;

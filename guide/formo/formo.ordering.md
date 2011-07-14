@@ -27,8 +27,8 @@ You can also choose a place relative to another field. The options are "before" 
 	$form = Formo::form()
 		->add('username')
 		->add('password')
-		->add('email', array('order' => array('before' => 'password')))
-		->add('firstname', array('order' => array('after' => 'email')));
+		->add('email', array('order' => array('before', 'password')))
+		->add('firstname', array('order' => array('after', 'email')));
 		
 This example places the fields in the following order:
 
@@ -39,11 +39,15 @@ This example places the fields in the following order:
 
 Move fields around after creation by using the `order` method.
 
-	$form->order('email', 1);
+	$form->order(array('email' => 1));
 	
 Or
 	
-	$form->order('email', 'after', 'username');
+	$form->order(array(
+		'email' => 2,
+		'username' => array('before', 'first_name'),
+		'password' => array('after', 'last_name'),
+	));
 
 ### Limitations
 
