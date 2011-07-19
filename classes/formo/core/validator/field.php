@@ -103,7 +103,9 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if (empty($this->_validation))
 		{
-			$this->_validation = new Validation(array($this->alias() => $this->val()));
+			$array = $this->parent()->as_array('value');
+			$this->_validation = Validation::factory($array)
+				->bind(':form', $this->parent());
 		}
 
 		return $this->_validation;
