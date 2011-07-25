@@ -196,7 +196,7 @@ class Formo_Core_View_HTML extends Formo_View {
 			// If there isn't a parent, don't namespace the name
 			return $id;
 		
-		if ($parent->alias() == Kohana::$config->load('formo')->form_alias)
+		if ($parent->alias() == Formo::config($this->_field, 'form_alias'))
 			return $id;
 
 		return $parent->alias().'-'.$id;
@@ -210,7 +210,7 @@ class Formo_Core_View_HTML extends Formo_View {
 	 */
 	protected function _auto_id()
 	{
-		if (Kohana::$config->load('formo')->auto_id AND ! $this->attr('id'))
+		if (Formo::config($this->_field, 'auto_id') AND ! $this->attr('id'))
 		{
 			$this->attr('id', $this->_make_id());
 		}
@@ -340,7 +340,7 @@ class Formo_Core_View_HTML extends Formo_View {
 		$singletag = in_array($this->_vars['tag'], $this->_singles);
 
 		// Let the config file determine whether to close the tags
-		$closetag = (Kohana::$config->load('formo')->close_single_html_tags === TRUE)
+		$closetag = (Formo::config($this->_field, 'close_single_html_tags') === TRUE)
 			? '/'
 			: NULL;
 

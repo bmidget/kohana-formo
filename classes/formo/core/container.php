@@ -738,16 +738,13 @@ abstract class Formo_Core_Container {
 		// Fetch the current settings
 		$driver = $this->get('driver');
 		$instance = $this->get('driver_instance');
-		$class = 'Formo_Driver_'.ucfirst($driver);
+		$class = Formo::config($this, 'driver_prefix').ucfirst($driver);
 
 		// If the instance is the correct driver for the field, return it
 		if ($instance AND $instance instanceof $class)
 			return $instance;
 
-		// Build the class name
-		$driver_class_name = Kohana::$config->load('formo')->driver_prefix.ucfirst($driver);
-
-		$instance = new $driver_class_name($this);
+		$instance = new $class($this);
 
 		if ($save_instance === TRUE)
 		{
@@ -789,7 +786,7 @@ abstract class Formo_Core_Container {
 			return $instance;
 
 		// Get the driver neame
-		$driver = Kohana::$config->load('formo')->orm_driver;
+		$driver = Formo::config($this, 'orm_driver');
 
 		// Create the new instance
 		$instance = new $driver($this);

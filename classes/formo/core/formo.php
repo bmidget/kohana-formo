@@ -71,21 +71,6 @@ class Formo_Core_Formo {
 	}
 
 	/**
-	 * Return a new render object
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $type
-	 * @param mixed $options
-	 * @return Render object
-	 */
-	public static function render_obj($type, $options)
-	{
-		$class = Kohana::$config->load('formo')->render_classes[$type];
-		return new $class($options);
-	}
-
-	/**
 	 * Simplifies taking function arguments
 	 * Turns all arguments into one nice $options array
 	 *
@@ -164,6 +149,20 @@ class Formo_Core_Formo {
 		}
 
 		return $assoc_array;
+	}
+	
+	public static function config($field, $config_item, $file = 'formo')
+	{
+		// Fist check for the field
+		if ($value = $field->get($config_item, FALSE, TRUE))
+			return $value;
+		
+		// Next check against the parent
+		if ($parent = $field->parent() AND $value = $parent->get($config_item, FALSE, TRUE))
+			return $value;
+		
+		// Finally, result to the Config file
+		return Kohana::$config->load($file.'.'.$config_item);
 	}
 
 }

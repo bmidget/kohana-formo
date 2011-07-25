@@ -136,20 +136,7 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if ($file === NULL)
 		{
-			// First check for fiel-specific message_file
-			$file = $this->get('message_file');
-			
-			if ($file === NULL)
-			{
-				// Then look for parent message_file
-				$file = $this->parent()->get('message_file');
-			}
-			
-			if ($file === NULL)
-			{
-				// Finally default on ocnfig default
-				$file = Kohana::$config->load('formo')->message_file;
-			}
+			$file = Formo::config($this, 'message_file');
 		}
 		
 		return $file;

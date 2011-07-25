@@ -318,9 +318,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	// Determine which message file to use
 	public function message_file()
 	{
-		return $this->get('message_file')
-			? $this->get('message_file')
-			: Kohana::$config->load('formo')->message_file;
+		return Formo::config($this, 'message_file');
 	}
 
 	public static function range($field, $form)
