@@ -4,6 +4,7 @@
 	 - [Overview](formo.overview)
 	 - [Getting started](formo.getting-started)
  - Form Objects
+ 	 - [Cascading config](formo.cascading_config)
 	 - [Constructs](formo.constructs)
 	 - [Types](formo.types)
 	 - [Values](formo.values)
