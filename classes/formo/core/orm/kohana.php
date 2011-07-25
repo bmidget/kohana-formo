@@ -559,11 +559,15 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		{
 			$primary_key = $row->primary_key();
 
-			// Look for the primary value from the model
-			$primary_val = ($_primary_val = $row->primary_val())
-				? $_primary_val
-				: Kohana::$config->load('orm_primary_val');
-
+			$primary_val = ($pval = $this->_form->$alias->get('orm_primary_val'))
+				// Use the field primary val if set
+				? $pval
+				: ($pval = $this->_form->get('orm_primary_val'))
+					// Use the Form primary val if set
+					? $pval
+					// Finally, use the config, generic primary val
+					: Kohana::$config->load('formo.orm_primary_val');
+			
 			// Use the primary value
 			$opts[$row->{$primary_val}] = $row->{$primary_key};
 		}
