@@ -189,8 +189,8 @@ abstract class Formo_Core_Container {
 			return $this;
 		}
 
-		// Otherwise let the driver do the setting
-		$this->driver()->set($variable, $value);
+		// Otherwise set the value here
+		$this->$variable = $value;
 
 		return $this;
 	}
@@ -325,7 +325,7 @@ abstract class Formo_Core_Container {
 	 * @param mixed $default. (default: FALSE)
 	 * @return mixed
 	 */
-	public function get($variable, $default = FALSE, $shallow_look = FALSE)
+	public function get($variable, $default = FALSE)
 	{
 		$arrays = array('_defaults', '_settings', '_customs');
 
@@ -337,12 +337,11 @@ abstract class Formo_Core_Container {
 			}
 		}
 		
-		if ($shallow_look === TRUE)
-			// Don't keep searching deeper
-			return $default;
-
-		// Otherwise run get through the driver
-		return $this->driver()->get($variable, $default, $shallow_look);
+		if (isset($this->$variable))
+			return $this->$variable;
+		
+		// Return the default if every check failed
+		return $default;
 	}
 
 	/**

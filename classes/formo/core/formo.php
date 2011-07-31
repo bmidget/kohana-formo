@@ -154,11 +154,11 @@ class Formo_Core_Formo {
 	public static function config($field, $config_item, $file = 'formo')
 	{
 		// Fist check for the field
-		if ($value = $field->get($config_item, FALSE, TRUE))
+		if ($value = $field->get($config_item, FALSE))
 			return $value;
 		
 		// Next check against the parent
-		if ($parent = $field->parent() AND $value = $parent->get($config_item, FALSE, TRUE))
+		if ($parent = $field->parent() AND $value = $parent->get($config_item, FALSE))
 			return $value;
 		
 		// Finally, result to the Config file

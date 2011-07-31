@@ -119,22 +119,6 @@ abstract class Formo_Core_Driver {
 		$this->_view->append();
 	}
 
-	public function set($variable, $value)
-	{
-		// Just set the field value
-		$this->_field->$variable = $value;
-
-		return $this->_field;
-	}
-
-	public function get($variable, $default, $shallow_look = FALSE)
-	{
-		// Return the field value if it's set, or the default value if it's not
-		return (isset($this->_field->$variable))
-			? $this->_field->$variable
-			: $default;
-	}
-	
 	public function format_alias($alias)
 	{
 		return str_replace(' ', '_', $alias);
