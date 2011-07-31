@@ -171,7 +171,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 	{
 		if ($this->_validation->errors())
 			return FALSE;
-
+		
 		return $this->_validation->check();
 	}
 
@@ -311,6 +311,13 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		{
 			$errors += $field->errors($file, $translate);
 		}
+		
+		// Add this error
+		$file = $file
+			? $file
+			: Formo::config($this, 'message_file');
+
+		$errors += $this->_validation->errors($file, $translate);
 
 		return $errors;
 	}
