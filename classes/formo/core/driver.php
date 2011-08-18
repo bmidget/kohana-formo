@@ -413,6 +413,9 @@ abstract class Formo_Core_Driver {
 			$prefix = ($parent = $this->_field->parent())
 				? $parent->get('view_prefix', NULL)
 				: NULL;
+			
+			// Set the view prefix so children can use it
+			$this->_field->set('view_prefix', $prefix);
 		}
 
 		// If prefix is still set to NULL and config file has one defined, use the config prefix
