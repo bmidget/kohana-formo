@@ -12,15 +12,11 @@ class Formo_Core_Driver_Submit extends Formo_Driver {
 
 	public function html()
 	{
-		$value = ($val = $this->_field->get('value'))
-			? $val
-			: $this->_view->label();
-			
 		$this->_view
-			->set_var('tag', 'input')
+			->set_var('tag', 'button')
+			->set_var('text', ($text = $this->_field->val()) ? $text : $this->_view->label())
 			->attr('type', 'submit')
-			->attr('name', $this->name())
-			->attr('value', $value);
+			->attr('name', $this->name());
 	}
 
 	public function sent()
