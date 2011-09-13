@@ -220,9 +220,45 @@ abstract class Formo_Core_Driver {
 		return $this;
 	}
 	
+	/**
+	 * Whether the 'new_value' parameter is set
+	 * 
+	 * @access public
+	 * @return boolean
+	 */
 	public function val_isset()
 	{
 		return Formo::is_set($this->_field->get('new_value'));
+	}
+	
+	/**
+	 * Determine if the field's value has changed
+	 * 
+	 * @access public
+	 * @return boolean
+	 */
+	public function is_changed()
+	{
+		$value = $this->_field->get('value');
+		$new_value = $this->_field->get('new_value');
+		
+		echo Debug::vars($value, $new_value);
+		
+		if ( ! $this->val_isset())
+			return FALSE;
+
+		return $value != $new_value;
+	}
+	
+	/**
+	 * Return the previous value
+	 * 
+	 * @access public
+	 * @return mixed
+	 */
+	public function last_val()
+	{
+		return $this->_field->get('value');
 	}
 	
 	/**

@@ -12,7 +12,7 @@ class Formo_Core_Driver_Submit extends Formo_Driver {
 
 	public function html()
 	{
-		$value = ($val = $this->_field->get('value'))
+		$value = ($val = $this->_field->val())
 			? $val
 			: $this->_view->label();
 			
