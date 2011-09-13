@@ -1,10 +1,10 @@
 Formo is a form module for Kohana 3 that lets you work with forms as objects.
 
-Requires Kohana 3.1.x
+Requires Kohana 3.2.x
 
 # Features
 
-* Made for [Kohana 3.1.x](http://github.com/kohana/kohana)
+* Made for [Kohana 3.2.x](http://github.com/kohana/kohana)
 * ORM integration
 * Namespace your form elements (ie name="address['street']", name="address['city']")
 * Driver-based
