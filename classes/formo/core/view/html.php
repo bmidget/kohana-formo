@@ -365,6 +365,11 @@ class Formo_Core_View_HTML extends Formo_View {
 		{
 			$this->css($css);
 		}
+		
+		if ($text = $this->_field->get('text'))
+		{
+			$this->text($text);
+		}
 
 		$this->_auto_id();
 		return parent::pre_render();

@@ -15,8 +15,12 @@ class Formo_Core_Driver_Button extends Formo_Driver {
 		$this->_view
 			->set_var('tag', 'button')
 			->attr('name', $this->name())
-			->attr('value', $this->val())
-			->text($this->_field->alias());
+			->attr('value', $this->val());
+		
+		if ( ! $this->_view->text())
+		{
+			$this->_view->text($this->_field->alias());
+		}
 	}
 
 	public function sent()
