@@ -29,7 +29,7 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		'form' => array(),
 		'fields' => array(),
 	);
-
+	
 	/**
 	 * Create validation object
 	 *
@@ -139,7 +139,12 @@ abstract class Formo_Core_Validator extends Formo_Container {
 
 			$has_errors = $this->_determine_errors() === FALSE;
 		}
-		return $has_errors === FALSE;
+		
+		$passed_validation = ($has_errors === FALSE);
+		
+		$this->_run_callbacks($passed_validation);
+
+		return $passed_validation;
 	}
 
 	/**
@@ -320,6 +325,90 @@ abstract class Formo_Core_Validator extends Formo_Container {
 		$errors += $this->_validation->errors($file, $translate);
 
 		return $errors;
+	}
+
+	/**
+	 * Ensure the array for a field's callbacks exists and is an array
+	 * 
+	 * @access protected
+	 * @param mixed $type
+	 * @param mixed $alias
+	 * @return void
+	 */
+	protected function _create_callback_array($type, $alias)
+	{
+		if ( ! isset($this->_defaults['callbacks'][$type][$alias]))
+		{
+			$this->_defaults['callbacks'][$type][$alias] = array();
+		}
+		
+		return $this->_defaults['callbacks'][$type][$alias];
+	}
+
+	/**
+	 * Add a callback
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param mixed $alias
+	 * @param mixed $method
+	 * @param mixed array $values. (default: NULL)
+	 * @return void
+	 */
+	public function callback($type, $alias, $method, array $values = NULL)
+	{
+		$this->_create_callback_array($type, $alias);
+		$this->_defaults['callbacks'][$type][$alias][] = array($method, $values);
+		
+		return $this;
+	}
+	
+	/**
+	 * Add multiple callbacks
+	 * 
+	 * @access public
+	 * @param mixed array $callbacks
+	 * @return void
+	 */
+	public function callbacks(array $callbacks)
+	{
+		$types = array('pass', 'fail');
+		
+		foreach ($callbacks as $type => $callback)
+		{
+			foreach ($callback as $alias => $_callbacks)
+			{
+				$this->_create_callback_array($type, $alias);
+				$this->_defaults['callbacks'][$type][$alias] += $_callbacks;
+			}
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Run callbacks
+	 * 
+	 * @access protected
+	 * @param mixed $passed_validatoin
+	 * @return void
+	 */
+	protected function _run_callbacks($passed_validatoin)
+	{
+		$type = ($passed_validatoin === TRUE) ? 'pass' : 'fail';
+		$all_callbacks = arr::get($this->_defaults['callbacks'], $type, array());
+
+		foreach ($all_callbacks as $alias => $callbacks)
+		{
+			foreach ($callbacks as $callback)
+			{
+				$method = array_shift($callback);
+				$values = arr::get($callback, 0, array());
+				
+				$this->_replace_callback_vals($alias, $values);
+				call_user_func_array($method, $values);
+			}
+		}
 	}
 
 	// Determine which message file to use

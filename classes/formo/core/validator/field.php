@@ -64,8 +64,12 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 		$this->_validation();
 		$this->driver()->pre_validate();
 		$this->_add_rules();
+		
+		$passed = $this->_validation()->check();
+		
+		$this->_run_callbacks($passed);
 
-		return $this->_validation()->check();
+		return $passed;
 	}
 	
 	/**
@@ -140,6 +144,66 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 		}
 		
 		return $file;
+	}
+	
+	/**
+	 * Add a callback
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param mixed $method
+	 * @param mixed array $values. (default: NULL)
+	 * @return void
+	 */
+	public function callback($type, $method, array $values = NULL)
+	{
+		$this->_defaults['callbacks'][$type][] = array($method, $values);
+		
+		return $this;
+	}
+	
+	/**
+	 * Add multiple callbacks
+	 * 
+	 * @access public
+	 * @param mixed array $callbacks
+	 * @return void
+	 */
+	public function callbacks(array $callbacks)
+	{
+		$types = array('pass', 'fail');
+		
+		foreach ($types as $type)
+		{
+			if ($callbacks = arr::get($callbacks, $type))
+			{
+				$this->_defaults[$type] += $callbacks;
+			}
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Run callbacks
+	 * 
+	 * @access protected
+	 * @param mixed $passed_validatoin
+	 * @return void
+	 */
+	protected function _run_callbacks($passed_validatoin)
+	{
+		$type = ($passed_validatoin === TRUE) ? 'pass' : 'fail';
+		$all_callbacks = arr::get($this->_defaults['callbacks'], $type, array());
+
+		foreach ($all_callbacks as $alias => $callbacks)
+		{
+			$method = array_shift($callbacks);
+			$values = arr::get($callbacks, 0, array());
+
+			$this->_replace_callback_vals(':self', $values);
+			call_user_func_array($method, $values);
+		}
 	}
 
 }

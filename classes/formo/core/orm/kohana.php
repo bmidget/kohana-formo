@@ -216,6 +216,15 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 		$this->_config = Kohana::$config->load('formo_kohana');
 		$this->_make_fields($fields, $skip_fields);
 		$this->_load_meta();
+		
+		if ($arr = arr::get($this->_formo, ':self'))
+		{
+			foreach ($arr as $var => $vals)
+			{
+				// Add :self stuff
+				$this->_form->set($var, $vals);
+			}
+		}
 
 		foreach ($model->as_array() as $alias => $value)
 		{

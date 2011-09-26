@@ -49,6 +49,11 @@ abstract class Formo_Core_Container {
 		'order'           => FALSE,
 		'kind'            => NULL,
 		'rules'           => array(),
+		'callbacks'       => array
+		(
+			'pass' => array(),
+			'fail' => array(),
+		),
 	);
 
 	/**
@@ -819,6 +824,40 @@ abstract class Formo_Core_Container {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Replace callback pseudo params with actual values
+	 * 
+	 * @access protected
+	 * @param mixed $alias
+	 * @param mixed & $values
+	 * @return void
+	 */
+	protected function _replace_callback_vals($alias, & $values)
+	{
+		$obj = ($alias == ':self')
+			? $this
+			: $this->$alias;
+
+		$new_vals = array
+		(
+			':value'    => $obj->val(),
+			':field'    => $obj,
+			':form'     => $obj->parent('form'),
+			':last_val' => $obj->last_val(),
+		);
+		
+		foreach ($new_vals as $k => $new_val)
+		{
+			foreach ($values as $key => $value)
+			{
+				if ($value == $k)
+				{
+					$values[$key] = $new_val;
+				}
+			}
+		}
 	}
 
 }
