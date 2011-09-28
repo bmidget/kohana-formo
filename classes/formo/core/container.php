@@ -632,6 +632,23 @@ abstract class Formo_Core_Container {
 	}
 
 	/**
+	 * Returns form.field key for translating labels
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function translate_label()
+	{
+		$str = NULL;
+		if ($parent = $this->parent())
+		{
+			$str .= $parent->translate_label().'.';
+		}
+		
+		return $str .= $this->alias();
+	}
+
+	/**
 	 * Return the order a field is in
 	 *
 	 * @access protected
