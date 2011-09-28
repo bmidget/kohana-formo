@@ -331,7 +331,7 @@ class Formo_Core_View_HTML extends Formo_View {
 			    // Do not end the tag if it's a single tag
 			    ? NULL
 			    // Otherwise close the tag
-			    : ">\n");
+			    : ">");
 	}
 
 	// Allows just the closing tag to be returned
