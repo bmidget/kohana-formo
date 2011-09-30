@@ -3,7 +3,7 @@
 return array
 (
 	// Whether to translate labels
-	'translate'              => TRUE,
+	'translate'              => FALSE,
 	// File for validate messages
 	'message_file'           => 'validate',
 	// Default path to view files
