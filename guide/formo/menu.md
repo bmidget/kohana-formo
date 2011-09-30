@@ -29,3 +29,4 @@
  	- [Checkboxes](formo.ex.checkboxes)
  	- [Radios](formo.ex.radios)
  	- [Bool](formo.ex.bool)
+ 	- [Datalist](formo.ex.datalist)
