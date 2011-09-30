@@ -14,7 +14,6 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 	{
 		foreach ($this->_field->get('options') as $label => $options)
 		{
-			$options['is_datalist'] = TRUE;
 			$this->_field->append(Formo::field($label, 'option', $options));
 		}
 
