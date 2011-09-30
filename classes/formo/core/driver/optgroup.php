@@ -4,6 +4,14 @@ class Formo_Core_Driver_Optgroup extends Formo_Driver {
 
 	protected $_view_file = 'optgroup';
 	
+	public function val($value = NULL)
+	{
+		if (func_num_args() === 0)
+			return $this->_field->parent()->val();
+		
+		return $this->_field->parent()->val($value);
+	}
+	
 	public function html()
 	{
 		foreach ($this->_field->get('options') as $label => $options)

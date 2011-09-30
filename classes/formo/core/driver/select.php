@@ -19,7 +19,7 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 		
 		foreach ($this->_field->get('optgroups', array()) as $label => $options)
 		{
-			$this->_field->append(Formo::field($label, 'optgroup', $this->_field->val(), array('options' => $options)));
+			$this->_field->append(Formo::field($label, 'optgroup', array('options' => $options)));
 		}
 
 		$this->_view
