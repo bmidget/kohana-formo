@@ -14,9 +14,13 @@ class Formo_Core_Driver_Option extends Formo_Driver {
 	{
 		$this->_view
 			->set_var('tag', 'option')
-			->text($this->_field->alias())
 			->attr('value', $this->_field->val());
 
+		if ($this->_field->get('is_datalist') !== TRUE)
+		{
+			$this->_view->text($this->_field->alias());
+		}
+		
 		if ($this->_field->parent()->val() == $this->_field->val())
 		{
 			$this->_field->view()->attr('selected', 'selected');
