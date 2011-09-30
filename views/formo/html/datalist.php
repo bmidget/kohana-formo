@@ -2,7 +2,7 @@
 	<label<?php if ($id = $this->attr('id')) echo ' for="'.$id.'"'; ?>>
 		<?php echo $label; ?>
 		<span class="field">
-			<input list="<?=$this->attr('id')?>" name="<?=$this->_field->name()?>" value="<?=$this->_field->val()?>" />
+			<input type="text" list="<?=$this->attr('id')?>" name="<?=$this->_field->name()?>" value="<?=$this->_field->val()?>" />
 		</span>
 		<span class="datalist">
 				<?php if ($this->editable() === TRUE): ?>
