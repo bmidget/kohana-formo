@@ -59,14 +59,19 @@ abstract class Formo_Core_View extends View {
 		
 		if ( ! $label)
 		{
-			if (Formo::config($this->_field, 'translate') === TRUE)
+			if (Formo::config($this->_field, 'use_messages') === TRUE)
 			{
-				$translate_label = $this->_field->translate_label();
-				$label = __(Kohana::message(Formo::config($this->_field, 'message_file'), $translate_label, $translate_label));
+				$translate_label = $this->_field->message_label();
+				$label = Kohana::message(Formo::config($this->_field, 'message_file'), $translate_label, $translate_label);
 			}
 			else
 			{
 				$label = $this->_field->alias();
+			}
+			
+			if (Formo::config($this->_field, 'translate') === TRUE)
+			{
+				$label = __($label);
 			}
 		}
 		

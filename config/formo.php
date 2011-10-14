@@ -4,6 +4,8 @@ return array
 (
 	// Whether to translate labels
 	'translate'              => FALSE,
+	// Whether to use Kohana messages
+	'use_messages'           => FALSE,
 	// File for validate messages
 	'message_file'           => 'validate',
 	// Default path to view files

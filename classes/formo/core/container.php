@@ -637,12 +637,12 @@ abstract class Formo_Core_Container {
 	 * @access public
 	 * @return void
 	 */
-	public function translate_label()
+	public function message_label()
 	{
 		$str = NULL;
 		if ($parent = $this->parent())
 		{
-			$str .= $parent->translate_label().'.';
+			$str .= $parent->message_label().'.';
 		}
 		
 		return $str .= $this->alias();
