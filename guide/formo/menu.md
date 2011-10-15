@@ -24,6 +24,7 @@
 	 - [HTML views](formo.html-views)
  - [ORM Integration](formo.orm)
  - Examples
+ 	- [Styling](formo.ex.styling)
  	- [Text Input](formo.ex.input)
  	- [Select](formo.ex.select)
  	- [Checkboxes](formo.ex.checkboxes)
