@@ -1,5 +1,5 @@
 <div class="group">
-	<h2><?php echo str_replace('_', ' ', $this->alias()); ?></h2>
+	<h2><?php echo $this->label(); ?></h2>
 	<?php if ($error = $this->error() AND $error !== TRUE): ?>
 		<span class="error-message"><?php echo $this->error(); ?></span>
 	<?php endif; ?>
