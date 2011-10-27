@@ -92,7 +92,10 @@ class Formo_Core_Formo {
 		foreach ($method->getParameters() as $param)
 		{
 			if ( ! isset($args[$i]))
+			{
+				$i++;
 				continue;
+			}
 
 			$new_options = (is_array($args[$i]))
 	            // If the arg was an array and the last param, use it as the set of options
