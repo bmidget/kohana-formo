@@ -5,8 +5,8 @@
 		<?php foreach ($this->get('options') as $key => $option): ?>
 			<span class="radio">
 				<label>
-					<span class="input"><input<?=HTML::attributes($this->get_option_attr('radio', $option, $key))?> /></span>
-					<span class="text"><?=$this->option_label($option, $key)?></span>
+					<span class="input"><input<?php echo HTML::attributes($this->get_option_attr('radio', $option, $key))?> /></span>
+					<span class="text"><?php echo $this->option_label($option, $key)?></span>
 				</label>
 			</span>
 		<?php endforeach; ?>
