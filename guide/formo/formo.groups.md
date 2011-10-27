@@ -23,17 +23,10 @@ For the following examples, we will be using this array of options:
 
 	$options = array
 	(
-		'Running'	=> 1,
-		'Jumping'	=> 2,
-		array
-		(
-			'alias' => 'Swimming',
-			'value'	=> 900
-		),
-		'Hunting'	=> array
-		(
-			'value'	=> 300
-		)
+		'run' => 'Running',
+		'swim' => 'Swimming',
+		'bike' => 'Biking',
+		'hike' => 'Hiking',
 	);
 	
 You can either use `alias => value` pairs or individually specify all of the parameters for greater control.

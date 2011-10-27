@@ -12,10 +12,11 @@ class Formo_Core_Driver_Radios extends Formo_Driver {
 	
 	public function html()
 	{
-		foreach ($this->_field->get('options') as $label => $options)
-		{
-			$this->_field->append(Formo::field($label, 'radio', $options));
-		}
+	}
+	
+	public function option_name()
+	{
+		return $this->_field->name();
 	}
 
 }

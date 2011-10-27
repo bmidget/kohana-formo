@@ -12,16 +12,6 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 
 	public function html()
 	{
-		foreach ($this->_field->get('options', array()) as $label => $options)
-		{
-			$this->_field->append(Formo::field($label, 'option', $options));
-		}
-		
-		foreach ($this->_field->get('optgroups', array()) as $label => $options)
-		{
-			$this->_field->append(Formo::field($label, 'optgroup', array('options' => $options)));
-		}
-
 		$this->_view
 			->set_var('tag', 'select')
 			->attr('name', $this->name());

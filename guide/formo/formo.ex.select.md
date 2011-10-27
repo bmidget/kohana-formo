@@ -4,15 +4,10 @@
 
 	$hobbies = array
 	(
-		'Running' => 'run',
-		'Swimming' => 'swim',
-		array
-		(
-			'alias' => 'Biking',
-			'label' => 'Mountain Biking',
-			'value' => 'bike'
-		),
-		'Hiking' => 'hike',
+		'run' => 'Running',
+		'swim' => 'Swimming',
+		'bike' => 'Biking',
+		'hike' => 'Hiking',
 	);
 
 	$form
@@ -24,22 +19,17 @@
 	(
 		'Exercise' => array
 		(
-			'Running' => 'run',
-			'Swimming' => 'swim',
-			array
-			(
-				'alias' => 'Biking',
-				'label' => 'Mountain Biking',
-				'value' => 'bike',
-			),
-			'Hiking' => 'hike',
+			'run' => 'Running',
+			'swim' => 'Swimming',
+			'bike' => 'Biking',
+			'hike' => 'Hiking',
 		),
 		'Dates' => array
 		(
-			'Movie' => 'movie',
-			'Roller Skating' => 'rollerskating',
-			'Dinner' => 'dinner',
-			'Bowling' => 'bowling',
+			'movie' => 'Movie',
+			'rollerskating' => 'Roller Skating',
+			'dinner' => 'Dinner',
+			'bowling' => 'Bowling',
 		)
 	);
 	

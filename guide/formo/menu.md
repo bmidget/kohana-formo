@@ -1,5 +1,4 @@
 ## [Formo]()
- - [Migrating to Kohana 3.1](formo.31migration)
  - General
 	 - [Overview](formo.overview)
 	 - [Getting started](formo.getting-started)

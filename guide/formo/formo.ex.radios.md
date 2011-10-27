@@ -4,15 +4,10 @@
 
 	$hobbies = array
 	(
-		'Running' => 'run',
-		'Swimming' => 'swim',
-		array
-		(
-			'alias' => 'Biking',
-			'label' => 'Mountain Biking',
-			'value' => 'bike'
-		),
-		'Hiking' => 'hike',
+		'run' => 'Running',
+		'swim' => 'Swimming',
+		'bike' => 'Biking',
+		'hike' => 'Hiking',
 	);
 	
 	$last_selection = 'swim';

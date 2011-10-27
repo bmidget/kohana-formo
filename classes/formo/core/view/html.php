@@ -187,7 +187,7 @@ class Formo_Core_View_HTML extends Formo_View {
 
 		return $this;
 	}
-	
+
 	protected function _make_id()
 	{
 		$id = $this->alias();
@@ -195,16 +195,16 @@ class Formo_Core_View_HTML extends Formo_View {
 		if ( ! $parent = $this->_field->parent())
 			// If there isn't a parent, don't namespace the name
 			return $id;
-		
+
 		if ($parent->alias() == Formo::config($this->_field, 'form_alias'))
 			return $id;
 
 		return $parent->alias().'-'.$id;
 	}
-	
+
 	/**
 	 * Auto-create the id if necessary
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -314,6 +314,72 @@ class Formo_Core_View_HTML extends Formo_View {
 	}
 
 	/**
+	 * Create option attributes options
+	 *
+	 * @access public
+	 * @param mixed $option
+	 * @param mixed $key
+	 * @return array
+	 */
+	public function get_option_attr($type, $option_value, $key = NULL)
+	{
+		if ($type == 'select')
+			return $this->_get_select_option_attr($option_value, $key);
+
+		$array = array('type' => $type);
+		if ( ! is_array($option_value))
+		{
+			$array += array
+			(
+				'value' => $key,
+				'name' => $this->_field->option_name(),
+			);
+
+			if (in_array($key, (array) $this->val()))
+			{
+				$array += array('checked' => 'checked');
+			}
+		}
+		
+		return $array;
+	}
+
+	/**
+	 * Create option attributes
+	 *
+	 * @access public
+	 * @param mixed $option_value
+	 * @return void
+	 */
+	public function _get_select_option_attr($option_value)
+	{
+		$array = array('value' => $option_value);
+
+		if ( (string) $option_value == (string) $this->val())
+		{
+			$array += array('selected' => 'selected');
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Return label for option
+	 *
+	 * @access public
+	 * @param mixed $option
+	 * @param mixed $key
+	 * @return void
+	 */
+	public function option_label($option, $key = NULL)
+	{
+		if ( ! is_array($option))
+		{
+			return $this->translate($option);
+		}
+	}
+
+	/**
 	 * Allows just the opening tag to be returned
 	 *
 	 * @access public
@@ -353,19 +419,19 @@ class Formo_Core_View_HTML extends Formo_View {
 			return '</'.$this->_vars['tag'].'>'."\n";
 		}
 	}
-	
+
 	public function pre_render()
 	{
 		if ($attr = $this->_field->get('attr'))
 		{
 			$this->attr($attr);
 		}
-		
+
 		if ($css = $this->_field->get('css'))
 		{
 			$this->css($css);
 		}
-		
+
 		if ($text = $this->_field->get('text'))
 		{
 			$this->text($text);
@@ -374,7 +440,7 @@ class Formo_Core_View_HTML extends Formo_View {
 		$this->_auto_id();
 		return parent::pre_render();
 	}
-	
+
 	public function field()
 	{
 		return $this->_field;
@@ -404,5 +470,5 @@ class Formo_Core_View_HTML extends Formo_View {
 
 		return $str.= $this->close();
 	}
-	
+
 }

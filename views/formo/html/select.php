@@ -5,8 +5,16 @@
 			<?php if ($this->editable() === TRUE): ?>
 				<?php echo $this->open(); ?>
 					<option value=""></option>
-					<?php foreach ($this->fields() as $option): ?>
-						<?php echo $option->render()?>
+					<?php foreach ($this->_field->get('options') as $key => $value): ?>
+					<?php if (is_array($value)): ?>
+						<optgroup label="<?php echo $key?>">
+						<?php foreach ($value as $_value => $_key): ?>
+							<option<?php echo HTML::attributes($this->get_option_attr('select', $_value)); ?>><?php echo $this->option_label($_key); ?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php else: ?>
+						<option<?php echo HTML::attributes($this->get_option_attr('select', $key)); ?>><?php echo $this->option_label($value); ?></option>
+					<?php endif; ?>
 					<?php endforeach; ?>
 				<?php echo $this->close(); ?>
 			<?php else: ?>

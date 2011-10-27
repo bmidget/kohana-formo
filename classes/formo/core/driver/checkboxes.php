@@ -77,12 +77,13 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 		$this->_field->set_var('value', $new_value);
 	}
 
+	public function option_name()
+	{
+		return $this->_field->name().'[]';
+	}
+
 	public function html()
 	{
-		foreach ($this->_field->get('options') as $alias => $options)
-		{
-			$this->_field->append(Formo::field($alias, 'checkbox', $options));
-		}
 	}
 
 }

@@ -571,7 +571,7 @@ abstract class Formo_Core_ORM_Kohana extends Formo_ORM {
 			$primary_val = Formo::config($this->_form->$alias, 'orm_primary_val');
 
 			// Use the primary value
-			$opts[$row->{$primary_val}] = $row->{$primary_key};
+			$opts[$row->{$primary_key}] = $row->{$primary_val};
 		}
 
 		// Add the options to the field

@@ -6,12 +6,6 @@ class Formo_Core_Driver_Datalist extends Formo_Driver {
 
 	public function html()
 	{
-		foreach ($this->_field->get('options') as $label => $options)
-		{
-			$options += array('is_datalist' => TRUE);
-			$this->_field->append(Formo::field($label, 'option', $options));
-		}
-
 		$this->_view
 			->set_var('tag', 'datalist')
 			->attr('id', $this->_field->get('id'));

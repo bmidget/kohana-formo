@@ -2,8 +2,13 @@
 	<?php echo $label; ?>
 	<?php echo $message; ?>
 	<span class="field">
-		<?php foreach ($this->fields() as $radio): ?>
-			<?php echo $radio->render(); ?>
+		<?php foreach ($this->get('options') as $key => $option): ?>
+			<span class="radio">
+				<label>
+					<span class="input"><input<?=HTML::attributes($this->get_option_attr('radio', $option, $key))?> /></span>
+					<span class="text"><?=$this->option_label($option, $key)?></span>
+				</label>
+			</span>
 		<?php endforeach; ?>
 	</span>
 <?php echo $close; ?>

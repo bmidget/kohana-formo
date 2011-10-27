@@ -295,28 +295,6 @@ abstract class Formo_Core_Driver {
 	}
 
 	/**
-	 * Make every option an array of options
-	 *
-	 * @access public
-	 * @param mixed $options
-	 * @return void
-	 */
-	public function set_options($options)
-	{
-		// Create the new array
-		$array = array();
-		foreach ($options as $alias => $value)
-		{
-			$array[$alias] = ( ! is_array($value))
-				// Make the value part of an array
-				? array('value' => $value)
-				: $value;
-		}
-
-		return $array;
-	}
-
-	/**
 	 * Run a method through the orm driver
 	 *
 	 * @access public

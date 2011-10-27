@@ -2,8 +2,13 @@
 	<?php echo $label; ?>
 	<?php echo $message; ?>
 	<span class="field">
-		<?php foreach ($this->fields() as $checkbox): ?>
-			<?php echo $checkbox->render(); ?>
+		<?php foreach ($this->get('options') as $key => $option): ?>
+			<span class="checkbox">
+				<label>
+					<span class="input"><input<?php echo HTML::attributes($this->get_option_attr('checkbox', $option, $key)); ?> /></span>
+					<span class="text"><?php echo $this->option_label($option, $key); ?></span>
+				</label>
+			</span>
 		<?php endforeach; ?>
 	</span>
 <?php echo $close; ?>
