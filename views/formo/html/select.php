@@ -8,8 +8,8 @@
 					<?php foreach ($this->_field->get('options') as $key => $value): ?>
 					<?php if (is_array($value)): ?>
 						<optgroup label="<?php echo $key?>">
-						<?php foreach ($value as $_value => $_key): ?>
-							<option<?php echo HTML::attributes($this->get_option_attr('select', $_value)); ?>><?php echo $this->option_label($_key); ?></option>
+						<?php foreach ($value as $_key => $_value): ?>
+							<option<?php echo HTML::attributes($this->get_option_attr('select', $_key)); ?>><?php echo $this->option_label($_value); ?></option>
 						<?php endforeach; ?>
 						</optgroup>
 					<?php else: ?>
