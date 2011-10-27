@@ -80,7 +80,8 @@ abstract class Formo_Core_View extends View {
 
 		if (Formo::config($this->_field, 'use_messages') === TRUE)
 		{
-			$new_str = Kohana::message(Formo::config($this->_field, 'message_file'), $str, $str);
+			$msg_file = Formo::config($this->_field, 'message_file');
+			$new_str = Kohana::message($msg_file, $str, $str);
 		}
 		
 		if (Formo::config($this->_field, 'translate') === TRUE)
