@@ -93,3 +93,8 @@ By default, Formo uses html files that build the inputs in a specific way. Here 
 		display:block;
 		color:red;
 	}
+	
+	form h2 {
+		text-transform: capitalize;
+		font-size: 18px;
+	}
