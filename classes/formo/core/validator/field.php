@@ -107,7 +107,11 @@ abstract class Formo_Core_Validator_Field extends Formo_Container {
 	{
 		if (empty($this->_validation))
 		{
-			$array = $this->parent()->as_array('value');
+			// Fetch form values if there's a parent
+			$array = ($parent = $this->parent())
+				? $parent->as_array('value')
+				: array();
+
 			$this->_validation = Validation::factory($array)
 				->bind(':form', $this->parent());
 		}
