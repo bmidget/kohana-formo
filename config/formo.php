@@ -25,7 +25,7 @@ return array
 	// Default subform driver
 	'default_subform_driver' => 'subform',
 	// Namespace fields
-	'namespaces'             => TRUE,
+	'namespaces'             => FALSE,
 	// ORM driver to use
 	'orm_driver'             => 'Formo_ORM_Kohana',
 	// Config file for the ORM driver
