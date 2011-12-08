@@ -46,19 +46,19 @@ By default, Formo uses html files that build the inputs in a specific way. Here 
 	form textarea {
 		  font-family:Helvetica, Arial, sans-serif;
 	}
-	form input[type="text"],
-	form input[type="password"],
-	form input[type="email"],
-	form input[type="color"],
-	form input[type="tel"],
-	form input[type="date"],
-	form input[type="datetime"],
-	form input[type="datetime-local"],
-	form input[type="week"],
-	form input[type="time"],
-	form input[type="month"],
-	form input[type="range"],
-	form input[type="tel"],
+	form .error input[type="text"],
+	form .error input[type="password"],
+	form .error input[type="email"],
+	form .error input[type="color"],
+	form .error input[type="tel"],
+	form .error input[type="date"],
+	form .error input[type="datetime"],
+	form .error input[type="datetime-local"],
+	form .error input[type="week"],
+	form .error input[type="time"],
+	form .error input[type="month"],
+	form .error input[type="range"],
+	form .error input[type="tel"],
 	form .error textarea,
 	form .error select {
 		  border-color:red;
