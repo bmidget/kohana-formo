@@ -31,3 +31,4 @@
  	- [Bool](formo.ex.bool)
  	- [Datalist](formo.ex.datalist)
  	- [Custom Message Files](formo.ex.custom-message-file)
+ 	- [Define HTML attributes](formo.ex.html-attributes)
