@@ -7,15 +7,15 @@ For instance, consider the `add()` function. Its options are the following: `add
 Here the following are identical:
 
 	$attr = array('height' => '23px');
-	$form->add('username', 'text', $model->username, array($attr));
+	$form->add('username', 'input', $model->username, array($attr));
 	
 	$options = array('value' => $model->username, $attr);
 	$form->add('username', 'text', $options);
 	
-	$options = array('driver' => 'text', 'value' => $model->username, $attr);
+	$options = array('driver' => 'input', 'value' => $model->username, $attr);
 	$form->add('username', $options);
 	
-	$options = array('alias' => 'username', 'value' => $model->username, 'driver' => 'text', $attr);
+	$options = array('alias' => 'username', 'value' => $model->username, 'driver' => 'input', $attr);
 	$form->add($options);
 	
 This is the case with all Formo constructs.
