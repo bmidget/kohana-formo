@@ -69,8 +69,15 @@ class Formo_Core_Field extends Formo_Validator_Field {
 	 */
 	public function __toString()
 	{
-		// Render as the default render type
-		return (string) $this->render();
+		// Render the field
+	    try
+	    {
+	        $this->render();
+	    }
+	    catch (Exception $e)
+	    {
+	        return "Error rendering field:".$e->getMessage();
+	    }
 	}
 	
 	/**

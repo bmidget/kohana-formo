@@ -243,7 +243,14 @@ class Formo_Core_Form extends Formo_Validator {
 	public function __toString()
 	{
 		// Render as the default render type
-		return $this->render(Formo::config($this, 'render_type'));
+	    try
+	    {
+	       return $this->render(Formo::config($this, 'render_type'));
+	    }
+	    catch (Exception $e)
+	    {
+	        return "Error rendering form:".$e->getMessage();
+	    }
 	}
 
 }
