@@ -348,6 +348,17 @@ abstract class Formo_Core_Driver {
 
 		return $this->_view->open();
 	}
+	
+	/**
+	 * Run the view's close method
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function close()
+	{
+		return $this->_view->close();
+	}
 
 	/**
 	 * Render a view from a field or form object
