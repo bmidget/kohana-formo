@@ -33,4 +33,4 @@
 		)
 	);
 	
-	$form->add('activity', 'select', $initial_value, array('optgroups' => $activities));
+	$form->add_group('activity', 'select', $activities, $initial_value);
