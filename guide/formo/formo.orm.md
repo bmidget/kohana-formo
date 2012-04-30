@@ -7,7 +7,7 @@ You can directly work with ORM model fields inside Formo throught it's `orm()` i
 
 To load fields from a model, use `orm('load',  $model)`. For instance, if you have a `$user` object and want to convert the record to a Formo form, you can simply do this:
 
-	$user = ORM::factory('user', 20);
+	$user = ORM::factory('User', 20);
 	
 	$form = Formo::form()
 		->orm('load', $user);
@@ -48,7 +48,7 @@ The method to make these definitions in the model is `formo()`. You can return a
 
 The general flow goes like this. You first create the record and load its values and rules into the form. This can also be an empty, unsaved record.
 
-	$user = ORM::factory('user');
+	$user = ORM::factory('User');
 	
 	$form = Formo::form()
 		->orm('load', $user);
@@ -93,14 +93,14 @@ If you list an array of fields in the first optional parameter, only those field
 
 How to only pull the `username` and `password` fields:
 
-	$user = ORM::factory('user', 20);
+	$user = ORM::factory('User', 20);
 	
 	$form = Formo::form()
 		->orm('load', $user, array('username', 'password'));
 
 How to pull every field except the password and email fields:
 
-	$user = ORM::factory('user', 20);
+	$user = ORM::factory('User', 20);
 	
 	$form = Formo::form()
 		->orm('load', $user, array('password', 'email'), TRUE);
