@@ -13,17 +13,17 @@ return array
 	// For determining path to driver files
 	'driver_prefix'          => 'Formo_Driver_',
 	// Default form driver
-	'form_driver'            => 'form',
+	'form_driver'            => 'Form',
 	// Default form alias
 	'form_alias'             => 'form',
 	// Default field driver
-	'default_driver'         => 'input',
+	'default_driver'         => 'Input',
 	// Default render kind
-	'kind'                   => 'html',
+	'kind'                   => 'HTML',
 	// Close single html tags (TRUE = <br/>. FALSE = <br>)
 	'close_single_html_tags' => TRUE,
 	// Default subform driver
-	'default_subform_driver' => 'subform',
+	'default_subform_driver' => 'Subform',
 	// Namespace fields
 	'namespaces'             => FALSE,
 	// ORM driver to use

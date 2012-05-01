@@ -15,7 +15,7 @@ return array
             'name' => 'Formo',
  
             // A short description of this module, shown on the index page
-            'description' => 'Object-based form handling for Kohana 3.2.x',
+            'description' => 'Object-based form handling for Kohana 3.3.x',
  
             // Copyright message, shown in the footer for this module
             'copyright' => '&copy; 2010–2011 Ben Midget',
