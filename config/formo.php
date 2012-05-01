@@ -23,7 +23,7 @@ return array
 	// Close single html tags (TRUE = <br/>. FALSE = <br>)
 	'close_single_html_tags' => TRUE,
 	// Default subform driver
-	'default_subform_driver' => 'subform',
+	'default_subform_driver' => 'Subform',
 	// Namespace fields
 	'namespaces'             => FALSE,
 	// ORM driver to use
