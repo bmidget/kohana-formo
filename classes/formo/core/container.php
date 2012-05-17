@@ -518,6 +518,11 @@ abstract class Formo_Core_Container {
 	 */
 	public function as_array($value = NULL, array $fields = NULL)
 	{
+		if ($value === TRUE)
+		{
+			return $this->_get_form_as_array();
+		}
+
 		// Create the empty array to fill
 		$array = array();
 		foreach ($this->_defaults['fields'] as $field)
@@ -841,6 +846,35 @@ abstract class Formo_Core_Container {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Return an array representation of the entire form
+	 *
+	 * @access protected
+	 * @return array
+	 */
+	public function _get_form_as_array()
+	{
+		$array = array();
+		foreach ($this->_defaults['fields'] as $field)
+		{
+			$array += array
+			(
+				$field->alias() => array
+				(
+					'alias' => $field->alias(),
+					'driver' => $field->get('driver'),
+					'attr' => $field->get('attr'),
+					'fields' => $field->get('fields'),
+					'rules' => ($rules = $field->get('rules'))
+						? $rules
+						: array(),
+				)
+			);
+		}
+
+		return $array;
 	}
 
 	/**
