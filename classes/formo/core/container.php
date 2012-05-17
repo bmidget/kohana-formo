@@ -866,6 +866,7 @@ abstract class Formo_Core_Container {
 					'alias' => $field->alias(),
 					'driver' => $field->get('driver'),
 					'attr' => $field->get('attr'),
+					'label' => $field->get('label'),
 					'options' => ($options = $field->get('options'))
 						? $options
 						: array(),
