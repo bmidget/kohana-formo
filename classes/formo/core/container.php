@@ -866,7 +866,6 @@ abstract class Formo_Core_Container {
 					'alias' => $field->alias(),
 					'driver' => $field->get('driver'),
 					'attr' => $field->get('attr'),
-					'fields' => $field->get('fields'),
 					'rules' => ($rules = $field->get('rules'))
 						? $rules
 						: array(),
