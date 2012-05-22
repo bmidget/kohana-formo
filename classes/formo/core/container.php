@@ -867,6 +867,7 @@ abstract class Formo_Core_Container {
 					'driver' => $field->get('driver'),
 					'attr' => $field->get('attr'),
 					'label' => $field->get('label'),
+					'value' => $field->val(),
 					'options' => ($options = $field->get('options'))
 						? $options
 						: array(),
