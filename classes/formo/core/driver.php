@@ -411,7 +411,7 @@ abstract class Formo_Core_Driver {
 	{
 		// The defined view file takes precendence over the default one
 		// and the parameter passed into render() takes first precedence
-		return ($view !== FALSE)
+		return ($view)
 			// Always choose the passed view if it exists
 			? $view
 			// Next look for the field-level view
