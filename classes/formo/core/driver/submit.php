@@ -1,31 +1,26 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Submit_Core class.
- * 
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Submit extends Formo_Driver {
 
-	protected $_view_file = 'submit';
-
-	public function html()
+	public static function get_attr( array $array)
 	{
-		$value = ($val = $this->_field->val())
-			? $val
-			: $this->_view->label();
-			
-		$this->_view
-			->set_var('tag', 'input')
-			->attr('type', 'submit')
-			->attr('name', $this->name())
-			->attr('value', $value);
+		$field = $array['field'];
+
+		return array
+		(
+			'type' => 'submit',
+			'value' => ($val = $field->val()) ? $val : $field->alias(),
+		);
 	}
 
-	public function sent()
+	public static function get_tag()
 	{
-		return $this->_field->not_empty() !== FALSE;
+		return 'input';
+	}
+
+	public static function get_label( array $array)
+	{
+		return null;
 	}
 
 }

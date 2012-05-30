@@ -1,41 +1,46 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Form_Core class.
- *
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Form extends Formo_Driver {
 
-	protected $_view_file = 'form';
-	public $alias = 'form';
-
-	// Setup the html object
-	public function html()
+	public static function get_attr( array $array)
 	{
-		$this->_view
-			->set_var('tag', 'form');
+		$field = $array['field'];
 
-		// If the action hasn't been set, set it to the current uri
-		( ! $this->_view->attr('action') AND URL::site(Request::current()->detect_uri()));
-
-		// If it's not already defined, the form's type is 'post'
-		( ! $this->_view->attr('method') AND $this->_view->attr('method', 'post'));
-
-		// If it's not already defined, define the field's action
-		( ! $this->_view->attr('action') AND $this->_view->attr('action', ''));
+		return array
+		(
+			'method' => ($method = $field->attr('method')) ? $method : 'post',
+			'action' => ($action = $field->attr('action')) ? $action : '',
+		);
 	}
-	
-	public function val($value = NULL)
+
+	public static function get_tag()
 	{
-		$values = array();
-		foreach ($this->_field->get('fields') as $field)
+		return 'form';
+	}
+
+	public static function get_template( array $array)
+	{
+		$field = $array['field'];
+
+		if ($template = $field->get('template'))
 		{
-			$values[$field->alias()] = $field->val();
+			return $template;
 		}
-		
-		return $values;
+
+		return 'formo/form_template';
 	}
 
+	public static function get_val( array $array)
+	{
+		$field = $array['field'];
+		$val = $array['val'];
+
+		$array = array();
+		foreach ($field->as_array('val') as $alias => $val)
+		{
+			$array += array($alias => $val);
+		}
+
+		return $array;
+	}
 }

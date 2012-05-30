@@ -1,22 +1,34 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Radios_Core class.
- * 
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Radios extends Formo_Driver {
 
-	protected $_view_file = 'radios';
-	
-	public function html()
+	public static function get_label( array $array)
 	{
+		return null;
 	}
-	
-	public function option_name()
+
+	public static function get_opts( array $array)
 	{
-		return $this->_field->name();
+		$field = $array['field'];
+
+		$opts_array = array();
+		foreach ($field->get('opts', array()) as $key => $value)
+		{
+			$opts_array[] = '<input type="radio" name="'.$field->alias().'" value="'.$key.'" />';
+		}
+
+		return $opts_array;
+	}
+
+	public static function get_opts_template( array $array)
+	{
+		return 'formo/opts/radios_template';
+	}
+
+	public static function get_title( array $array)
+	{
+		$field = $array['field'];
+		return $field->alias();
 	}
 
 }

@@ -1,89 +1,34 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Checkboxes_Core class.
- *
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
-	protected $_view_file = 'checkboxes';
-	public $empty_input = TRUE;
-
-	public function load($values)
+	public static function get_label( array $array)
 	{
-		// If this field is not being rendered, do nothing
-		if ($this->_field->get('render') === FALSE)
-			return;
+		return null;
+	}
 
-		$this->val($values);
+	public static function get_opts( array $array)
+	{
+		$field = $array['field'];
 
-		if ( ! is_array($values))
+		$opts_array = array();
+		foreach ($field->get('opts', array()) as $key => $value)
 		{
-			$values = array($values);
-		}
-	}
-
-	protected function _get_val()
-	{
-		$new_value = $this->_field->get('new_value');
-
-		// If the form was sent but the field wasn't set, return empty array as value
-		if ($this->_field->sent() AND Formo::is_set($new_value) === FALSE)
-			return array();
-
-		// Otherwise return the value that's set
-		return (Formo::is_set($new_value, $new_value) === TRUE)
-			? (array) $new_value
-			: (array) $this->_field->get('value');
-	}
-
-	public function not_empty()
-	{
-		$value = $this->val();
-		// If the value is empty, it doesn't pass
-		return empty($value) === FALSE;
-	}
-
-	public function check(array $aliases)
-	{
-		$new_value = (array) $this->_field->get('value');
-		foreach ($aliases as $alias)
-		{
-			$options = $this->_field->get('options');
-			$value = $options[$alias]['value'];
-
-			if ( ! in_array($value, $new_value))
-			{
-				$new_value[] = $value;
-			}
+			$opts_array[] = '<input type="checkbox" name="'.$field->alias().'[]" value="'.$key.'" />';
 		}
 
-		$this->_field->set_var('value', $new_value);
+		return $opts_array;
 	}
 
-	public function uncheck(array $aliases)
+	public static function get_opts_template( array $array)
 	{
-		$new_value = (array) $this->_field->get('value');
-		foreach ($aliases as $alias)
-		{
-			$options = $this->_field->get('options');
-			$value = $options[$alias]['value'];
-
-			unset($new_value[array_search($value, $new_value)]);
-		}
-
-		$this->_field->set_var('value', $new_value);
+		return 'formo/opts/checkboxes_template';
 	}
 
-	public function option_name()
+	public static function get_title( array $array)
 	{
-		return $this->_field->name().'[]';
-	}
-
-	public function html()
-	{
+		$field = $array['field'];
+		return $field->alias();
 	}
 
 }
