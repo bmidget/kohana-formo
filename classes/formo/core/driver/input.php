@@ -15,6 +15,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 		(
 			'type' => 'text',
 			'value' => $field->val(),
+			'name' => $field->alias(),
 		);
 	}
 

@@ -61,14 +61,19 @@ abstract class Formo_Core_Driver {
 		
 	}
 
-	public function load($value)
+	public static function load( array $array)
 	{
-		
+		$val = $array['val'];
+		$field = $array['field'];
+
+		$field->val($val);
 	}
 
 	public static function new_val( array $array)
 	{
-		
+		$new_val = $array['new_val'];
+
+		return $new_val;
 	}
 
 }

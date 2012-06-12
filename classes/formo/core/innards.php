@@ -2,6 +2,7 @@
 
 abstract class Formo_Core_Innards {
 
+	const OPTS = 4;
 	protected $_alias;
 	protected $_attr = array
 	(
@@ -14,6 +15,7 @@ abstract class Formo_Core_Innards {
 		'val' => 2,
 	);
 	protected $_driver;
+	protected $_errors = array();
 	protected $_fields = array();
 	protected $_opts = array();
 	protected $_parent;
@@ -32,16 +34,32 @@ abstract class Formo_Core_Innards {
 	protected $_vars = array();
 	protected $_validation;
 
-	protected function _add_rules( Validation $validation)
+	protected function _add_rule($alias, $rule, array $params = NULL)
 	{
-		if (empty($this->_rules))
+		if ($alias != ':self' AND $alias != $this->alias())
 		{
-			// Only do anything if the field has rules
-			return;
+			$field = $this->find($alias);
+			return $field->rule($alias, $rule, $params);
 		}
 
-		$validation->label($this->alias(), $this->view()->label());
-		$validation->rules($this->alias(), $rules);
+		$rules = Arr::get($this->_rules, $alias, array());
+		$rules[] = array($rule, $params);
+		$this->_rules[$alias] = $rules;
+	}
+
+	protected function _add_rules_to_validation( Validation $validation)
+	{
+		$rules = $this->_rules;
+
+		foreach ($this->_fields as $field)
+		{
+			$rules += $field->rules();
+		}
+
+		foreach ($rules as $alias => $rules)
+		{
+			$validation->rules($alias, $rules);
+		}
 	}
 
 	protected function _append( Formo $field)
@@ -83,6 +101,17 @@ abstract class Formo_Core_Innards {
 		return $this->driver('get_val', array('val' => $val, 'field' => $this));
 	}
 
+	protected function _get_validation_values()
+	{
+		$values = $this->val();
+		if ( ! is_array($values))
+		{
+			$values = array($this->alias => $this->val());
+		}
+
+		return $values;
+	}
+
 	protected function _get_var_array($var)
 	{
 		if ($var == 'driver')
@@ -119,19 +148,6 @@ abstract class Formo_Core_Innards {
 		$id = $this->alias();
 
 		return $id;
-	}
-
-	protected function _make_validation( array $array = NULL)
-	{
-		if ($array === NULL)
-		{
-			$array = $this->as_array('val');
-		}
-
-		$validation = new Validation($array);
-		$this->_add_rules($validation);
-
-		return $validation;
 	}
 
 	protected function _set_val($val, $force_new = FALSE)

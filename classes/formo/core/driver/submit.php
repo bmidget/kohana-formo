@@ -10,6 +10,7 @@ class Formo_Core_Driver_Submit extends Formo_Driver {
 		(
 			'type' => 'submit',
 			'value' => ($val = $field->val()) ? $val : $field->alias(),
+			'name' => $field->alias(),
 		);
 	}
 
