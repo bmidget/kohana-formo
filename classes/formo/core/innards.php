@@ -15,6 +15,8 @@ abstract class Formo_Core_Innards {
 		'val' => 2,
 	);
 	protected $_driver;
+	protected $_editable = true;
+	protected $_render = true;
 	protected $_errors = array();
 	protected $_fields = array();
 	protected $_opts = array();
@@ -114,24 +116,9 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_var_array($var)
 	{
-		if ($var == 'driver')
+		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable')))
 		{
-			return '_driver';
-		}
-
-		if ($var == 'attr')
-		{
-			return '_attr';
-		}
-
-		if ($var == 'alias')
-		{
-			return '_alias';
-		}
-
-		if ($var == 'opts')
-		{
-			return '_opts';
+			return '_'.$var;
 		}
 
 		return '_vars';
@@ -173,6 +160,11 @@ abstract class Formo_Core_Innards {
 				$_array[$key] = $array[$key_alias];
 				unset($_array[$key_alias]);
 			}
+		}
+
+		if (empty($_array['driver']))
+		{
+			$_array['driver'] = 'input';
 		}
 
 		return $_array;

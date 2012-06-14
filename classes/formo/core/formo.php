@@ -6,7 +6,8 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if ($array === NULL)
 		{
-			$array = array('formo');
+			// Set the default alias
+			$array = array('alias' => 'formo');
 		}
 
 		if (empty($array['driver']))
@@ -70,18 +71,30 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function add($args)
 	{
-		if ($args instanceof Formo)
-		{
-			// Allow a straight Formo object to be added
-			$this->_fields[] = $args;
-
-			return $this;
-		}
-
 		if ( ! is_array($args))
 		{
 			// Treat args the same as a plain array
 			$args = func_get_args();
+		}
+
+		if ($args[0] instanceof Formo)
+		{
+			$form = $args[0];
+
+			// Allow a straight Formo object to be added
+			$this->_fields[] = $form;
+
+			if ( ! empty($args[1]))
+			{
+				$form->set($args[1]);
+			}
+
+			if ($form->get('driver', 'form'))
+			{
+				$form->set('driver', 'group');
+			}
+
+			return $this;
 		}
 
 		// Create the field object
@@ -271,6 +284,11 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function html()
 	{
+		if ($this->get('render') === false)
+		{
+			return NULL;
+		}
+
 		$str = $this->open();
 
 		$opts = $this->driver('get_opts', array('field' => $this));
@@ -278,7 +296,10 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		foreach ($this->_fields as $field)
 		{
-			$str.= $field->render();
+			if ($field->get('render') === TRUE)
+			{
+				$str.= $field->render();
+			}
 		}
 		
 		$str.= $this->close();
@@ -362,6 +383,11 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function render()
 	{
+		if ($this->get('render') === FALSE)
+		{
+			return NULL;
+		}
+
 		$template = $this->driver('get_template', array('field' => $this));
 
 		$view = View::factory($template)
@@ -562,7 +588,10 @@ class Formo_Core_Formo extends Formo_Innards {
 			}
 		}
 
-		$validation = $this->validation();
+		foreach ($this->_fields as $field)
+		{
+			$v = $field->validate();
+		}
 
 		if ($validation->check() === TRUE)
 		{
