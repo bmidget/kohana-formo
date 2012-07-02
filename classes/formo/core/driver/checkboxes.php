@@ -11,11 +11,6 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 			: array();
 	}
 
-	public static function get_label( array $array)
-	{
-		return null;
-	}
-
 	public static function get_opts( array $array)
 	{
 		$field = $array['field'];

@@ -11,12 +11,34 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	{
 		$field = $array['field'];
 
+		$type = ($_type = $field->attr('type'))
+			? $_type
+			: 'text';
+
+		$val = ($type == 'password')
+			? NULL
+			: $field->val();
+
 		return array
 		(
-			'type' => 'text',
-			'value' => $field->val(),
+			'type' => $type,
+			'value' => $val,
 			'name' => $field->alias(),
 		);
+	}
+
+	public static function get_label( array $array)
+	{
+		$field = $array['field'];
+
+		if ($field->attr('type') == 'submit')
+		{
+			return NULL;
+		}
+		else
+		{
+			return parent::get_label($array);
+		}
 	}
 
 }

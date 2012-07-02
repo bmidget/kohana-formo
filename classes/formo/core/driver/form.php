@@ -43,4 +43,22 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 
 		return $array;
 	}
+
+	public static function get_validation_values( array $array)
+	{
+		$field = $array['field'];
+
+		return $field->val();
+	}
+
+	public static function is_a_parent()
+	{
+		return TRUE;
+	}
+
+	public static function load_config( array $array)
+	{
+		$field = $array['field'];
+		$field->set('config', Kohana::$config->load('formo'));
+	}
 }

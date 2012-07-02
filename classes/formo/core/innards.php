@@ -2,12 +2,15 @@
 
 abstract class Formo_Core_Innards {
 
-	const OPTS = 4;
+	const NOTSET = '_NOTSET';
+	const OPTS = 3;
+
 	protected $_alias;
 	protected $_attr = array
 	(
 		'class' => null,
 	);
+	protected $_config = array();
 	protected $_construct_aliases = array
 	(
 		'alias' => 0,
@@ -36,6 +39,28 @@ abstract class Formo_Core_Innards {
 	protected $_vars = array();
 	protected $_validation;
 
+	public function config($param, $default = NULL)
+	{
+		$val = Arr::path($this->_config, $param, self::NOTSET);
+
+		if ($val !== self::NOTSET)
+		{
+			return $val;
+		}
+
+		$parent = $this->parent();
+		if ($parent)
+		{
+			$val = $parent->config($param, self::NOTSET);
+			if ($val !== self::NOTSET)
+			{
+				return $val;
+			}
+		}
+
+		return $default;
+	}
+
 	protected function _add_rule($alias, $rule, array $params = NULL)
 	{
 		if ($alias != ':self' AND $alias != $this->alias())
@@ -44,24 +69,12 @@ abstract class Formo_Core_Innards {
 			return $field->rule($alias, $rule, $params);
 		}
 
-		$rules = Arr::get($this->_rules, $alias, array());
-		$rules[] = array($rule, $params);
-		$this->_rules[$alias] = $rules;
+		$this->_rules[] = array($rule, $params);
 	}
 
 	protected function _add_rules_to_validation( Validation $validation)
 	{
-		$rules = $this->_rules;
-
-		foreach ($this->_fields as $field)
-		{
-			$rules += $field->rules();
-		}
-
-		foreach ($rules as $alias => $rules)
-		{
-			$validation->rules($alias, $rules);
-		}
+		$validation->rules($this->alias(), $this->_rules);
 	}
 
 	protected function _append( Formo $field)
@@ -94,6 +107,55 @@ abstract class Formo_Core_Innards {
 			: $this->_vals['original'];
 	}
 
+	protected function _get_label()
+	{
+		$label = $this->driver('get_label', array('field' => $this));
+
+		if ($label == NULL)
+		{
+			return NULL;
+		}
+
+		if ($file = $this->config('label_message_file'))
+		{
+			$parent = $this->parent();
+
+			$prefix = ($parent = $this->parent())
+				? $parent->alias()
+				: NULL;
+
+			$full_alias = $prefix
+				? $prefix.'.'.$this->alias()
+				: $this->alias();
+
+			if ($label = Kohana::message($file, $full_alias))
+			{
+				return $label;
+			}
+			elseif($label = Kohana::message($file, $this->alias()))
+			{
+				return $label;
+			}
+			elseif ($prefix AND ($label = Kohana::message($file, $prefix.'.default')))
+			{
+				if ($label === ':alias')
+				{
+					return $this->alias();
+				}
+				elseif ($label === ':alias_spaces')
+				{
+					return str_replace('_', ' ', $this->alias());
+				}
+			}
+
+			return $full_alias;
+		}
+		else
+		{
+			return $label;
+		}
+	}
+
 	protected function _get_val()
 	{
 		$val = (isset($this->_vals['new']))
@@ -103,25 +165,56 @@ abstract class Formo_Core_Innards {
 		return $this->driver('get_val', array('val' => $val, 'field' => $this));
 	}
 
-	protected function _get_validation_values()
-	{
-		$values = $this->val();
-		if ( ! is_array($values))
-		{
-			$values = array($this->alias => $this->val());
-		}
-
-		return $values;
-	}
-
 	protected function _get_var_array($var)
 	{
-		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable')))
+		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules')))
 		{
 			return '_'.$var;
 		}
 
 		return '_vars';
+	}
+
+	protected function _error_to_msg()
+	{
+		$file = $this->config('validation_message_file');
+		$translate = $this->config('translate', FALSE);
+
+		if ($set = Arr::get($this->_errors, $this->alias()))
+		{
+			$field = $this->alias();
+			list($error, $params) = $set;
+
+			// Start the translation values list
+			$values = array(
+				':field' => $this->alias(),
+				':value' => $this->val(),
+			);
+
+			if ($message = Kohana::message($file, "{$field}.{$error}"))
+			{
+				// Found a message for this field and error
+			}
+			elseif ($message = Kohana::message($file, "{$field}.default"))
+			{
+				// Found a default message for this field
+			}
+			elseif ($message = Kohana::message($file, $error))
+			{
+				// Found a default message for this error
+			}
+			else
+			{
+				// No message exists, display the path expected
+				$message = "{$file}.{$field}.{$error}";
+			}
+
+			$message = strtr($message, $values);
+
+			return $message;
+		}
+
+		return FALSE;
 	}
 
 	protected function _make_id()
@@ -153,9 +246,15 @@ abstract class Formo_Core_Innards {
 	{
 		$_array = $array;
 
+		if (isset($_array[Formo::OPTS]))
+		{
+			$_array = Arr::merge($_array, $_array[Formo::OPTS]);
+			unset($_array[Formo::OPTS]);
+		}
+
 		foreach ($this->_construct_aliases as $key => $key_alias)
 		{
-			if (isset($array[$key_alias]))
+			if (array_key_exists($key_alias, $array))
 			{
 				$_array[$key] = $array[$key_alias];
 				unset($_array[$key_alias]);
@@ -165,6 +264,16 @@ abstract class Formo_Core_Innards {
 		if (empty($_array['driver']))
 		{
 			$_array['driver'] = 'input';
+		}
+		elseif (strpos($_array['driver'], '|') !== false)
+		{
+			$parts = explode('|', $_array['driver']);
+			$_array['driver'] = $parts[0];
+			if ( ! array_key_exists('attr', $_array))
+			{
+				$_array['attr'] = array();
+			}
+			$_array['attr']['type'] = $parts[1];
 		}
 
 		return $_array;

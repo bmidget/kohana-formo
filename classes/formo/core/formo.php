@@ -18,20 +18,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return new Formo($array);
 	}
 
-	public static function factory( array $array = NULL, array $opts = NULL)
+	public static function factory( array $array = NULL)
 	{
 		return new Formo($array);
 	}
 
-	public function __construct( array $array = NULL, array $opts = NULL)
+	public function __construct( array $array = NULL)
 	{
-		// First look for the aliases
-		if ($opts !== NULL)
-		{
-			$array += array('opts' => $opts);
-		}
-
-		$array = $this->_resolve_construct_aliases($array, 'alias');
+		$array = $this->_resolve_construct_aliases($array);
 
 		if ( ! $array['alias'])
 		{
@@ -40,17 +34,16 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		foreach ($array as $key => $value)
 		{
-			if (is_array($value))
-			{
-				foreach ($value as $_key => $_value)
-				{
-					$this->set($_key, $_value);
-				}
-			}
-			else
-			{
-				$this->set($key, $value);
-			}
+			$this->set($key, $value);
+		}
+
+		if ($this->driver('is_a_parent'))
+		{
+			// Merge config files
+			$config = (array) Kohana::$config->load('formo');
+			$other_config = $this->get('config', array());
+			$merged = Arr::merge($config, $other_config);
+			$this->set('config', $config);
 		}
 	}
 
@@ -69,15 +62,17 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this->render();
 	}
 
-	public function add($args)
+	public function add($alias, $input = NULL, $value = NULL, array $opts = NULL)
 	{
+		$args = $alias;
+
 		if ( ! is_array($args))
 		{
 			// Treat args the same as a plain array
 			$args = func_get_args();
 		}
 
-		if ($args[0] instanceof Formo)
+		if (Arr::get($args, 0) instanceof Formo)
 		{
 			$form = $args[0];
 
@@ -144,10 +139,6 @@ class Formo_Core_Formo extends Formo_Innards {
 			{
 				$array += array($field->alias() => $field);
 			}
-			elseif ($value == 'val')
-			{
-				$array += array($field->alias() => $field->val());
-			}
 			else
 			{
 				$array += array($field->alias() => $field->get($value));
@@ -197,22 +188,18 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $class_name::$func($args);
 	}
 
-	public function error($alias = NULL, $message = NULL, array $params = NULL)
+	public function error($message = NULL, array $params = array())
 	{
-		if ($this->_errors)
+		if ($message)
 		{
-			Arr::get($this->_errors, $this->alias(), FALSE);
-		}
-		elseif ($this->parent())
-		{
-			$errors = $this->parent()->errors();
-			if ($errors)
-			{
-				return Arr::get($errors, $this->alias(), FALSE);
-			}
-		}
+			$this->_errors[$this->alias()] = array($message, $params);
 
-		return FALSE;
+			return $this;
+		}
+		else
+		{
+			return $this->_error_to_msg();
+		}
 	}
 
 	public function errors($file = NULL, $translate = NULL)
@@ -309,7 +296,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function label()
 	{
-		return $this->driver('get_label', array('field' => $this));
+		return $this->_get_label();
 	}
 
 	public function load( array $array = NULL)
@@ -330,7 +317,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			if ($field = $this->find($alias))
 			{
-				$this->driver('load', array('field' => $field, 'val' => $value));
+				$field->driver('load', array('field' => $field, 'val' => $value));
 			}
 		}
 
@@ -369,6 +356,8 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$this->_parent = $parent;
+
+		return $this;
 	}
 
 	public function remove($field)
@@ -494,6 +483,11 @@ class Formo_Core_Formo extends Formo_Innards {
 			}
 		}
 
+		if ($parent = $this->parent())
+		{
+			return $this->parent()->sent();
+		}
+
 		return FALSE;
 	}
 
@@ -567,46 +561,45 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
-	public function validate( Closure $func = NULL)
+	public function validate()
 	{
 		if ( ! $this->sent())
 		{
 			return FALSE;
 		}
 
-		if ($func !== NULL)
-		{
-			$result = $func($this, $this->_rules, $this->_get_validation_values());
-			if ($result === TRUE)
-			{
-				return TRUE;
-			}
-			else
-			{
-				$this->_errors = $result;
-				return FALSE;
-			}
-		}
+		$pass_validation = TRUE;
 
 		foreach ($this->_fields as $field)
 		{
-			$v = $field->validate();
+			if ($field->validate() === FALSE)
+			{
+				$pass_validation = FALSE;
+			}
 		}
 
-		if ($validation->check() === TRUE)
+		if ($pass_validation === FALSE)
 		{
-			return TRUE;
+			return FALSE;
+		}
+
+		if (Arr::get($this->_errors, $this->alias()))
+		{
+			return FALSE;
 		}
 		else
 		{
-			$this->_errors = $validation->errors('validation');
-			return FALSE;
+			$validation = $this->validation();
+			$pass_validation = $validation->check();
+			$this->_errors = $validation->errors();
+
+			return $pass_validation;
 		}
 	}
 
 	public function validation( array $array = NULL)
 	{
-		$values = $this->_get_validation_values();
+		$values = $this->driver('get_validation_values', array('field' => $this));
 		$validation = new Validation($values);
 		$this->_add_rules_to_validation($validation);
 

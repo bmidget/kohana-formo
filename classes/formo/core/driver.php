@@ -11,12 +11,17 @@ abstract class Formo_Core_Driver {
 	{
 		$field = $array['field'];
 
-		if ($label = $field->get('label'))
-		{
-			return $label;
-		}
+		return str_replace('_', ' ', $field->alias());
+	}
 
-		return $field->alias();
+	public static function get_opts( array $array)
+	{
+		return array();
+	}
+
+	public static function get_opts_template( array $array)
+	{
+		return NULL;
 	}
 
 	public static function get_tag()
@@ -41,19 +46,21 @@ abstract class Formo_Core_Driver {
 		return null;
 	}
 
-	public static function get_opts( array $array)
-	{
-		return array();
-	}
-
-	public static function get_opts_template( array $array)
-	{
-		return NULL;
-	}
-
 	public static function get_val( array $array)
 	{
 		return $array['val'];
+	}
+
+	public static function get_validation_values( array $array)
+	{
+		$field = $array['field'];
+
+		return array($field->alias() => $field->val());
+	}
+
+	public static function is_a_parent()
+	{
+		return FALSE;
 	}
 
 	public function is_changed()
