@@ -24,6 +24,11 @@ abstract class Formo_Core_Driver {
 		return NULL;
 	}
 
+	public static function pre_validate( array $array)
+	{
+		return;
+	}
+
 	public static function get_tag()
 	{
 		
@@ -38,7 +43,7 @@ abstract class Formo_Core_Driver {
 			return $template;
 		}
 
-		return 'formo/field_template';
+		return 'field_template';
 	}
 
 	public static function get_title( array $array)

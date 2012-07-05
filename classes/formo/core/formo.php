@@ -4,10 +4,15 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public static function form( array $array = NULL)
 	{
-		if ($array === NULL)
+		if (empty($array['alias']))
 		{
+			if ($array === NULL)
+			{
+				$array = array();
+			}
+
 			// Set the default alias
-			$array = array('alias' => 'formo');
+			$array += array('alias' => 'formo');
 		}
 
 		if (empty($array['driver']))
@@ -35,15 +40,6 @@ class Formo_Core_Formo extends Formo_Innards {
 		foreach ($array as $key => $value)
 		{
 			$this->set($key, $value);
-		}
-
-		if ($this->driver('is_a_parent'))
-		{
-			// Merge config files
-			$config = (array) Kohana::$config->load('formo');
-			$other_config = $this->get('config', array());
-			$merged = Arr::merge($config, $other_config);
-			$this->set('config', $config);
 		}
 	}
 
@@ -92,9 +88,10 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
+		$args['parent'] = $this;
+
 		// Create the field object
 		$field = Formo::factory($args);
-		$field->parent($this);
 		$this->_fields[] = $field;
 
 		return $this;
@@ -160,9 +157,16 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
-	public function callbacks( array $callbacks)
+	public function callbacks($type, array $callbacks)
 	{
-		
+		if ( ! isset($this->_callbacks[$type]))
+		{
+			$this->_callbacks[$type] = array();
+		}
+
+		$this->_callbacks[$type] = Arr::merge($this->_callbacks[$type], $callbacks);
+
+		return $this;
 	}
 
 	public function close()
@@ -343,9 +347,11 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
-	public function order($field, $new_order, $relative_field = NULL)
+	public function order($field, $new_order = NULL, $relative_field = NULL)
 	{
-		
+		$this->_order($field, $new_order, $relative_field);
+
+		return $this;
 	}
 
 	public function parent(Formo $parent = NULL)
@@ -378,6 +384,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$template = $this->driver('get_template', array('field' => $this));
+		$template = $this->config('template_dir').$template;
 
 		$view = View::factory($template)
 			->set('field', $this)
@@ -391,6 +398,8 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if ($template = $this->driver('get_opts_template', array('field' => $this)))
 		{
+			$template = $this->config('template_dir').$template;
+
 			$view = View::factory($template)
 				->set('field', $this)
 				->set('opts', $this->get('opts', array()));
@@ -563,8 +572,11 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function validate()
 	{
+		$this->driver('pre_validate', array('field' => $this));
+
 		if ( ! $this->sent())
 		{
+			// Return and don't run any callbacks
 			return FALSE;
 		}
 
@@ -578,23 +590,26 @@ class Formo_Core_Formo extends Formo_Innards {
 			}
 		}
 
-		if ($pass_validation === FALSE)
+		if ($pass_validation === TRUE)
 		{
-			return FALSE;
+			if (Arr::get($this->_errors, $this->alias()))
+			{
+				$pass_validation = TRUE;
+			}
+			else
+			{
+				$validation = $this->validation();
+				$this->_add_rules_to_validation($validation);
+				$pass_validation = $validation->check();
+				$this->_errors = $validation->errors();
+			}
 		}
 
-		if (Arr::get($this->_errors, $this->alias()))
-		{
-			return FALSE;
-		}
-		else
-		{
-			$validation = $this->validation();
-			$pass_validation = $validation->check();
-			$this->_errors = $validation->errors();
+		$result = $this->_run_callbacks($pass_validation);
 
-			return $pass_validation;
-		}
+		return ($pass_validation === TRUE AND $result === FALSE)
+			? FALSE
+			: $pass_validation;
 	}
 
 	public function validation( array $array = NULL)

@@ -17,7 +17,7 @@ class Formo_Core_Driver_Radios extends Formo_Driver {
 
 	public static function get_opts_template( array $array)
 	{
-		return 'formo/opts/radios_template';
+		return 'opts/radios_template';
 	}
 
 	public static function get_title( array $array)

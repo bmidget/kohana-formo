@@ -25,6 +25,7 @@ abstract class Formo_Core_Innards {
 	protected $_opts = array();
 	protected $_parent;
 	protected $_rules = array();
+	protected $_callbacks = array();
 	protected $_single_tags = array
 	(
 		'br',
@@ -85,12 +86,11 @@ abstract class Formo_Core_Innards {
 	protected function _attr_to_str()
 	{
 		$str = NULL;
-		
-		$arr1 = array('id' => $this->_make_id());
-		$arr2 = $this->driver('get_attr', array('field' => $this));
-		$arr3 = $this->get('attr', array());
 
-		$attr = \Arr::merge($arr1, $arr2, $arr3);
+		$arr1 = $this->driver('get_attr', array('field' => $this));
+		$arr2 = $this->get('attr', array());
+
+		$attr = \Arr::merge($arr1, $arr2);
 
 		foreach ($attr as $key => $value)
 		{
@@ -167,7 +167,7 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_var_array($var)
 	{
-		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules')))
+		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks')))
 		{
 			return '_'.$var;
 		}
@@ -230,6 +230,115 @@ abstract class Formo_Core_Innards {
 		return $id;
 	}
 
+	protected function _order($field_alias, $new_order, $relative_field = NULL)
+	{
+		if (is_array($field_alias))
+		{
+			foreach ($field_alias as $_field => $_value)
+			{
+				$args = (array) $_value;
+				array_unshift($args, $_field);
+				$args = array_pad($args, 3, NULL);
+
+				$method = new ReflectionMethod($this, 'order');
+				$method->invokeArgs($this, $args);
+			}
+
+			return $this;
+		}
+
+		$fields = $this->_fields;
+		$field_obj = NULL;
+		$field_key = NULL;
+		$new_key = (ctype_digit($new_order) OR is_int($new_order))
+			? $new_order
+			: FALSE;
+
+		foreach ($this->_fields as $key => $field)
+		{
+			if ($field->alias() === $field_alias)
+			{
+				$field_obj = $field;
+				$field_key = $key;
+				break;
+			}
+		}
+
+		if ($field_obj === NULL)
+		{
+			return;
+		}
+
+		$i = 0;
+		foreach ($this->_fields as $field)
+		{
+			if ($field === $field_obj)
+			{
+				continue;
+			}
+
+			if ($relative_field AND $field->alias() === $relative_field)
+			{
+				$new_key = ($new_order === 'after')
+					? $i + 1
+					: $i;
+			}
+
+			$i++;
+		}
+
+		if ( $field_key === NULL OR $new_key === FALSE)
+		{
+			return;
+		}
+
+		unset($this->_fields[$field_key]);
+		array_splice($this->_fields, $new_key, 0, array($field_obj));
+	}
+
+	protected function _run_callbacks($type = NULL)
+	{
+		$keys = array('fail' => FALSE, 'pass' => TRUE);
+		$return = NULL;
+
+		foreach ($keys as $key => $value)
+		{
+			if ($type === NULL AND $this->validate() !== $value)
+			{
+				continue;
+			}
+
+			if ($type === NULL OR $value === $type)
+			{
+				$callbacks = Arr::get($this->_callbacks, $key, array());
+				foreach ($callbacks as $callback)
+				{
+					$result = $callback($this);
+
+					if ($value === TRUE AND $result === FALSE)
+					{
+						$return = FALSE;
+					}
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	protected function _set_id( array & $array)
+	{
+		if ($this->config('auto_id') === TRUE AND empty($array['attr']['id']))
+		{
+			if (empty($array['attr']))
+			{
+				$array['attr'] = array();
+			}
+
+			Arr::set_path($array, 'attr.id', $array['alias']);
+		}
+	}
+
 	protected function _set_val($val, $force_new = FALSE)
 	{
 		if ( ! isset($this->_vals['original']) AND $force_new !== TRUE)
@@ -275,6 +384,26 @@ abstract class Formo_Core_Innards {
 			}
 			$_array['attr']['type'] = $parts[1];
 		}
+
+		$this->set('driver', $_array['driver']);
+		unset($_array['driver']);
+
+		if ($parent = Arr::get($_array, 'parent'))
+		{
+			$this->parent($_array['parent']);
+			unset($_array['parent']);
+		}
+
+		if ($this->driver('is_a_parent'))
+		{
+			// Merge config files
+			$config = (array) Kohana::$config->load('formo');
+			$other_config = $this->get('config', array());
+			$merged = Arr::merge($config, $other_config);
+			$this->set('config', $config);
+		}
+
+		$this->_set_id($_array);
 
 		return $_array;
 	}

@@ -26,7 +26,7 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
 	public static function get_opts_template( array $array)
 	{
-		return 'formo/opts/checkboxes_template';
+		return 'opts/checkboxes_template';
 	}
 
 	public static function get_title( array $array)

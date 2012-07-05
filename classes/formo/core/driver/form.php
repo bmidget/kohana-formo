@@ -27,7 +27,7 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 			return $template;
 		}
 
-		return 'formo/form_template';
+		return 'form_template';
 	}
 
 	public static function get_val( array $array)

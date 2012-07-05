@@ -11,7 +11,7 @@ class Formo_Core_Driver_Group extends Formo_Driver {
 			return $template;
 		}
 
-		return 'formo/group_template';
+		return 'group_template';
 	}
 
 	public static function get_val( array $array)
@@ -26,6 +26,11 @@ class Formo_Core_Driver_Group extends Formo_Driver {
 		}
 
 		return $array;
+	}
+
+	public static function is_a_parent()
+	{
+		return TRUE;
 	}
 
 }

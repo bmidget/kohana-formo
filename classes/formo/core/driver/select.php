@@ -37,7 +37,7 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 
 	public static function get_opts_template( array $array)
 	{
-		return 'formo/opts/select_template';
+		return 'opts/select_template';
 	}
 
 	public static function get_tag()

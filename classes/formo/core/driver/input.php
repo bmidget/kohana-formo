@@ -11,9 +11,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	{
 		$field = $array['field'];
 
-		$type = ($_type = $field->attr('type'))
-			? $_type
-			: 'text';
+		$type = static::_get_type($field);
 
 		$val = ($type == 'password')
 			? NULL
@@ -39,6 +37,23 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 		{
 			return parent::get_label($array);
 		}
+	}
+
+	public static function pre_validate( array $array)
+	{
+		$field = $array['field'];
+
+		if ($rules = $field->config('input_rules.'.static::_get_type($field)))
+		{
+			$field->rules(':self', $rules);
+		}
+	}
+
+	protected static function _get_type($field)
+	{
+		return ($type = $field->attr('type'))
+			? $type
+			: 'text';
 	}
 
 }
