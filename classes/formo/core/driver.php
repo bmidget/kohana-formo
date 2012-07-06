@@ -2,6 +2,11 @@
 
 abstract class Formo_Core_Driver {
 
+	public static function added( array $array)
+	{
+		return;
+	}
+
 	public static function get_attr( array $array)
 	{
 		return array();

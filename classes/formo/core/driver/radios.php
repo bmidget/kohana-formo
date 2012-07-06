@@ -2,6 +2,11 @@
 
 class Formo_Core_Driver_Radios extends Formo_Driver {
 
+	public static function get_label( array $array)
+	{
+		return;
+	}
+
 	public static function get_opts( array $array)
 	{
 		$field = $array['field'];

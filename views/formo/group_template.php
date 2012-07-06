@@ -1,4 +1,4 @@
-<div class="<?=$field->get('driver')?>" id="form-container-<?=$field->alias()?>">
+<div class="group <?=$field->get('driver')?>" id="form-container-<?=$field->alias()?>">
 	<?=$field->open()?>
 		<?php foreach ($field->as_array() as $_field): ?>
 		<?=$_field->render()?>

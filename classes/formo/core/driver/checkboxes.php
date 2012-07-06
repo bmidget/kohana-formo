@@ -2,13 +2,9 @@
 
 class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
-	public static function get_val( array $array)
+	public static function get_label( array $array)
 	{
-		$val = $array['val'];
-
-		return $val
-			? $val
-			: array();
+		return;
 	}
 
 	public static function get_opts( array $array)
@@ -33,6 +29,15 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 	{
 		$field = $array['field'];
 		return $field->alias();
+	}
+
+	public static function get_val( array $array)
+	{
+		$val = $array['val'];
+
+		return $val
+			? $val
+			: array();
 	}
 
 }

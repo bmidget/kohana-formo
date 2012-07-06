@@ -94,6 +94,8 @@ class Formo_Core_Formo extends Formo_Innards {
 		$field = Formo::factory($args);
 		$this->_fields[] = $field;
 
+		$field->driver('added', array('field' => $field));
+
 		return $this;
 	}
 
@@ -307,7 +309,9 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if ($array === NULL)
 		{
-			$array = Request::$current->post();
+			$post = Request::$current->post();
+			$files = $_FILES;
+			$array = Arr::merge($post, $files);
 		}
 
 		$this->set('input_array', $array);
