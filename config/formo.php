@@ -15,7 +15,7 @@ return array
 	// The directory for the formo templates (ex: 'formo' or 'formo_bootstrap')
 	'template_dir'            => 'formo/',
 	// Namespace fields
-	'namespaces'              => FALSE,
+	'namespaces'              => TRUE,
 	// Automatically add these rules to 'input' fields for html5 compatability
 	'input_rules' => array
 	(

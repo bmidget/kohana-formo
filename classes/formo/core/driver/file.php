@@ -38,7 +38,7 @@ class Formo_Core_Driver_File extends Formo_Driver {
 		(
 			'type' => 'file',
 			'value' => null,
-			'name' => $field->alias(),
+			'name' => $field->name(),
 		);
 	}
 

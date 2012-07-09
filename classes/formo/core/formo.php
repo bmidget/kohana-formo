@@ -94,7 +94,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		$field = Formo::factory($args);
 		$this->_fields[] = $field;
 
-		$field->driver('added', array('field' => $field));
+		$field->driver('added');
 
 		return $this;
 	}
@@ -178,9 +178,11 @@ class Formo_Core_Formo extends Formo_Innards {
 			$has_singletag = in_array($tag, $this->_single_tags);
 	
 			// Let the config file determine whether to close the tags
-			return ($has_singletag === TRUE)
+			$str = ($has_singletag === TRUE)
 				? '>'."\n"
 				: '</'.$tag.'>'."\n";
+
+			return $this->driver('close', array('str' => $str));
 		}
 		else
 		{
@@ -191,7 +193,14 @@ class Formo_Core_Formo extends Formo_Innards {
 	public function driver($func, array $args = NULL)
 	{
 		$class_name = 'Formo_Driver_'.ucfirst($this->_driver);
-		return $class_name::$func($args);
+
+		$array = array('field' => $this);
+		if ($args !== NULL)
+		{
+			$array = Arr::merge($args, $array);
+		}
+
+		return $class_name::$func($array);
 	}
 
 	public function error($message = NULL, array $params = array())
@@ -261,6 +270,28 @@ class Formo_Core_Formo extends Formo_Innards {
 		return NULL;
 	}
 
+	public function flatten( array &$array = NULL)
+	{
+		if ($array === NULL)
+		{
+			$array = array();
+		}
+
+		foreach ($this->_fields as $field)
+		{
+			if ($field->driver('is_a_parent'))
+			{
+				$field->flatten($array);
+			}
+			else
+			{
+				$array[] = $field;
+			}
+		}
+
+		$this->_fields = $array;
+	}
+
 	public function get($var, $default = NULL)
 	{
 		$array_name = $this->_get_var_array($var);
@@ -284,7 +315,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		$str = $this->open();
 
-		$opts = $this->driver('get_opts', array('field' => $this));
+		$opts = $this->driver('get_opts');
 		$str.= implode("\n", $opts);
 
 		foreach ($this->_fields as $field)
@@ -310,7 +341,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		if ($array === NULL)
 		{
 			$post = Request::$current->post();
-			$files = $_FILES;
+			$files = $this->_get_files_array();
 			$array = Arr::merge($post, $files);
 		}
 
@@ -320,16 +351,34 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			return $this;
 		}
-
-		foreach ($array as $alias => $value)
+		
+		if ($this->config('namespaces') === TRUE)
 		{
-			if ($field = $this->find($alias))
+			foreach ($array as $namespace => $values)
 			{
-				$field->driver('load', array('field' => $field, 'val' => $value));
+				if ($namespace === $this->alias())
+				{
+					$this->_load($values);
+				}
+				elseif ($field = $this->find($namespace, false) AND $field->driver('is_a_parent'))
+				{
+					$field->_load($values);
+				}
 			}
+		}
+		else
+		{
+			$this->_load($array);
 		}
 
 		return $this;
+	}
+
+	public function name()
+	{
+		$use_namespaces = $this->config('namespaces');
+
+		return $this->driver('name', array('use_namespaces' => $use_namespaces));
 	}
 
 	public function open()
@@ -342,8 +391,8 @@ class Formo_Core_Formo extends Formo_Innards {
 			$str.= ($has_singletag === TRUE)
 				? NULL
 				: '>';
-	
-			return $str;
+
+			return $this->driver('open', array('str' => $str));
 		}
 		else
 		{
@@ -387,7 +436,7 @@ class Formo_Core_Formo extends Formo_Innards {
 			return NULL;
 		}
 
-		$template = $this->driver('get_template', array('field' => $this));
+		$template = $this->driver('get_template');
 		$template = $this->config('template_dir').$template;
 
 		$view = View::factory($template)
@@ -400,7 +449,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function render_opts()
 	{
-		if ($template = $this->driver('get_opts_template', array('field' => $this)))
+		if ($template = $this->driver('get_opts_template'))
 		{
 			$template = $this->config('template_dir').$template;
 
@@ -509,54 +558,9 @@ class Formo_Core_Formo extends Formo_Innards {
 		
 	}
 
-	public function text($text, $operation = NULL)
-	{
-		// Get the args
-		$vals = func_get_args();
-
-		if ($operation)
-		{
-			foreach ($operation as $key => $val)
-			{
-				if (is_string($key))
-				{
-					$this->text($key, $val);
-				}
-				else
-				{
-					$this->text($val);
-				}
-			}
-
-			return $this;
-		}
-
-		if ($operation !== NULL)
-		{
-			switch ($operation)
-			{
-				case '.=':
-					$this->_vars['text'] .= $vals[1];
-					break;
-				case '=.':
-					$this->_vars['text'] = $vals[1].$this->_vars['text'];
-					break;
-				case 'callback':
-					$this->_vars['text'] = $vals[1]($this->_vars['text']);
-					break;
-			}
-		}
-		else
-		{
-			$this->set('text', $text);
-		}
-
-		return $this;
-	}
-
 	public function title()
 	{
-		return $this->driver('get_title', array('field' => $this));
+		return $this->driver('get_title');
 	}
 
 	public function val($new_val = NULL, $force_new = FALSE)
@@ -576,7 +580,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function validate()
 	{
-		$this->driver('pre_validate', array('field' => $this));
+		$this->driver('pre_validate');
 
 		if ( ! $this->sent())
 		{
@@ -618,7 +622,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function validation( array $array = NULL)
 	{
-		$values = $this->driver('get_validation_values', array('field' => $this));
+		$values = $this->driver('get_validation_values');
 		$validation = new Validation($values);
 		$this->_add_rules_to_validation($validation);
 

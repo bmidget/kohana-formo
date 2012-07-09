@@ -1,3 +1,34 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Driver_Button extends Formo_Core_Driver_Button {}
+class Formo_Core_Driver_Button extends Formo_Driver {
+
+	public static function get_attr( array $array)
+	{
+		$field = $array['field'];
+
+		return array
+		(
+			'name' => $field->name(),
+			'value' => $field->val(),
+		);
+	}
+
+	public static function get_label( array $array)
+	{
+		return NULL;
+	}
+
+	public static function get_tag()
+	{
+		return 'button';
+	}
+
+	public static function open( array $array)
+	{
+		$str = $array['str'];
+		$field = $array['field'];
+
+		return $str.= $field->alias();
+	}
+
+}

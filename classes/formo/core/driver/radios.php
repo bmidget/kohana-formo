@@ -14,7 +14,7 @@ class Formo_Core_Driver_Radios extends Formo_Driver {
 		$opts_array = array();
 		foreach ($field->get('opts', array()) as $key => $value)
 		{
-			$opts_array[] = '<input type="radio" name="'.$field->alias().'" value="'.$key.'" />';
+			$opts_array[] = '<input type="radio" name="'.$field->name().'" value="'.$key.'" />';
 		}
 
 		return $opts_array;

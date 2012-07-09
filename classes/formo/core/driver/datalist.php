@@ -1,6 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo_Core_Driver_Select extends Formo_Driver {
+class Formo_Core_Driver_Datalist extends Formo_Driver {
+
+	public static function close( array $array)
+	{
+		return '</datalist>';
+	}
 
 	public static function get_attr( array $array)
 	{
@@ -9,6 +14,8 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 		return array
 		(
 			'name' => $field->name(),
+			'type' => 'text',
+			'list' => $field->attr('id').'_list',
 		);
 	}
 
@@ -42,7 +49,15 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 
 	public static function get_tag()
 	{
-		return 'select';
+		return 'input';
+	}
+
+	public static function open( array $array)
+	{
+		$str = $array['str'];
+		$field = $array['field'];
+
+		return $str.= '><datalist id="'.$field->attr('id').'_list">';
 	}
 
 }

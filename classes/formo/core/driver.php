@@ -7,6 +7,13 @@ abstract class Formo_Core_Driver {
 		return;
 	}
 
+	public static function close( array $array)
+	{
+		$str = $array['str'];
+
+		return $str;
+	}
+
 	public static function get_attr( array $array)
 	{
 		return array();
@@ -78,12 +85,41 @@ abstract class Formo_Core_Driver {
 		
 	}
 
+	public static function open( array $array)
+	{
+		$str = $array['str'];
+
+		return $str;
+	}
+
 	public static function load( array $array)
 	{
 		$val = $array['val'];
 		$field = $array['field'];
 
 		$field->val($val);
+	}
+
+	public static function name( array $array)
+	{
+		$field = $array['field'];
+		$use_namespaces = $array['use_namespaces'];
+
+		if ($use_namespaces !== TRUE)
+		{
+			return $field->alias();
+		}
+
+		if ($parent = $field->parent())
+		{
+			$name = $parent->alias().'['.$field->alias().']';
+		}
+		else
+		{
+			$name = $field->alias();
+		}
+
+		return $name;
 	}
 
 	public static function new_val( array $array)

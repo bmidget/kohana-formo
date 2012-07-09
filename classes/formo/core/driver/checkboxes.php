@@ -14,7 +14,7 @@ class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 		$opts_array = array();
 		foreach ($field->get('opts', array()) as $key => $value)
 		{
-			$opts_array[] = '<input type="checkbox" name="'.$field->alias().'[]" value="'.$key.'" />';
+			$opts_array[] = '<input type="checkbox" name="'.$field->name().'[]" value="'.$key.'" />';
 		}
 
 		return $opts_array;

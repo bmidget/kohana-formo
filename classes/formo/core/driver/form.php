@@ -36,9 +36,9 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 		$val = $array['val'];
 
 		$array = array();
-		foreach ($field->as_array('val') as $alias => $val)
+		foreach ($field->as_array() as $alias => $field)
 		{
-			$array += array($alias => $val);
+			$array[$alias] = $field->val();
 		}
 
 		return $array;

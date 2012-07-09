@@ -21,7 +21,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 		(
 			'type' => $type,
 			'value' => $val,
-			'name' => $field->alias(),
+			'name' => $field->name(),
 		);
 	}
 
@@ -29,7 +29,7 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 	{
 		$field = $array['field'];
 
-		if ($field->attr('type') == 'submit')
+		if (in_array($field->attr('type'), array('submit', 'hidden')))
 		{
 			return NULL;
 		}

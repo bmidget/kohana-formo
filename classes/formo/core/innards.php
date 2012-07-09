@@ -87,7 +87,7 @@ abstract class Formo_Core_Innards {
 	{
 		$str = NULL;
 
-		$arr1 = $this->driver('get_attr', array('field' => $this));
+		$arr1 = $this->driver('get_attr');
 		$arr2 = $this->get('attr', array());
 
 		$attr = \Arr::merge($arr1, $arr2);
@@ -100,6 +100,41 @@ abstract class Formo_Core_Innards {
 		return $str;
 	}
 
+	protected function _get_files_array()
+	{
+/*
+        "name" => string(0) ""
+        "type" => string(0) ""
+        "tmp_name" => string(0) ""
+        "error" => integer 4
+        "size" => integer 0
+*/
+
+		$files = $_FILES;
+		$vars = array('name', 'type', 'tmp_name', 'error', 'size');
+
+		$array = array();
+		foreach ($files as $parent_alias => $vals)
+		{
+			foreach ($vars as $var_name)
+			{
+				if (is_array($vals[$var_name]))
+				{
+					foreach ($vals[$var_name] as $key => $val)
+					{
+						$array[$parent_alias][$key][$var_name] = $val;
+					}
+				}
+				else
+				{
+					$array[$parent_alias][$var_name] = $vals[$var_name];
+				}
+			}
+		}
+
+		return $array;
+	}
+
 	protected function _get_latest_val()
 	{
 		return (isset($this->_vals['new']))
@@ -109,7 +144,8 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_label()
 	{
-		$label = $this->driver('get_label', array('field' => $this));
+		$label = $this->driver('get_label');
+		$return_str = NULL;
 
 		if ($label == NULL)
 		{
@@ -130,30 +166,38 @@ abstract class Formo_Core_Innards {
 
 			if ($label = Kohana::message($file, $full_alias))
 			{
-				return $label;
+				$return_str = (is_array($label))
+					? $full_alias
+					: $label;
 			}
 			elseif($label = Kohana::message($file, $this->alias()))
 			{
-				return $label;
+				$return_str = $label;
 			}
 			elseif ($prefix AND ($label = Kohana::message($file, $prefix.'.default')))
 			{
 				if ($label === ':alias')
 				{
-					return $this->alias();
+					$return_str = $this->alias();
 				}
 				elseif ($label === ':alias_spaces')
 				{
-					return str_replace('_', ' ', $this->alias());
+					$return_str = str_replace('_', ' ', $this->alias());
 				}
 			}
-
-			return $full_alias;
+			else
+			{
+				$return_str = $this->alias();
+			}
 		}
 		else
 		{
-			return $label;
+			$return_str = $label;
 		}
+
+		return ($this->config('translate') === TRUE)
+			? __($return_str, NULL)
+			: $return_str;
 	}
 
 	protected function _get_val()
@@ -162,7 +206,7 @@ abstract class Formo_Core_Innards {
 			? $this->_vals['new']
 			: $this->_vals['original'];
 
-		return $this->driver('get_val', array('val' => $val, 'field' => $this));
+		return $this->driver('get_val', array('val' => $val));
 	}
 
 	protected function _get_var_array($var)
@@ -211,10 +255,23 @@ abstract class Formo_Core_Innards {
 
 			$message = strtr($message, $values);
 
-			return $message;
+			return ($translate === TRUE)
+				? __($message)
+				: $message;
 		}
 
 		return FALSE;
+	}
+
+	protected function _load( array $array)
+	{
+		foreach ($array as $alias => $value)
+		{
+			if ($field = $this->find($alias))
+			{
+				$field->driver('load', array('val' => $value));
+			}
+		}
 	}
 
 	protected function _make_id()
