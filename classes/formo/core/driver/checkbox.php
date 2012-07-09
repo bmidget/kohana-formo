@@ -21,6 +21,18 @@ class Formo_Core_Driver_Checkbox extends Formo_Driver {
 		return $array;
 	}
 
+	public static function get_template( array $array)
+	{
+		$field = $array['field'];
+
+		if ($template = $field->get('template'))
+		{
+			return $template;
+		}
+
+		return 'checkbox_template';
+	}
+
 	public static function get_tag()
 	{
 		return 'input';
