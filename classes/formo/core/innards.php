@@ -438,12 +438,11 @@ abstract class Formo_Core_Innards {
 			if ( ! array_key_exists('attr', $_array))
 			{
 				$_array['attr'] = array();
-			}
-			$_array['attr']['type'] = $parts[1];
+			}			$_array['attr']['type'] = $parts[1];
+
 		}
 
 		$this->set('driver', $_array['driver']);
-		unset($_array['driver']);
 
 		if ($parent = Arr::get($_array, 'parent'))
 		{

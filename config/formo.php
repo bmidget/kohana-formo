@@ -16,6 +16,8 @@ return array
 	'template_dir'            => 'formo_bootstrap/',
 	// Namespace fields
 	'namespaces'              => TRUE,
+	// Driver used for ORM integration
+	'orm_driver'              => 'kohana',
 	// Automatically add these rules to 'input' fields for html5 compatability
 	'input_rules' => array
 	(

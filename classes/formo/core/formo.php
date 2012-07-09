@@ -407,6 +407,24 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	public function orm($method, array $vals = NULL)
+	{
+		if ($vals === NULL)
+		{
+			$vals = array();
+		}
+
+		$vals = Arr::merge($vals, array('field' => $this));
+
+		$driver = $this->config('orm_driver');
+
+		$class_name = 'Formo_Driver_ORM_'.ucfirst($driver);
+
+		$class_name::$method($vals);
+
+		return $this;
+	}
+
 	public function parent(Formo $parent = NULL)
 	{
 		if ($parent === NULL)
@@ -518,6 +536,16 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			// Just set non-arrays
 			$this->{$array_name} = $val;
+		}
+
+		return $this;
+	}
+
+	public function set_all( array $array)
+	{
+		foreach ($array as $alias => $values)
+		{
+			$this->$alias->set($values);
 		}
 
 		return $this;
