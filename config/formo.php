@@ -13,7 +13,7 @@ return array
 	// Auto-generate IDs on form elements
 	'auto_id'                 => TRUE,
 	// The directory for the formo templates (ex: 'formo' or 'formo_bootstrap')
-	'template_dir'            => 'formo/',
+	'template_dir'            => 'formo_bootstrap/',
 	// Namespace fields
 	'namespaces'              => TRUE,
 	// Automatically add these rules to 'input' fields for html5 compatability
