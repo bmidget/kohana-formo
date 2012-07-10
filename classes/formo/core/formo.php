@@ -58,7 +58,6 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this->render();
 	}
 
-	public function add($alias, $input = NULL, $value = NULL, array $opts = NULL)
 	public function add($alias, $driver = NULL, $value = NULL, array $opts = NULL)
 	{
 		$args = $alias;
