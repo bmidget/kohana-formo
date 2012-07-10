@@ -1,4 +1,4 @@
-<div class="field control-group <?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
+<div class="field control-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
 	<label><?=$field->open().$field->render_opts().$field->close()?> <?=$field->label()?></label>
 
 	<?php if ($msg = $field->error()): ?>
