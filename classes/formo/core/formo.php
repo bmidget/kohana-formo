@@ -153,7 +153,19 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if (func_num_args() == 1)
 		{
-			return \Arr::get($this->_attr, $get);
+			if (is_array($get))
+			{
+				foreach ($get as $_get => $_set)
+				{
+					$this->attr($_get, $_set);
+				}
+
+				return $this;
+			}
+			else
+			{
+				return \Arr::get($this->_attr, $get);
+			}
 		}
 
 		$this->_attr = \Arr::merge($this->_attr, array($get => $set));
