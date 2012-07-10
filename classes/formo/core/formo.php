@@ -80,7 +80,7 @@ class Formo_Core_Formo extends Formo_Innards {
 				$form->set($args[1]);
 			}
 
-			if ($form->get('driver', 'form'))
+			if ($form->get('driver') === 'form')
 			{
 				$form->set('driver', 'group');
 			}
