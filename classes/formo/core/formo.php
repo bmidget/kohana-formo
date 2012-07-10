@@ -217,9 +217,60 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
-	public function errors($file = NULL, $translate = NULL)
+	public function errors( array & $array = NULL)
 	{
-		return $this->_errors;
+		if ($array === NULL)
+		{
+			$array = array();
+			$is_first_field = TRUE;
+		}
+		else
+		{
+			$is_first_field = FALSE;
+		}
+
+		$error = $this->error();
+
+		if ( ! empty($this->_fields))
+		{
+			if ($is_first_field === TRUE AND $error)
+			{
+				$array[':self'] = $error;
+			}
+
+			if ($is_first_field === FALSE)
+			{
+				$array[$this->alias()] = array();
+
+				if ($error)
+				{
+					$array[$this->alias()][':self'] = $error;
+				}
+			}
+		}
+		elseif ($error)
+		{
+			$array[$this->alias()] = $error;
+		}
+
+		foreach ($this->_fields as $field)
+		{
+			if ($is_first_field === TRUE)
+			{
+				$field->errors($array);
+			}
+			else
+			{
+				$field->errors($array[$this->alias()]);
+			}
+		}
+
+		if ( ! empty($this->_fields) AND $is_first_field === FALSE AND empty($array[$this->alias()]))
+		{
+			unset($array[$this->alias()]);
+		}
+
+		return $array;
 	}
 
 	public function find($alias, $not_recursive = FALSE)
@@ -614,6 +665,11 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			// Return and don't run any callbacks
 			return FALSE;
+		}
+
+		if ($this->get('render') === FALSE OR $this->get('ignore') === FALSE)
+		{
+			return;
 		}
 
 		$pass_validation = TRUE;
