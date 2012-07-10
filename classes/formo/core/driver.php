@@ -23,7 +23,9 @@ abstract class Formo_Core_Driver {
 	{
 		$field = $array['field'];
 
-		return str_replace('_', ' ', $field->alias());
+		return ($label = $field->get('label'))
+			? $label
+			: $field->alias();
 	}
 
 	public static function get_opts( array $array)

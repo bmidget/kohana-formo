@@ -383,6 +383,21 @@ abstract class Formo_Core_Innards {
 		return $return;
 	}
 
+	protected function _set_driver($driver)
+	{
+		if (strpos($driver, '|') !== FALSE)
+		{
+			$vals = explode('|', $driver);
+
+			list($this->_driver, $type) = explode('|', $driver);
+			$this->attr('type', $type);
+		}
+		else
+		{
+			$this->_driver = $driver;
+		}
+	}
+
 	protected function _set_id( array & $array)
 	{
 		if ($this->config('auto_id') === TRUE AND empty($array['attr']['id']))
@@ -430,16 +445,6 @@ abstract class Formo_Core_Innards {
 		if (empty($_array['driver']))
 		{
 			$_array['driver'] = 'input';
-		}
-		elseif (strpos($_array['driver'], '|') !== false)
-		{
-			$parts = explode('|', $_array['driver']);
-			$_array['driver'] = $parts[0];
-			if ( ! array_key_exists('attr', $_array))
-			{
-				$_array['attr'] = array();
-			}			$_array['attr']['type'] = $parts[1];
-
 		}
 
 		$this->set('driver', $_array['driver']);

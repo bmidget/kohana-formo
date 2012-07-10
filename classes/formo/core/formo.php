@@ -512,9 +512,27 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
-	public function remove($field)
+	public function remove($alias)
 	{
-		
+		if (is_array($alias))
+		{
+			foreach ($alias as $_alias)
+			{
+				$this->remove($_alias);
+			}
+		}
+		else
+		{
+			foreach ($this->_fields as $key => $field)
+			{
+				if ($field->alias() === $alias)
+				{
+					unset($this->_fields[$key]);
+				}
+			}
+		}
+
+		return $this;
 	}
 
 	public function remove_class($class)
@@ -588,11 +606,23 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
-		if ($var == 'val')
+		if ($var === 'val')
 		{
 			// Special case for value
 			$this->val($val);
+			return $this;
+		}
 
+		if ($var === 'driver')
+		{
+			// Special case for driver
+			$this->_set_driver($val);
+			return $this;
+		}
+
+		if ($var == 'attr')
+		{
+			$this->attr($val);
 			return $this;
 		}
 
@@ -656,9 +686,28 @@ class Formo_Core_Formo extends Formo_Innards {
 		return FALSE;
 	}
 
-	public function subform($alias, $driver, array $fields, $order = NULL)
+	public function subform($alias, array $fields, array $order = NULL, $driver = 'group')
 	{
-		
+		$subform = Formo::factory(array(
+			'alias' => $alias,
+			'driver' => $driver,
+		));
+
+		foreach ($fields as $field_alias)
+		{
+			$field = $this->find($field_alias, TRUE);
+			$subform->add($field);
+			$this->remove($field_alias);
+		}
+
+		$this->add($subform);
+
+		if ($order !== NULL)
+		{
+			$this->order($alias, $order[0], $order[1]);
+		}
+
+		return $this;
 	}
 
 	public function title()
@@ -691,7 +740,7 @@ class Formo_Core_Formo extends Formo_Innards {
 			return FALSE;
 		}
 
-		if ($this->get('render') === FALSE OR $this->get('ignore') === FALSE)
+		if ($this->get('render') === FALSE OR $this->get('ignore') === TRUE)
 		{
 			return;
 		}
