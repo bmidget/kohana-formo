@@ -85,6 +85,8 @@ class Formo_Core_Formo extends Formo_Innards {
 				$form->set('driver', 'group');
 			}
 
+			$form->parent($this);
+
 			return $this;
 		}
 
