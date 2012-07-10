@@ -467,7 +467,17 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function order($field, $new_order = NULL, $relative_field = NULL)
 	{
-		$this->_order($field, $new_order, $relative_field);
+		if (is_array($field))
+		{
+			foreach($field as $alias => $values)
+			{
+				$this->order($alias, $values[0], $values[1]);
+			}
+		}
+		else
+		{
+			$this->_order($field, $new_order, $relative_field);
+		}
 
 		return $this;
 	}
