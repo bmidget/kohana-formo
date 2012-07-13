@@ -28,6 +28,13 @@ class Formo_Core_Driver_Group extends Formo_Driver {
 		return $array;
 	}
 
+	public static function get_validation_values( array $array)
+	{
+		$field = $array['field'];
+
+		return array($field->alias() => $field->val());
+	}
+
 	public static function is_a_parent()
 	{
 		return TRUE;

@@ -48,7 +48,7 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 	{
 		$field = $array['field'];
 
-		return $field->val();
+		return array($field->alias() => $field->val());
 	}
 
 	public static function is_a_parent()

@@ -764,7 +764,6 @@ class Formo_Core_Formo extends Formo_Innards {
 			else
 			{
 				$validation = $this->validation();
-				$this->_add_rules_to_validation($validation);
 				$pass_validation = $validation->check();
 				$this->_errors = $validation->errors();
 			}
