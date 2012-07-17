@@ -45,4 +45,13 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 		return 'select';
 	}
 
+	public static function new_val( array $array)
+	{
+		$new_val = $array['new_val'];
+
+		return $new_val
+			? $new_val
+			: NULL;
+	}
+
 }
