@@ -97,9 +97,16 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 		$field_alias = $std->belongs_to['foreign_keys'][$alias];
 
 		$options['driver'] = 'select';
-		
-		$opts = ORM::factory($std->belongs_to['definitions'][$field_alias]['model'])->find_all();
-		$options['opts'] = static::select_list($opts, 'id', 'name');
+
+		if (Arr::get($std->belongs_to['definitions'][$field_alias], 'formo') !== false)
+		{
+			$opts = ORM::factory($std->belongs_to['definitions'][$field_alias]['model'])->find_all();
+			$options['opts'] = static::select_list($opts, 'id', 'name');
+		}
+		else
+		{
+			$options['render'] = false;
+		}
 	}
 
 }
