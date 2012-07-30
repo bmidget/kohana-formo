@@ -98,14 +98,6 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_files_array()
 	{
-/*
-        "name" => string(0) ""
-        "type" => string(0) ""
-        "tmp_name" => string(0) ""
-        "error" => integer 4
-        "size" => integer 0
-*/
-
 		$files = $_FILES;
 		$vars = array('name', 'type', 'tmp_name', 'error', 'size');
 
