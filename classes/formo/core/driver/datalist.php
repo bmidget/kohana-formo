@@ -16,6 +16,7 @@ class Formo_Core_Driver_Datalist extends Formo_Driver {
 			'name' => $field->name(),
 			'type' => 'text',
 			'list' => $field->attr('id').'_list',
+			'value' => $field->val(),
 		);
 	}
 
