@@ -63,11 +63,6 @@ abstract class Formo_Core_Innards {
 		return $default;
 	}
 
-	protected function _add_field( Formo $field)
-	{
-		$this->_fields[] = $field;
-	}
-
 	protected function _add_rule($alias, $rule, array $params = NULL)
 	{
 		if ($alias != ':self' AND $alias != $this->alias())
@@ -219,7 +214,7 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_var_name($var)
 	{
-		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks', 'filters')))
+		if (in_array($var, array('driver', 'attr', 'alias', 'fields', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks', 'filters')))
 		{
 			return '_'.$var;
 		}
