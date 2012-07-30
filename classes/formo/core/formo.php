@@ -565,7 +565,28 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function remove_class($class)
 	{
-		
+		if (is_array($class))
+		{
+			foreach ($class as $_class)
+			{
+				$this->remove_class(explode(' ', $class));
+			}
+		}
+		elseif (strpos($class, ' ') !== FALSE)
+		{
+			$this->remove_class(explode(' ', $class));
+		}
+		else
+		{
+			$all_classes = explode(' ', \Arr::get($this->_attr, 'class'));
+	
+			if (($key = array_search($class, $all_classes)) !== FALSE)
+			{
+				unset($all_classes[$key]);
+			}
+		}
+
+		return $this;
 	}
 
 	public function render()
