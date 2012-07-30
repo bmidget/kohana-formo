@@ -657,9 +657,16 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if (is_array($var) AND $val === NULL)
 		{
-			foreach ($var as $_var => $_val)
+			foreach ($var as $alias => $vals)
 			{
-				$this->set($_var, $_val);
+				$field = (in_array($alias, array($this->alias(), ':self')))
+					? $this
+					: $this->$alias;
+
+				foreach ($vals as $_var => $_val)
+				{
+					$field->set($_var, $_val);
+				}
 			}
 
 			return $this;
@@ -693,16 +700,6 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
-	public function set_all( array $array)
-	{
-		foreach ($array as $alias => $values)
-		{
-			$this->$alias->set($values);
-		}
-
-		return $this;
-	}
-	
 	public function sent( array $input_array = NULL)
 	{
 		if ($input_array === NULL)
