@@ -226,7 +226,7 @@ abstract class Formo_Core_Innards {
 
 			// Start the translation values list
 			$values = array(
-				':field' => $this->alias(),
+				':field' => $this->label(),
 				':value' => $this->val(),
 			);
 
