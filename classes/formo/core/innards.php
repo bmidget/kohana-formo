@@ -22,6 +22,7 @@ abstract class Formo_Core_Innards {
 	protected $_render = true;
 	protected $_errors = array();
 	protected $_fields = array();
+	protected $_filters = array();
 	protected $_opts = array();
 	protected $_parent;
 	protected $_rules = array();
@@ -62,6 +63,11 @@ abstract class Formo_Core_Innards {
 		return $default;
 	}
 
+	protected function _add_field( Formo $field)
+	{
+		$this->_fields[] = $field;
+	}
+
 	protected function _add_rule($alias, $rule, array $params = NULL)
 	{
 		if ($alias != ':self' AND $alias != $this->alias())
@@ -76,11 +82,6 @@ abstract class Formo_Core_Innards {
 	protected function _add_rules_to_validation( Validation $validation)
 	{
 		$validation->rules($this->alias(), $this->_rules);
-	}
-
-	protected function _append( Formo $field)
-	{
-		$this->_fields += array($field);
 	}
 
 	protected function _attr_to_str()
@@ -206,12 +207,19 @@ abstract class Formo_Core_Innards {
 			? $this->_vals['new']
 			: $this->_vals['original'];
 
-		return $this->driver('get_val', array('val' => $val));
+		foreach ($this->_filters as $filter)
+		{
+			$val = $filter($val);
+		}
+
+		$val =  $this->driver('get_val', array('val' => $val));
+
+		return $val;
 	}
 
-	protected function _get_var_array($var)
+	protected function _get_var_name($var)
 	{
-		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks')))
+		if (in_array($var, array('driver', 'attr', 'alias', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks', 'filters')))
 		{
 			return '_'.$var;
 		}
@@ -285,6 +293,18 @@ abstract class Formo_Core_Innards {
 		$id = $this->alias();
 
 		return $id;
+	}
+
+	protected function _merge($name, array $array)
+	{
+		$var_array = $this->_get_var_name($name);
+
+		if ( ! is_array($this->$var_array))
+		{
+			throw new Kohana_Exception('Formo :param is not an array', array(':param' => '$'.$var_array));
+		}
+
+		$this->$var_array = Arr::merge($this->$var_array, $array);
 	}
 
 	protected function _order($field_alias, $new_order, $relative_field = NULL)

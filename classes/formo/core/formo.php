@@ -359,7 +359,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function get($var, $default = NULL)
 	{
-		$array_name = $this->_get_var_array($var);
+		$array_name = $this->_get_var_name($var);
 
 		if ($array_name === '_vars')
 		{
@@ -434,6 +434,34 @@ class Formo_Core_Formo extends Formo_Innards {
 		else
 		{
 			$this->_load($array);
+		}
+
+		return $this;
+	}
+
+	public function merge($alias, array $array = NULL)
+	{
+		if (is_array($alias))
+		{
+			foreach ($alias as $_alias => $_array)
+			{
+				$this->merge($_alias, $_array);
+			}
+		}
+		else
+		{
+			if (in_array($alias, array($this->alias(), ':self')))
+			{
+				foreach ($array as $key => $_array)
+				{
+					$this->_merge($key, $_array);
+				}
+			}
+			else
+			{
+				$field = $this->find($alias);
+				$field->merge($alias, $array);
+			}
 		}
 
 		return $this;
@@ -586,9 +614,19 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this->_rules;
 		}
 
-		foreach ($rules as $rule)
+		if (is_array($alias))
 		{
-			$this->_add_rule($alias, $rule[0], Arr::get($rule, 1));
+			foreach ($alias as $_alias => $rules)
+			{
+				$this->rules($_alias, $rules);
+			}
+		}
+		else
+		{
+			foreach ($rules as $rule)
+			{
+				$this->_add_rule($alias, $rule[0], Arr::get($rule, 1));
+			}
 		}
 
 		return $this;
@@ -626,22 +664,10 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
-		$array_name = $this->_get_var_array($var);
+		$array_name = $this->_get_var_name($var);
 
-		if (is_array($this->{$array_name}))
-		{
-			// Treat arrays as arrays
-			$_val = (is_array($val))
-				? $val
-				: array($var => $val);
-
-			$this->{$array_name} = \Arr::merge($this->{$array_name}, $_val);
-		}
-		else
-		{
-			// Just set non-arrays
-			$this->{$array_name} = $val;
-		}
+		// Set the value
+		$this->$array_name = $val;
 
 		return $this;
 	}
