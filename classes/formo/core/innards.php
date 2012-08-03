@@ -206,12 +206,16 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_var_name($var)
 	{
-		if (in_array($var, array('driver', 'attr', 'alias', 'fields', 'opts', 'render', 'editable', 'config', 'rules', 'callbacks', 'filters')))
-		{
-			return '_'.$var;
-		}
+		$var_name = '_'.$var;
 
-		return '_vars';
+		if (property_exists($this, $var_name))
+		{
+			return $var_name;
+		}
+		else
+		{
+			return '_vars';
+		}
 	}
 
 	protected function _error_to_msg()
