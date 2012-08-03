@@ -23,6 +23,7 @@ abstract class Formo_Core_Innards {
 	protected $_errors = array();
 	protected $_fields = array();
 	protected $_filters = array();
+	protected $_label;
 	protected $_opts = array();
 	protected $_parent;
 	protected $_rules = array();
