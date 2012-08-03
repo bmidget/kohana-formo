@@ -359,6 +359,13 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function get($var, $default = NULL)
 	{
+		$parts = NULL;
+		if (strpos($var, '.') !== FALSE)
+		{
+			$parts = explode('.', $var);
+			$var = array_shift($parts);
+		}
+
 		$array_name = $this->_get_var_name($var);
 
 		if ($array_name === '_vars')
@@ -366,9 +373,16 @@ class Formo_Core_Formo extends Formo_Innards {
 			return Arr::get($this->_vars, $var, $default);
 		}
 
-		return (isset($this->$array_name))
-			? $this->$array_name
-			: $default;
+		if ($parts)
+		{
+			return Arr::path($this->$array_name, implode('.', $parts), $default);
+		}
+		else
+		{
+			return (isset($this->$array_name))
+				? $this->$array_name
+				: $default;
+		}
 	}
 
 	public function html()
@@ -692,10 +706,24 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
+		$parts = NULL;
+		if (strpos($var, '.') !== FALSE)
+		{
+			$parts = explode('.', $var);
+			$var = array_shift($parts);
+		}
+
 		$array_name = $this->_get_var_name($var);
 
-		// Set the value
-		$this->$array_name = $val;
+		if ($parts)
+		{
+			Arr::set_path($this->$array_name, implode('.', $parts), $val);
+		}
+		else
+		{
+			// Set the value
+			$this->$array_name = $val;
+		}
 
 		return $this;
 	}
