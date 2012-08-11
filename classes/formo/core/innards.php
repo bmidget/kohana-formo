@@ -36,8 +36,8 @@ abstract class Formo_Core_Innards {
 	);
 	protected $_vals = array
 	(
-		'original' => null,
-		'new' => null,
+		'original' => self::NOTSET,
+		'new' => self::NOTSET,
 	);
 	protected $_vars = array();
 	protected $_validation;
@@ -126,7 +126,7 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_latest_val()
 	{
-		return (isset($this->_vals['new']))
+		return ($this->_vals['new'] !== self::NOTSET)
 			? $this->_vals['new']
 			: $this->_vals['original'];
 	}
@@ -191,13 +191,21 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_val()
 	{
-		$val = (isset($this->_vals['new']))
+		$val = ($this->_vals['new'] !== self::NOTSET)
 			? $this->_vals['new']
 			: $this->_vals['original'];
 
-		foreach ($this->_filters as $filter)
+		if ($val === self::NOTSET)
 		{
-			$val = $filter($val);
+			return NULL;
+		}
+
+		if ($val)
+		{
+			foreach ($this->_filters as $filter)
+			{
+				$val = $filter($val);
+			}
 		}
 
 		$val =  $this->driver('get_val', array('val' => $val));
@@ -425,7 +433,7 @@ abstract class Formo_Core_Innards {
 
 	protected function _set_val($val, $force_new = FALSE)
 	{
-		if ( ! isset($this->_vals['original']) AND $force_new !== TRUE)
+		if ($this->_vals['original'] === self::NOTSET AND $force_new !== TRUE)
 		{
 			$this->_vals['original'] = $val;
 		}
