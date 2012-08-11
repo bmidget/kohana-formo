@@ -197,7 +197,7 @@ abstract class Formo_Core_Innards {
 
 		if ($val === self::NOTSET)
 		{
-			return NULL;
+			$val = NULL;
 		}
 
 		if ($val)
