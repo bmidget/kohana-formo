@@ -852,6 +852,14 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		$values = $this->driver('get_validation_values');
 		$validation = new Validation($values);
+		$validation->bind(':formo', $this);
+
+		$parent = ($this->driver('is_a_parent'))
+			? $this
+			: $this->parent();
+
+		$validation->bind(':form_val', $parent->val());
+
 		$this->_add_rules_to_validation($validation);
 
 		return $validation;
