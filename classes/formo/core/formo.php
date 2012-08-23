@@ -719,6 +719,10 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			Arr::set_path($this->$array_name, implode('.', $parts), $val);
 		}
+		elseif ($array_name === '_vars')
+		{
+			$this->_vars[$var] = $val;
+		}
 		else
 		{
 			// Set the value
