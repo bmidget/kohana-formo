@@ -204,7 +204,18 @@ abstract class Formo_Core_Innards {
 		{
 			foreach ($this->_filters as $filter)
 			{
-				$val = $filter($val);
+				if (  ! is_array($filter))
+				{
+					// Very simple filters, take one argument
+					$val = $filter($val);
+				}
+				else
+				{
+					// Support filters as defined in Kohana ORM
+					$func = array_shift($filter);
+					$params = Arr::merge(array($val), $filter);
+					$val = call_user_func_array($func, $params);
+				}
 			}
 		}
 

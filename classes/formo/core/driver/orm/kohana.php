@@ -43,6 +43,14 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 			}
 		}
 
+		if ($filters = $model->filters())
+		{
+			foreach ($filters as $alias => $_filters)
+			{
+				$field->merge($alias, array('filters' => $_filters));
+			}
+		}
+
 		if (method_exists($model, 'formo'))
 		{
 			$model->formo($field);
