@@ -453,29 +453,21 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
-	public function merge($alias, array $array = NULL)
+	public function merge($property, array $array = NULL)
 	{
-		if (is_array($alias))
+		if (is_array($property))
 		{
-			foreach ($alias as $_alias => $_array)
+			foreach ($property as $alias => $stuff)
 			{
-				$this->merge($_alias, $_array);
+				foreach ($stuff as $key => $value)
+				{
+					$this->find($alias)->merge($key, $value);
+				}
 			}
 		}
 		else
 		{
-			if (in_array($alias, array($this->alias(), ':self')))
-			{
-				foreach ($array as $key => $_array)
-				{
-					$this->_merge($key, $_array);
-				}
-			}
-			else
-			{
-				$field = $this->find($alias);
-				$field->merge($alias, $array);
-			}
+			$this->_merge($property, $array);
 		}
 
 		return $this;
