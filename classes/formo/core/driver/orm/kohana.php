@@ -53,7 +53,8 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 
 		if (method_exists($model, 'formo'))
 		{
-			$model->formo($field);
+			unset($array['model']);
+			$model->formo($field, $array);
 		}
 
 		//$this->_add_has_relationships();
