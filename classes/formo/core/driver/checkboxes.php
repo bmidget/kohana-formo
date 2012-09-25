@@ -2,6 +2,11 @@
 
 class Formo_Core_Driver_Checkboxes extends Formo_Driver {
 
+	public static function can_be_empty()
+	{
+		return TRUE;
+	}
+
 	public static function get_label( array $array)
 	{
 		return;

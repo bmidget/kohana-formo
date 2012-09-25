@@ -23,7 +23,7 @@ abstract class Formo_Core_Innards {
 	protected $_errors = array();
 	protected $_fields = array();
 	protected $_filters = array();
-	protected $_label;
+	protected $_label = self::NOTSET;
 	protected $_opts = array();
 	protected $_parent;
 	protected $_rules = array();
@@ -133,10 +133,10 @@ abstract class Formo_Core_Innards {
 
 	protected function _get_label()
 	{
-		$label = $this->driver('get_label');
+		$label_str = $this->driver('get_label');
 		$return_str = NULL;
 
-		if ($label == NULL)
+		if ($label_str == NULL)
 		{
 			return NULL;
 		}
@@ -150,8 +150,8 @@ abstract class Formo_Core_Innards {
 				: NULL;
 
 			$full_alias = $prefix
-				? $prefix.'.'.$this->alias()
-				: $this->alias();
+				? $prefix.'.'.$label_str
+				: $label_str;
 
 			if ($label = Kohana::message($file, $full_alias))
 			{
@@ -159,7 +159,7 @@ abstract class Formo_Core_Innards {
 					? $full_alias
 					: $label;
 			}
-			elseif($label = Kohana::message($file, $this->alias()))
+			elseif($label = Kohana::message($file, $label_str))
 			{
 				$return_str = $label;
 			}
@@ -176,12 +176,12 @@ abstract class Formo_Core_Innards {
 			}
 			else
 			{
-				$return_str = $this->alias();
+				$return_str = $label_str;
 			}
 		}
 		else
 		{
-			$return_str = $label;
+			$return_str = $label_str;
 		}
 
 		return ($this->config('translate') === TRUE)
@@ -272,6 +272,32 @@ abstract class Formo_Core_Innards {
 				$message = "{$file}.{$field}.{$error}";
 			}
 
+			if ($params)
+			{
+				foreach ($params as $key => $value)
+				{
+					if (is_array($value))
+					{
+						// All values must be strings
+						$value = implode(', ', Arr::flatten($value));
+					}
+					elseif (is_object($value))
+					{
+						// Objects cannot be used in message files
+						continue;
+					}
+
+					if ($field = $this->parent(TRUE)->find($value, TRUE))
+					{
+						// Use a field's label if we're referencing a field
+						$value = $field->label();
+					}
+
+					// Add each parameter as a numbered value, starting from 1
+					$values[':param'.($key + 1)] = $value;
+				}
+			}
+
 			$message = strtr($message, $values);
 
 			return ($translate === TRUE)
@@ -284,11 +310,17 @@ abstract class Formo_Core_Innards {
 
 	protected function _load( array $array)
 	{
-		foreach ($array as $alias => $value)
+		foreach ($this->_fields as $field)
 		{
-			if ($field = $this->find($alias))
+			$value = Arr::get($array, $field->alias(), Formo::NOTSET);
+
+			if ($value !== Formo::NOTSET)
 			{
 				$field->driver('load', array('val' => $value));
+			}
+			elseif ($field->driver('can_be_empty') === TRUE)
+			{
+				$field->val(null);
 			}
 		}
 	}
@@ -493,6 +525,11 @@ abstract class Formo_Core_Innards {
 			$other_config = $this->get('config', array());
 			$merged = Arr::merge($config, $other_config);
 			$this->set('config', $config);
+		}
+
+		if (empty($_array['alias']))
+		{
+			throw new Kohana_Exception('Formo.Every formo field must have an alias');
 		}
 
 		$this->_set_id($_array);

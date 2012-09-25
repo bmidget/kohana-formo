@@ -7,6 +7,11 @@ abstract class Formo_Core_Driver {
 		return;
 	}
 
+	public static function can_be_empty()
+	{
+		return false;
+	}
+
 	public static function close( array $array)
 	{
 		$str = $array['str'];
@@ -23,7 +28,9 @@ abstract class Formo_Core_Driver {
 	{
 		$field = $array['field'];
 
-		return ($label = $field->get('label'))
+		$label = $field->get('label');
+
+		return ($label !== Formo::NOTSET)
 			? $label
 			: $field->alias();
 	}

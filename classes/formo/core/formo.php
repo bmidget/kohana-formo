@@ -80,7 +80,7 @@ class Formo_Core_Formo extends Formo_Innards {
 				$form->set('driver', 'group');
 			}
 
-			$form->parent($this);
+			$form->set('parent', $this);
 
 			return $this;
 		}
@@ -428,13 +428,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		
 		if ($this->config('namespaces') === TRUE)
 		{
+			// First find all the fields that can be empty
 			foreach ($array as $namespace => $values)
 			{
 				if ($namespace === $this->alias())
 				{
 					$this->_load($values);
 				}
-				elseif ($field = $this->find($namespace, false) AND $field->driver('is_a_parent'))
+				elseif ($field = $this->find($namespace, true) AND $field->driver('is_a_parent'))
 				{
 					$field->_load($values);
 				}
@@ -529,16 +530,18 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
-	public function parent(Formo $parent = NULL)
+	public function parent($group_or_form = FALSE)
 	{
-		if ($parent === NULL)
+		if ($group_or_form !== TRUE)
 		{
 			return $this->_parent;
 		}
 
-		$this->_parent = $parent;
+		$parent = ($this->driver('is_a_parent'))
+			? $this
+			: $this->parent()->parent(TRUE);
 
-		return $this;
+		return $parent;
 	}
 
 	public function remove($alias)
@@ -845,11 +848,10 @@ class Formo_Core_Formo extends Formo_Innards {
 		$validation = new Validation($values);
 		$validation->bind(':formo', $this);
 
-		$parent = ($this->driver('is_a_parent'))
-			? $this
-			: $this->parent();
+		$parent = $this->parent(TRUE);
 
 		$validation->bind(':form_val', $parent->val());
+		$validation->bind(':form', $parent);
 
 		$this->_add_rules_to_validation($validation);
 
