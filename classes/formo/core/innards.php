@@ -482,7 +482,7 @@ abstract class Formo_Core_Innards {
 
 		if ($parent = Arr::get($_array, 'parent'))
 		{
-			$this->parent($_array['parent']);
+			$this->set('parent', $_array['parent']);
 			unset($_array['parent']);
 		}
 

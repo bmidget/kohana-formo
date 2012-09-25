@@ -32,11 +32,6 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		$array = $this->_resolve_construct_aliases($array);
 
-		if ( ! $array['alias'])
-		{
-			throw new Kohana_Exception('Formo.Every formo field must have an alias');
-		}
-
 		foreach ($array as $key => $value)
 		{
 			$this->set($key, $value);
