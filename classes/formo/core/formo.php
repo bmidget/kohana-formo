@@ -844,7 +844,10 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function validation( array $array = NULL)
 	{
-		$values = $this->driver('get_validation_values');
+		$values = $array === NULL
+			? $this->driver('get_validation_values')
+			: $array;
+
 		$validation = new Validation($values);
 		$validation->bind(':formo', $this);
 
@@ -856,6 +859,21 @@ class Formo_Core_Formo extends Formo_Innards {
 		$this->_add_rules_to_validation($validation);
 
 		return $validation;
+	}
+
+	public function validation_error($array = FALSE)
+	{
+		if ($array instanceof Kohana_Validation)
+		{
+			$array->check();
+			$array = $array->errors();
+		}
+		elseif ($array !== FALSE AND ! is_array($array))
+		{
+			throw new Kohana_Exception('Argument 1 passed to Formo_Core_Formo::validation_error() must be an instance of Kohana_Validation, an array, or FALSE. :param given', array(':param' => $array));
+		}
+
+		return $this->_error_to_msg($array);
 	}
 
 }

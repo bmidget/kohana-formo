@@ -238,12 +238,15 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
-	protected function _error_to_msg()
+	protected function _error_to_msg( array $errors_array = NULL)
 	{
 		$file = $this->config('validation_message_file');
 		$translate = $this->config('translate', FALSE);
+		$errors = ($errors_array !== NULL)
+			? $errors_array
+			: $this->_errors;
 
-		if ($set = Arr::get($this->_errors, $this->alias()))
+		if ($set = Arr::get($errors, $this->alias()))
 		{
 			$field = $this->alias();
 			list($error, $params) = $set;
