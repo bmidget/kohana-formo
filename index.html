@@ -6,62 +6,109 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Kohana-formo : Object-based form handling for Kohana 3" />
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/marked.js"></script>
+    <script type="text/javascript" src="/javascripts/site.js"></script>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Kohana-formo</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/bmidget/kohana-formo">View on GitHub</a>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="active">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
 
-          <h1 id="project_title">Kohana-formo</h1>
-          <h2 id="project_tagline">Object-based form handling for Kohana 3</h2>
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Formo</h1>
+    <p class="lead">Formo is a form module for Kohana 3 that lets you work with forms as objects.</p>
+  </div>
+</header>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/bmidget/kohana-formo/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/bmidget/kohana-formo/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#installation"><i class="icon-chevron-right"></i> Installation</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+        <!-- Download
+        ================================================== -->
+        <section id="installation">
+          <div class="page-header">
+            <h1>Installation</h1>
+          </div>
+
+<div class="md">
+Since Formo was written specifically for Kohana, installation is a breeze. To install Formo in your application:
+
+1. Create a directory for Formo in your modules directory
+2. Clone Formo (git://github.com/bmidget/kohana-formo.git) or copy Formo into your new directory
+3. Add the Formo module to the modules located in /application/bootstrap.php
+
+That’s it, you’re ready to use Formo.
+
+<p><a class="btn btn-large btn-primary" href="https://github.com/bmidget/kohana-formo.git">Go to the Github Repo</a></p>
+</div>
+
+        </section>
+
+
+
+
+
+
+
+      </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>Formo is a form module for Kohana 3 that lets you work with forms as objects.</p>
+  </div>
 
-<p>Requires Kohana 3.2.x</p>
-
-<h1>Features</h1>
-
-<ul>
-<li>Made for <a href="http://github.com/kohana/kohana">Kohana 3.2.x</a>
-</li>
-<li>ORM integration</li>
-<li>Namespace your form elements (ie name="address['street']", name="address['city']")</li>
-<li>Driver-based</li>
-<li>Completely extendable</li>
-<li>Simple and powerful</li>
-<li>MVC separation</li>
-<li>Supports any combination of forms, subforms and fields</li>
-<li>New, simple and powerful object-based validation</li>
-<li>HTML 5 ready</li>
-</ul><p>Documentation is contained within the Formo module and requires Kohana's <a href="http://github.com/kohana/userguide">userguide module</a>.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Kohana-formo maintained by <a href="https://github.com/bmidget">bmidget</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
 
   </body>
 </html>
