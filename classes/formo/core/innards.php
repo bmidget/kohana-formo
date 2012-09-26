@@ -251,9 +251,18 @@ abstract class Formo_Core_Innards {
 			$field = $this->alias();
 			list($error, $params) = $set;
 
+			$label = $this->label();
+			if ( ! $label)
+			{
+				if ($title = $this->driver('get_title'))
+				{
+					$label = $title;
+				}
+			}
+
 			// Start the translation values list
 			$values = array(
-				':field' => $this->label(),
+				':field' => $label,
 				':value' => $this->val(),
 			);
 

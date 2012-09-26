@@ -844,36 +844,54 @@ class Formo_Core_Formo extends Formo_Innards {
 
 	public function validation( array $array = NULL)
 	{
-		$values = $array === NULL
-			? $this->driver('get_validation_values')
-			: $array;
+		if ($array !== NULL)
+		{
+			$validation = new Validation($array);
+			$validation->rules($this->alias(), $this->_rules);
 
-		$validation = new Validation($values);
-		$validation->bind(':formo', $this);
+			foreach ($this->_fields as $field)
+			{
+				$validation->rules($field->alias(), $field->get('rules'));
+			}
+		}
+		else
+		{
+			$values = $this->driver('get_validation_values');
+	
+			$validation = new Validation($values);	
+			$this->_add_rules_to_validation($validation);
+		}
 
 		$parent = $this->parent(TRUE);
-
+		$validation->bind(':formo', $this);
 		$validation->bind(':form_val', $parent->val());
 		$validation->bind(':form', $parent);
-
-		$this->_add_rules_to_validation($validation);
 
 		return $validation;
 	}
 
-	public function validation_error($array = FALSE)
+	public function validation_errors( Kohana_Validation $validation)
 	{
-		if ($array instanceof Kohana_Validation)
-		{
-			$array->check();
-			$array = $array->errors();
-		}
-		elseif ($array !== FALSE AND ! is_array($array))
-		{
-			throw new Kohana_Exception('Argument 1 passed to Formo_Core_Formo::validation_error() must be an instance of Kohana_Validation, an array, or FALSE. :param given', array(':param' => $array));
-		}
+		$validation->check();
+		$errors = $validation->errors();
 
-		return $this->_error_to_msg($array);
+		if ($this->driver('is_a_parent'))
+		{
+			$array = array();
+			foreach ($this->_fields as $field)
+			{
+				if ($msg = $field->_error_to_msg($errors))
+				{
+					$array[$field->alias()] = $field->_error_to_msg($errors);
+				}
+			}
+
+			return $array;
+		}
+		else
+		{
+			return $this->_error_to_msg($errors);
+		}
 	}
 
 }
