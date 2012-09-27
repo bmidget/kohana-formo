@@ -1,5 +1,10 @@
 $(document).ready(function(){
 	function markdown_it() {
+		marked.setOptions({
+			gfm: true,
+			sanitize: false
+		});
+
 		var $md = $('.md');
 		if ($md.length) {
 			$md.each(function(k, el) {

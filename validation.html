@@ -54,6 +54,117 @@
       </div>
     </div>
     
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Validation</h1>
+    <p class="lead">How to validate your forms, fields and subforms.</p>
+  </div>
+</header>
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#validation"><i class="icon-chevron-right"></i> Validation</a></li>
+          <li><a href="#without-loading"><i class="icon-chevron-right"></i> Validate without loading</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+        <!-- Download
+        ================================================== -->
+        <section id="validation">
+          <div class="page-header">
+            <h1>Validating forms</h1>
+          </div>
+
+<div class="md">
+
+Usually when you validate a form, you will follow a linear process:
+
+1. Create form
+2. Load new values from $_POST data
+3. Validate against the form with its new values
+
+You can do this easily using `Formo::load()` and `Formo::validate()`:
+
+```
+$form = Formo::form();
+// Add stuff to form
+
+if ($form->load($_POST)->validate())
+{
+	echo ‘You did it!’;
+}
+```
+
+What this is saying is: “Update all field values from the `$_POST` array, and check if the form validates with those values.”
+
+Formo first checks whether the form appears to be sent at all, and returns `FALSE` if it wasn’t sent.
+
+IF you don’t specify an array in `Formo::load()`, Formo will load values from `Request::$current->post()` by default. Thus, this is the most common syntax for validation:
+
+```
+if ($form->load()->validate())
+{
+	// Passed!
+}
+```
+</div> <!-- md -->
+        </section>
+
+
+<section id="without-loading">
+	<div class="page-header">
+		<h1>Validating without loading values</h1>
+
+<div class="md">
+## Validating without loading values
+
+Sometimes you may want to check whether a form or field validates without actually loading a new value into the form or field. You can do this by passing an array of `$alias => $value` of field values you want to validate against.
+
+Here’s an example of validating a form without loading any values. The errors returned is an array for a form or group
+
+```
+$values = [‘first’ => ‘Billy’, ‘last’ => null, ‘email’ => ‘billy@madison.com’];
+
+// First create a validation object with the values you want to validate against
+$validation = $form->validation($values);
+
+// You can do anything with the validation object, it’s just a regular Kohana Validation object
+if ( ! $validation->check())
+{
+
+}
+else
+{
+	// Formo can turn the values into strings
+	$errors = $form->validation_errors($validation);
+}
+```
+
+You can also validate a single field this way. The error returned is a string
+
+```
+$validation = $form->email->validation(array(‘email’ => ‘john@doe.com’));
+
+if ( ! $error = $form->email->validation_errors($validation))
+{
+
+}
+```
+</div> <!-- md -->
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+
 
   </body>
 </html>

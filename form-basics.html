@@ -17,43 +17,322 @@
     <title>Kohana-formo</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="./index.html">Formo</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="">
-                <a href="./index.html">Home</a>
-              </li>
-              <li class="active">
-                <a href="./form-basics.html">Form Basics</a>
-              </li>
-              <li class="">
-                <a href="./validation.html">Validation</a>
-              </li>
-              <li class="">
-                <a href="./orm.html">ORM</a>
-              </li>
-              <li class="">
-                <a href="./files.html">Files</a>
-              </li>
-              <li class="">
-                <a href="./examples.html">Examples</a>
-              </li>
-            </ul>
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="active">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Form basics</h1>
+    <p class="lead">Learn the Formo ropes.</p>
+  </div>
+</header>
+
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#create"><i class="icon-chevron-right"></i> Create a form</a></li>
+          <li><a href="#adding"><i class="icon-chevron-right"></i> Adding fields</a></li>
+          <li><a href="#validation"><i class="icon-chevron-right"></i> Basic validation</a></li>
+          <li><a href="#rendering"><i class="icon-chevron-right"></i> Rendering</a></li>
+          <li><a href="#getting"><i class="icon-chevron-right"></i> Getting and setting</a></li>
+          <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+        <!-- Download
+        ================================================== -->
+        <section id="create">
+          <div class="page-header">
+            <h1>Create a form</h1>
           </div>
-        </div>
+
+<div class="md">
+To create a form, use `Formo::form()`:
+
+```
+$form = Formo::form();
+```
+
+You can also name your form by giving it an `alias`:
+
+```
+$form = Formo::form(['alias' => 'myform']);
+```
+</div> <!-- md -->
+</section>
+
+<section id="adding">
+	<div class="page-header">
+		<h1>Adding fields</h1>
+
+<div class="md">
+To add a field to the form, use `Formo::add()`. Here’s a practical example:
+
+```
+$Form = Formo::form()
+	// The field added here is $form->first
+	->add(‘first’)
+	->add(‘last’, ‘input’)
+	->add(‘email’, ‘input|email’)
+	->add(‘notes’, ‘textarea’)
+	->add(‘save’, ‘input|submit’, ‘Save’);
+```
+
+This will create the following:
+
+1. Form object containing:
+	1. input named ‘first’
+	2. input named ‘last’
+	3. input named ‘email’ with ‘type=“email”’ and validation rule that entered text is a valid email
+	4. textare named ‘notes’
+	5. input named ‘save’ with ‘type=“submit”’ and value ‘Save’
+
+Every field has an `alias` that the field is accessible by. Also, by default, the field `name` is the same as its `alias` (if no name is specified).
+
+The second parameter for `Formo::add()` is the field driver name. Drivers tell Formo how to process each field since different field types behave differently in HTML (think about ways a select field differs from a textarea, for instance).
+
+Thus, when using `Formo::add()`, you specify:
+
+1. The field alias
+2. Driver name
+3. Default value
+4. Array of other attributes and options
+</div> <!-- md -->
+</section>
+
+        <section id="validation">
+          <div class="page-header">
+            <h1>Basic Validation</h1>
+          </div>
+
+<div class="md">
+### Loading posted
+
+The `Formo::load()` method tells the form that whatever array is passed as a parameter is what was posted. If no parameter is specified.
+
+### Validation
+
+To validate your form, use `Formo::validate()`. This returns `TRUE` or `FALSE` whether the form passed validation rules or not.
+
+Here’s a practical validation example:
+
+```
+if ($form->load()->validate())
+{
+
+}
+```
+
+What this is saying is, if the form loaded with `Request::$current->post()` passed validation rules attached to the form.
+</div> <!-- md -->
+</section>
+
+<section id="rendering">
+	<div class="page-header">
+		<h1>Rendering the form</h1>
+	</div>
+
+<div class="md">
+To render your form using the built-in html templates, use `Formo::render()`:
+
+```
+echo $formo->render();
+```
+
+Note that a `Formo` object's `__toString()` method also runs `$form->render()`.
+
+```
+echo $form;
+```
+</div> <!-- md -->
+</section>
+
+<section id="getting">
+	<div class="page-header">
+		<h1>Getting and setting stuff</h1>
+	</div>
+
+<div class="md">
+## Setting stuff
+
+In a Formo object, you cannot directly access object properties except for fields. So, if you have a form object with a `first_name` field and want to set its label (which is the `$form->_label` protected property), you have to use the `Formo::set()` method.
+
+It’s simple. Do `$form->set($property_name, $value)`:
+
+```
+$form->first_name->set(‘label’, ‘First Name’);
+```
+
+You can also set an array of stuff. When you pass an array of stuff, you need to specify the alias for each group of values you are setting.
+
+```
+$form->set([
+	‘first_name’ => [
+		‘label’ => ‘First Name’,
+	],
+	‘last_name’ => [
+		‘label’ => ‘Last Name’,
+	],
+]);
+```
+
+## Setting extra variables
+
+You can set any variable to any form object whenever you need. Let’s say you have a special variable named `$foo` you need to pass into your form. No problem:
+
+```
+$form->first_name->set(‘foo’, $bar);
+```
+
+## Setting the value
+
+You can set a field's value two ways
+
+```
+$form->val($new_val);
+$form->set('val', $new_val);
+
+$form->add([
+	‘alias’ => ‘foo’,
+	‘val’ => $value,
+]);
+```
+
+## Setting using array path
+
+One awesome thing you can do is directly set a property inside an array using Kohana’s `Arr::path` method.
+
+In this example, I am setting a custom config parameter for `label_message_file` for a particular form.
+
+```
+$form = Formo::form()
+	->set(‘config.label_message_file’, $new_file);
+```
+
+That sets `$form->_config[‘label_message_file’] = $new_file`.
+
+## Getting stuff
+
+The only properties you can access directly in a Formo object are fields. Thus, if you have a field named `first_name` and want to retrieve the `Formo::$_label` variable, you cannot use `$form->first_name->_label`. Instead you need to use `Formo::get()`.
+
+`Formo::get($property, [$default = null])` takes two parameters:
+
+1. The property you are retrieving
+2. The default value if the property isn’t found.
+
+## Retrieving custom variables
+
+You retrieve custom variables the same as any others. Let’s say you passed a `$foo` variable into the `first_name` field:
+
+```
+$form->first_name->set(‘foo’, $bar);
+
+$foo_value = $form->first_name->get(‘foo’);
+```
+
+That’s it.
+
+## Getting the value
+
+You can set a field's value two ways
+
+```
+$value = $form->val();
+$value = $form->get('val');
+```
+
+## Getting using array path
+
+Formo lets you get a property using Kohana’s `Arr::path()` method.
+
+Here’s an example of retrieving `$form->_config[‘label_message_file’]` (which is a protected property) in one fell swoop:
+
+```
+$file = $form->get(‘config.label_message_file’);
+```
+</div> <!-- md -->
+</section>
+
+
+<section id="terminology">
+	<div class="page-header">
+		<h1>Formo Terminology</h1>
+	</div>
+
+<div class="md">
+While using Formo, it's important to understand Formo's terminology.
+
+### Driver
+
+### Field
+
+### Subform
+A group of fields added to a form.
+
+In this example, `$f2` is the subform.
+
+```
+$form = Formo::form();
+
+$f2 = Formo::form(['alias' => 'mysubform']);
+
+$form->add($f2);
+```
+
+</div> <!-- md -->
+</section>
+
+
+
+
       </div>
     </div>
-    
+
+  </div>
+
 
   </body>
 </html>
