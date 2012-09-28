@@ -17,49 +17,50 @@
     <title>Kohana-formo</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="./index.html">Formo</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="">
-                <a href="./index.html">Home</a>
-              </li>
-              <li class="">
-                <a href="./form-basics.html">Form Basics</a>
-              </li>
-              <li class="active">
-                <a href="./validation.html">Validation</a>
-              </li>
-              <li class="">
-                <a href="./orm.html">ORM</a>
-              </li>
-              <li class="">
-                <a href="./files.html">Files</a>
-              </li>
-              <li class="">
-                <a href="./examples.html">Examples</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="active">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
 <header class="jumbotron subhead" id="overview">
   <div class="container">
-    <h1>Validation</h1>
-    <p class="lead">How to validate your forms, fields and subforms.</p>
+    <h1>Formo</h1>
+    <p class="lead">Formo is a form module for Kohana 3 that lets you work with forms as objects.</p>
   </div>
 </header>
+
 
 
   <div class="container">
@@ -75,15 +76,16 @@
       </div>
       <div class="span9">
 
+
+
         <!-- Download
         ================================================== -->
-        <section id="validation">
-          <div class="page-header">
-            <h1>Validating forms</h1>
-          </div>
+<section id="validation">
+	<div class="page-header">
+		<h1>Validation</h1>
+	</div> <!-- page-header -->
 
 <div class="md">
-
 Usually when you validate a form, you will follow a linear process:
 
 1. Create form
@@ -115,16 +117,17 @@ if ($form->load()->validate())
 }
 ```
 </div> <!-- md -->
-        </section>
+
+</section>
+
 
 
 <section id="without-loading">
 	<div class="page-header">
 		<h1>Validating without loading values</h1>
+	</div> <!-- page-header -->
 
 <div class="md">
-## Validating without loading values
-
 Sometimes you may want to check whether a form or field validates without actually loading a new value into the form or field. You can do this by passing an array of `$alias => $value` of field values you want to validate against.
 
 Here’s an example of validating a form without loading any values. The errors returned is an array for a form or group
@@ -138,11 +141,11 @@ $validation = $form->validation($values);
 // You can do anything with the validation object, it’s just a regular Kohana Validation object
 if ( ! $validation->check())
 {
-
+	// Passed validation
 }
 else
 {
-	// Formo can turn the values into strings
+	// Turn errors into strings
 	$errors = $form->validation_errors($validation);
 }
 ```
@@ -158,7 +161,10 @@ if ( ! $error = $form->email->validation_errors($validation))
 }
 ```
 </div> <!-- md -->
-        </section>
+
+</section>
+
+
 
       </div>
     </div>

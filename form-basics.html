@@ -75,6 +75,7 @@
           <li><a href="#validation"><i class="icon-chevron-right"></i> Basic validation</a></li>
           <li><a href="#rendering"><i class="icon-chevron-right"></i> Rendering</a></li>
           <li><a href="#getting"><i class="icon-chevron-right"></i> Getting and setting</a></li>
+          <li><a href="#merging"><i class="icon-chevron-right"></i> Merging stuff</a></li>
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
         </ul>
       </div>
@@ -140,6 +141,51 @@ Thus, when using `Formo::add()`, you specify:
 2. Driver name
 3. Default value
 4. Array of other attributes and options
+
+## Field creation with an array
+
+Though `Formo::add()` supports separate parameters that define the new field added to its parent, you can also pass an array as a field construct. Here's an example:
+
+```
+$form->add([
+	'alias' => 'first_name',
+	'driver' => 'input',
+	'val' => NULL,
+	'rules' => [
+		['not_empty'],
+	],
+	'filters' => [
+		function(str) {
+			return trim($str);
+		}
+	],
+]);
+```
+
+If array keys are not specified, Formo expects your array to be an exact representation of params for `Formo::add()`. Thus, the following three examples are equivelent.
+
+```
+$form->add('email', 'input|email', NULL, ['attr' => ['placeholder' => 'john@doe.com']]);
+
+$form->add([
+	'email',
+	'input|email',
+	NULL,
+	['attr' => [
+		'placeholder' => 'john@doe.com',
+	]]
+]);
+
+$form->add([
+	'alias' => 'email',
+	'driver' => 'input|email',
+	'val' => NULL,
+	'attr' => [
+		'placeholder' => 'john@doe.com',
+	]
+]);
+```
+
 </div> <!-- md -->
 </section>
 
@@ -296,6 +342,63 @@ $file = $form->get(‘config.label_message_file’);
 </div> <!-- md -->
 </section>
 
+<section id="merging">
+	<div class="page-header">
+		<h1>Merging Stuff</h1>
+	</div> <!-- page-header -->
+<div class="md">
+Sometimes you don’t want to just set a variable value, but rather you need to merge an array of values with a new array of values.
+
+For instance, a field’s filters are an array of filters inside a field.
+
+Let’s say I created a form from a model, but I want to add a new filter to the bunch.
+
+It’s dirt-simple using `Formo::merge()`.
+
+```
+$user = ORM::factory(‘user’, $id);
+$other_email_filters = array
+(
+	‘remove_fugly_chars’,
+);
+
+
+$form = Formo::form()
+	->orm(‘load’, [‘model’ => $user])
+	->merge(‘email’, [
+		‘filters’ => $other_email_filters,
+	]);
+```
+
+To merge to itself, use `:self` as the alias
+
+```
+$form->merge(‘:self’, [‘config’ => $config_vals]);
+```
+
+You can also pass an array of stuff into `Formo::merge()` and merge all sorts of stuff at once.
+
+```
+$form->merge([
+	‘:self’ => [
+		‘config’ => $new_config_values,
+	],
+	‘email’ => [
+		‘filters’ => $new_filters,
+		‘rules’ => $new_rules,
+		‘callbacks’ => $new_callbacks,
+	],
+	‘first_name’ => [
+		‘rules’ => $new_rules,
+	],
+	‘hobbies’ => [
+		‘opts’ => $new_opts,
+	],
+]);
+```
+</div> <!-- md -->
+</section>
+
 
 <section id="terminology">
 	<div class="page-header">
@@ -305,11 +408,30 @@ $file = $form->get(‘config.label_message_file’);
 <div class="md">
 While using Formo, it's important to understand Formo's terminology.
 
-### Driver
-
 ### Field
 
+A field is a form field attached to a form. You attach fields using `Formo::add()`. Fields are accessed directly from its form.
+
+In this example, `email` is the field's alias, and it can be accessed as `$form->email`.
+
+```
+$form->add('email', 'input|email');
+```
+
+### Driver
+
+The driver handles field-specific functionality. For instance, a `checkbox` field functions totally different from an `input type="text"` field.
+
+Formo drivers handle every field-specific function from setting the value correctly to getting the field's label.
+
+In this example, the driver is `select`, and a `select` driver requires an extra array of `opts` (options).
+
+```
+$form->add('hobbies', 'select', NULL, ['opts' => $options]);
+```
+
 ### Subform
+
 A group of fields added to a form.
 
 In this example, `$f2` is the subform.
@@ -321,6 +443,14 @@ $f2 = Formo::form(['alias' => 'mysubform']);
 
 $form->add($f2);
 ```
+
+### Rules
+
+Rules are validation rules
+
+### Filters
+
+Filters are run on field values before validation
 
 </div> <!-- md -->
 </section>

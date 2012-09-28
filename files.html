@@ -17,43 +17,136 @@
     <title>Kohana-formo</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="./index.html">Formo</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="">
-                <a href="./index.html">Home</a>
-              </li>
-              <li class="">
-                <a href="./form-basics.html">Form Basics</a>
-              </li>
-              <li class="">
-                <a href="./validation.html">Validation</a>
-              </li>
-              <li class="">
-                <a href="./orm.html">ORM</a>
-              </li>
-              <li class="active">
-                <a href="./files.html">Files</a>
-              </li>
-              <li class="">
-                <a href="./examples.html">Examples</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="active">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Files</h1>
+    <p class="lead">File handling is a breeze.</p>
+  </div>
+</header>
+
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#field"><i class="icon-chevron-right"></i> Adding a file field</a></li>
+          <li><a href="#validating"><i class="icon-chevron-right"></i> Validating files</a></li>
+          <li><a href="#value"><i class="icon-chevron-right"></i> Field value</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+<section id="field">
+	<div class="page-header">
+		<h1>Adding a file field</h1>
+	</div> <!-- md -->
+
+<div class="md">
+Use the file driver (not `input|file`)
+
+```
+$form->add(‘upload’, ‘file’);
+```
+</div> <!-- md -->
+
+</section>
+
+<section id="validating">
+	<div class="page-header">
+		<h1>Validating files</h1>
+	</div> <!-- md -->
+
+<div class="md">
+A file field’s value is always `NULL` when it’s empty (as opposed to an empty array from `$_FILES`). Because of this, you use the regular `not_empty` validation rule for making the field required.
+
+You can use Kohana’s file validation rules for any other file field rules.
+
+```
+$form->rules(array(
+	‘upload’ => array
+	(
+		array(‘not_empty’),
+		array('Upload::type', array(':value', array('jpg','png','gif'))),
+	)
+));
+```
+</div> <!-- md -->
+
+</section>
+
+<section id="value">
+	<div class="page-header">
+		<h1>Field Value</h1>
+	</div> <!-- md -->
+
+<div class="md">
+When a file has a value, it is an array from `$_FILES`. The value looks like this:
+
+```
+array(5) (
+    "name" => string(40) "Screen Shot 2012-09-20 at 9.44.28 PM.png"
+    "type" => string(9) "image/png"
+    "tmp_name" => string(26) "/private/var/tmp/phpB4cFSq"
+    "error" => integer 0
+    "size" => integer 62393
+)
+```
+</div> <!-- md -->
+
+</section>
+
+
+
+
+
       </div>
     </div>
-    
+
+  </div>
+
 
   </body>
 </html>

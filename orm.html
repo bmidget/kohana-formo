@@ -17,43 +17,157 @@
     <title>Kohana-formo</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="./index.html">Formo</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="">
-                <a href="./index.html">Home</a>
-              </li>
-              <li class="">
-                <a href="./form-basics.html">Form Basics</a>
-              </li>
-              <li class="">
-                <a href="./validation.html">Validation</a>
-              </li>
-              <li class="active">
-                <a href="./orm.html">ORM</a>
-              </li>
-              <li class="">
-                <a href="./files.html">Files</a>
-              </li>
-              <li class="">
-                <a href="./examples.html">Examples</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="active">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Formo</h1>
+    <p class="lead">Formo is a form module for Kohana 3 that lets you work with forms as objects.</p>
+  </div>
+</header>
+
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#integration"><i class="icon-chevron-right"></i> ORM Integration</a></li>
+          <li><a href="#rules"><i class="icon-chevron-right"></i> Sharing model rules and filters</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+        <!-- Download
+        ================================================== -->
+<section id="integration">
+	<div class="page-header">
+		<h1>Integrating Formo with Kohana’s ORM</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+Formo makes it easy to share model fields, rules and filters with Kohana’s official ORM. You can generate a form directly from your ORM model.
+
+To make a form from your model, use `Formo::orm()`. Here’s an example of making a form from the user model:
+
+```
+$user = ORM::factory(‘user’, 10);
+
+$form = Formo::form()
+	->orm(‘load’, [‘model’ => $user]);
+
+if ($form->load()->validate())
+{
+	// Save the user model
+	$user
+		->values($form->val())
+		->save();
+}
+```
+
+It’s that simple.
+</div> <!-- md -->
+
+</section>
+
+
+<section id="rules">
+	<div class="page-header">
+		<h1>Sharing model rules and filters</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+## Model rules
+
+When you create a form using `Formo::orm(‘load’)`, Formo automatically looks for and applies any rules returned from the `$model->rules()` method. Formo uses Kohana’s built-in validation library for all its validation, so it can use and understand rules inside the model.
+
+That means you don’t have to repeat any of these. Just define ‘em once inside your model.
+
+## Sharing filters with the model
+
+Like rules, when you create a form using `Formo::orm(‘load’)`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
+
+## Sharing filters with the model
+
+Like rules, when you create a form using `Formo::orm(‘load’)`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
+
+## The special `$model::formo()` method.
+
+After `Formo::orm(‘load’)` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will run call it.
+
+This gives you a chance to do anything else you may want to do with your form.
+
+Since the entire form object is passed into the method, you can manipulate it however you want.
+
+Here’s an example:
+
+```
+$form->set([
+	'id' => ['render' => FALSE],
+	'class_id' => ['label' => 'Class', 'blank' => TRUE],
+	'email' => ['driver' => 'input|email',],
+	'logins' => ['render' => FALSE],
+	'last_login' => ['render' => FALSE],
+	'password' => ['render' => FALSE],
+]);
+```
+
+In this example, we are setting many fields (id, logins, last_login, password) to not render by default. Also, we are defining any special parameters for `class_id` and `email` fields so they render correctly by default.
+
+You can see the sky’s the limit inside your `$model::formo()` method.
+
+If the method is not defined in your model, Formo will not call anything.
+</div> <!-- md -->
+</section>
+
+
+
+
       </div>
     </div>
-    
+
+  </div>
+
 
   </body>
 </html>
