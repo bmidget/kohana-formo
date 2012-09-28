@@ -363,6 +363,12 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		$array_name = $this->_get_var_name($var);
 
+		if ($array_name === 'val')
+		{
+			// Special case for value
+			return $this->val();
+		}
+
 		if ($array_name === '_vars')
 		{
 			return Arr::get($this->_vars, $var, $default);
