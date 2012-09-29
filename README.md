@@ -16,3 +16,5 @@ Requires Kohana 3.2.x
 * HTML 5 ready
 
 Documentation is contained within the Formo module and requires Kohana's [userguide module](http://github.com/kohana/userguide).
+
+[Additional documentation and examples](http://bmidget.github.com/kohana-formo/)
