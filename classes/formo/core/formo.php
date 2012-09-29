@@ -2,6 +2,14 @@
 
 class Formo_Core_Formo extends Formo_Innards {
 
+	/**
+	 * Helper method to return a form field
+	 * 
+	 * @access public
+	 * @static
+	 * @param array $array (default: NULL)
+	 * @return Formo obj
+	 */
 	public static function form( array $array = NULL)
 	{
 		if (empty($array['alias']))
@@ -23,11 +31,26 @@ class Formo_Core_Formo extends Formo_Innards {
 		return new Formo($array);
 	}
 
+	/**
+	 * Simple factory method
+	 * 
+	 * @access public
+	 * @static
+	 * @param array $array (default: NULL)
+	 * @return Formo obj
+	 */
 	public static function factory( array $array = NULL)
 	{
 		return new Formo($array);
 	}
 
+	/**
+	 * Set up new field
+	 * 
+	 * @access public
+	 * @param array $array (default: NULL)
+	 * @return Formo obj
+	 */
 	public function __construct( array $array = NULL)
 	{
 		$array = $this->_resolve_construct_aliases($array);
@@ -38,21 +61,52 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Return a field
+	 * Retuns NULL if the field doesn't exist
+	 * 
+	 * @access public
+	 * @param mixed $key
+	 * @return mixed
+	 */
 	public function __get($key)
 	{
 		return $this->find($key, TRUE);
 	}
 
+	/**
+	 * Determine whether a field exists
+	 * 
+	 * @access public
+	 * @param mixed $key
+	 * @return boolean
+	 */
 	public function __isset($key)
 	{
 		return (bool) $this->find($key, TRUE);
 	}
 
+	/**
+	 * Render the Formo object
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function __toString()
 	{
 		return $this->render();
 	}
 
+	/**
+	 * Add a field or subform to a field or form
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $driver (default: NULL)
+	 * @param mixed $value (default: NULL)
+	 * @param array $opts (default: NULL)
+	 * @return void
+	 */
 	public function add($alias, $driver = NULL, $value = NULL, array $opts = NULL)
 	{
 		$args = $alias;
@@ -96,6 +150,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Add a class tag to the field
+	 * 
+	 * @access public
+	 * @param mixed $class
+	 * @return Formo obj
+	 */
 	public function add_class($class)
 	{
 		// Break current classes into an array
@@ -121,11 +182,24 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Helper method to return the field's alias
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function alias()
 	{
 		return $this->_alias;
 	}
 
+	/**
+	 * Return the field or form as an array
+	 * 
+	 * @access public
+	 * @param mixed $value (default: NULL)
+	 * @return array
+	 */
 	public function as_array($value = NULL)
 	{
 		$array = array();
@@ -144,6 +218,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $array;
 	}
 
+	/**
+	 * Set an html attribute
+	 * 
+	 * @access public
+	 * @param mixed $get
+	 * @param mixed $set (default: NULL)
+	 * @return Formo obj
+	 */
 	public function attr($get, $set = NULL)
 	{
 		if (func_num_args() == 1)
@@ -168,6 +250,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Setup callbacks
+	 * 
+	 * @access public
+	 * @param mixed $type
+	 * @param array $callbacks
+	 * @return Formo obj
+	 */
 	public function callbacks($type, array $callbacks)
 	{
 		if ( ! isset($this->_callbacks[$type]))
@@ -180,6 +270,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Return the field's closing tag
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function close()
 	{
 		if ($tag = $this->driver('get_tag'))
@@ -199,6 +295,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Run a method through a field's driver
+	 * 
+	 * @access public
+	 * @param mixed $func
+	 * @param array $args (default: NULL)
+	 * @return mixed
+	 */
 	public function driver($func, array $args = NULL)
 	{
 		$class_name = 'Formo_Driver_'.ucfirst($this->_driver);
@@ -212,6 +316,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $class_name::$func($array);
 	}
 
+	/**
+	 * Get or set a field error
+	 * 
+	 * @access public
+	 * @param mixed $message (default: NULL)
+	 * @param array $params (default: array())
+	 * @return mixed
+	 */
 	public function error($message = NULL, array $params = array())
 	{
 		if ($message)
@@ -226,6 +338,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Get field errors
+	 * 
+	 * @access public
+	 * @param array & $array (default: NULL)
+	 * @return array
+	 */
 	public function errors( array & $array = NULL)
 	{
 		if ($array === NULL)
@@ -282,6 +401,15 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $array;
 	}
 
+	/**
+	 * Find a field by its alias
+	 * Returns NULL if field can't be found
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $not_recursive (default: FALSE)
+	 * @return mixed
+	 */
 	public function find($alias, $not_recursive = FALSE)
 	{
 		if (is_array($alias))
@@ -330,6 +458,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		return NULL;
 	}
 
+	/**
+	 * Flatten fields in a form
+	 * 
+	 * @access public
+	 * @param array &$array (default: NULL)
+	 * @return Formo obj
+	 */
 	public function flatten( array &$array = NULL)
 	{
 		if ($array === NULL)
@@ -350,8 +485,19 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$this->_fields = $array;
+
+		return $this;
 	}
 
+	/**
+	 * Get a field attribute
+	 * You can use Arr::path dot syntax to retrieve a value
+	 * 
+	 * @access public
+	 * @param mixed $var
+	 * @param mixed $default (default: NULL)
+	 * @return mixed
+	 */
 	public function get($var, $default = NULL)
 	{
 		$parts = NULL;
@@ -386,6 +532,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Convert field into HTML
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function html()
 	{
 		if ($this->get('render') === false)
@@ -411,11 +563,24 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $str;
 	}
 
+	/**
+	 * Return a field's label
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	public function label()
 	{
 		return $this->_get_label();
 	}
 
+	/**
+	 * Load an array of alias => value pairs into a form
+	 * 
+	 * @access public
+	 * @param array $array (default: NULL)
+	 * @return void
+	 */
 	public function load( array $array = NULL)
 	{
 		if ($array === NULL)
@@ -455,6 +620,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Merge a field with an array value with a new array
+	 * 
+	 * @access public
+	 * @param mixed $property
+	 * @param array $array (default: NULL)
+	 * @return Formo obj
+	 */
 	public function merge($property, array $array = NULL)
 	{
 		if (is_array($property))
@@ -475,6 +648,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Return a field's HTML 'name' tag value
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function name()
 	{
 		$use_namespaces = $this->config('namespaces');
@@ -482,6 +661,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this->driver('name', array('use_namespaces' => $use_namespaces));
 	}
 
+	/**
+	 * Return a field's HTML opening tag
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function open()
 	{
 		if ($tag = $this->driver('get_tag'))
@@ -501,6 +686,15 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Reorder a field or multiple fields
+	 * 
+	 * @access public
+	 * @param mixed $field
+	 * @param mixed $new_order (default: NULL)
+	 * @param mixed $relative_field (default: NULL)
+	 * @return Formo obj
+	 */
 	public function order($field, $new_order = NULL, $relative_field = NULL)
 	{
 		if (is_array($field))
@@ -518,6 +712,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Run a method through the ORM driver
+	 * 
+	 * @access public
+	 * @param mixed $method
+	 * @param array $vals (default: NULL)
+	 * @return Formo obj
+	 */
 	public function orm($method, array $vals = NULL)
 	{
 		if ($vals === NULL)
@@ -536,6 +738,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Find a field's parent
+	 * If TRUE passed, find the field's parent (return that field if it is the parent)
+	 * 
+	 * @access public
+	 * @param mixed $group_or_form (default: FALSE)
+	 * @return mixed
+	 */
 	public function parent($group_or_form = FALSE)
 	{
 		if ($group_or_form !== TRUE)
@@ -550,6 +760,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $parent;
 	}
 
+	/**
+	 * Remove a field or fields from a form
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @return Formo obj
+	 */
 	public function remove($alias)
 	{
 		if (is_array($alias))
@@ -573,6 +790,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Remove a class or classes
+	 * 
+	 * @access public
+	 * @param mixed $class
+	 * @return Formo obj
+	 */
 	public function remove_class($class)
 	{
 		if (is_array($class))
@@ -599,6 +823,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Render a field from its view file
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function render()
 	{
 		if ($this->get('render') === FALSE)
@@ -617,6 +847,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $view->render();
 	}
 
+	/**
+	 * Render options (used for select, checkboxes, radios)
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function render_opts()
 	{
 		if ($template = $this->driver('get_opts_template'))
@@ -631,6 +867,15 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Add a rule to a field
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $rule
+	 * @param array $params (default: NULL)
+	 * @return Formo obj
+	 */
 	public function rule($alias, $rule, array $params = NULL)
 	{
 		$this->_add_rule($alias, $rule, $params);
@@ -638,6 +883,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Add multiple rules to a fielld
+	 * 
+	 * @access public
+	 * @param mixed $alias (default: NULL)
+	 * @param array $rules (default: NULL)
+	 * @return Formo obj
+	 */
 	public function rules($alias = NULL, array $rules = NULL)
 	{
 		if (func_num_args() === 0)
@@ -663,6 +916,15 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Set a value for a field's attribute
+	 * You can use Arr::set_path's dot-syntax to set an attribute
+	 * 
+	 * @access public
+	 * @param mixed $var
+	 * @param mixed $val (default: NULL)
+	 * @return void
+	 */
 	public function set($var, $val = NULL)
 	{
 		if (is_array($var) AND $val === NULL)
@@ -728,6 +990,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $this;
 	}
 
+	/**
+	 * Determine whether a form or field has been sent
+	 * 
+	 * @access public
+	 * @param array $input_array (default: NULL)
+	 * @return boolean
+	 */
 	public function sent( array $input_array = NULL)
 	{
 		if ($input_array === NULL)
@@ -758,6 +1027,16 @@ class Formo_Core_Formo extends Formo_Innards {
 		return FALSE;
 	}
 
+	/**
+	 * Create a subform from an array list of fields already in a form
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param array $fields
+	 * @param array $order (default: NULL)
+	 * @param string $driver (default: 'group')
+	 * @return Formo obj
+	 */
 	public function subform($alias, array $fields, array $order = NULL, $driver = 'group')
 	{
 		$subform = Formo::factory(array(
@@ -776,12 +1055,18 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		if ($order !== NULL)
 		{
-			$this->order($alias, $order[0], $order[1]);
+			$this->order($alias, $order[0], Arr::get($order, 1));
 		}
 
 		return $this;
 	}
 
+	/**
+	 * Return a field's title
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function title()
 	{
 		return $this->driver('get_title');
@@ -802,6 +1087,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 	}
 
+	/**
+	 * Validate all fields and return whether form passed validation
+	 * 
+	 * @access public
+	 * @return boolean
+	 */
 	public function validate()
 	{
 		$this->driver('pre_validate');
@@ -848,6 +1139,13 @@ class Formo_Core_Formo extends Formo_Innards {
 			: $pass_validation;
 	}
 
+	/**
+	 * Fetch a validation object from a field or form
+	 * 
+	 * @access public
+	 * @param array $array (default: NULL)
+	 * @return Validation obj
+	 */
 	public function validation( array $array = NULL)
 	{
 		if ($array !== NULL)
@@ -876,6 +1174,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return $validation;
 	}
 
+	/**
+	 * Format error messages from a validation object according to Formo's
+	 * formatting rules
+	 * 
+	 * @access public
+	 * @param Kohana_Validation $validation
+	 * @return mixed
+	 */
 	public function validation_errors( Kohana_Validation $validation)
 	{
 		$validation->check();
