@@ -72,6 +72,7 @@
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#validation"><i class="icon-chevron-right"></i> Validation</a></li>
           <li><a href="#without-loading"><i class="icon-chevron-right"></i> Validate without loading</a></li>
+          <li><a href="#bound"><i class="icon-chevron-right"></i> Bound validation values</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -163,6 +164,73 @@ if ( ! $error = $form->email->validation_errors($validation))
 </div> <!-- md -->
 
 </section>
+
+
+<section id="bound">
+	<div class="page-header">
+		<h1>Binding validation values</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+The following special parameters and values are bound to a validation object for extensive validation.
+
+<table>
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>`:value`</td>
+			<td>Field's value</td>
+		</tr>
+		<tr>
+			<td>`:formo`</td>
+			<td>The formo field object</td>
+		</tr>
+		<tr>
+			<td>`:form_val`</td>
+			<td>The parent's value (array)</td>
+		</tr>
+		<tr>
+			<td>`:form`</td>
+			<td>The parent formo object</td>
+		</tr>
+	</tbody>
+</table>
+
+## Binding examples
+
+Here's an example of using `in_array` as a rule:  
+```
+$form->rule('foo', 'in_array', [':value', array('bar, bar2, bar3')));
+```
+
+Here's a common one. This is uses Kohana's built-in `Valid::matches()` rule:  
+
+```
+$form
+	->add([
+		'alias' => 'password',
+		'driver' => 'input|password',
+		
+	])
+	->add([
+		'alias' => 'confirm',
+		'driver' => 'input|password',
+		'rules' => [
+			['matches, [':form_val', 'password', 'confirm']]
+		]
+	]);
+```
+
+</div> <!-- md -->
+
+
+</section>
+
 
 
 

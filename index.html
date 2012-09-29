@@ -71,6 +71,7 @@
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#installation"><i class="icon-chevron-right"></i> Installation</a></li>
+          <li><a href="#upgrading"><i class="icon-chevron-right"></i> Upgrading</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -98,7 +99,20 @@ That’s it, you’re ready to use Formo.
 
         </section>
 
+<section id="upgrading">
+	<div class="page-header">
+		<h1>Upgrading</h1>
+	</div> <!-- page-header -->
 
+<div class="md">
+Here are some changes that you need to know in order to upgrade from the last version of Formo
+
+- There is no longer a `Formo::field()` method. Just use `Formo::form()` and `Formo::factory()`
+- `create_sub()` is now `subform()`, and it returns the form object, not the subform
+- Formo doesn't do automatic belongs to, has many, or has many through relationships because it's ridiculous to auto-generate these
+- File fields have a `NULL` empty value, not an empty `$_FILES` array
+</div> <!-- md -->
+</section>
 
 
 

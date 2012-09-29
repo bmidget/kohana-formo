@@ -77,6 +77,8 @@
           <li><a href="#getting"><i class="icon-chevron-right"></i> Getting and setting</a></li>
           <li><a href="#merging"><i class="icon-chevron-right"></i> Merging stuff</a></li>
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
+          <li><a href="#ordering"><i class="icon-chevron-right"></i> Ordering</a></li>
+          <li><a href="#subforms"><i class="icon-chevron-right"></i> Subforms</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -455,7 +457,115 @@ Filters are run on field values before validation
 </div> <!-- md -->
 </section>
 
+<section id="ordering">
+	<div class="page-header">
+		<h1>Ordering</h1>
 
+<div class="md">
+Use `Formo::order()` to reorder field and subform elements. The arguments:
+
+- Field alias
+- New order (`int`, `'before'`, or `'after'`)
+- Relative field (default `NULL`)
+
+If you know the numeric order the field should be in, leave the relative field param empty and specify the direct order of the field (starting with 0).
+
+```
+$form
+	->add('confirm_password')
+	->add('password')
+	->add('last_name')
+	->add('first_name');
+
+$form->order([
+	'first_name' => array(0),
+	'password' => array('after', 'first_name'),
+	'last_name' => array('before', 'password'),
+]);
+
+$form->order('confirm_password', 'after', 'password');
+
+// The order of fields afterwords
+// 'first_name', 'last_name', 'password', 'confirm_password'
+```
+
+</div> <!-- md -->
+</section>
+
+<section id="subforms">
+	<div class="page-header">
+		<h1>Subforms</h1>
+
+<div class="md">
+A subform is a form within a form.
+
+Formo supports deep form objects and allows as many forms to exist within other forms as you deem necessary.
+
+Only the parent-most form will have the `form` driver. Another others added to it will be converted.
+
+## How to add a subform
+
+Since a subform is just a form within a form, it's creation is just like a form. Then it's added to a parent form
+
+```
+$address = Formo::form(['alias' => 'address'])
+	->add('street')
+	->add('city')
+	->add('zip');
+ 
+$user_form = Formo::form()
+	->add('first name')
+	->add('last name')
+	->add('address', 'group', $address);
+```
+
+In the example above, the address form is added to $user_form after last_name. It is given the alias address and is using the driver group to handle it.
+
+If you wanted to access street, to set its value for instance, you could do this:
+
+```
+$user_form->address->street->val();
+```
+
+Additionally, since PHP passes objects by reference, you could access the same value from the orinal subform object too:
+
+```
+$address->street->val();
+```
+
+## Create a subform on the fly from existing fields
+
+You may want to namespace a part of your form or simply turn a few fields into a subform on the fly. There are many reasons you may want to do this, but one is to allow the "group" or other specific driver for formatting reasons.
+
+Doing this always appends your subform to the bottom of its parent.
+
+To do this, use `Formo::subform()`. The arguments are:
+
+- Group alias
+- Fields to add to group (array)
+- Order for new subform to be placed (array, default `NULL`)
+- Subform's driver (default `group`)
+
+```
+$form = Formo::form()
+	->add('username')
+	->add('email')
+	->add('password')
+	->add('street')
+	->add('city')
+	->add('state');
+ 
+$form->subform('address', array('street', 'city', 'state'), array('before', 'username'));
+```
+
+You can also specify a numeric order for the subform
+
+```
+$form->subform('address', array('street', 'city', 'state'), array(1));
+```
+
+</div> <!-- md -->
+</section>
 
 
       </div>

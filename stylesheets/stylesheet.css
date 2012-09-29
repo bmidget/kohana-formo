@@ -118,3 +118,29 @@ h3 {
 section {
 	margin-bottom: 50px;
 }
+
+section table {
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+section table td,
+section table th {
+	padding: 5px;
+	border-bottom: 1px solid #ccc;
+}
+
+section table td:first-child,
+section table th:first-child {
+	border-right: 1px solid #ccc;
+}
+
+section table tr:last-child td {
+	border-bottom: 0;
+}
+
+
+section table th {
+	text-align: left;
+	background: #ddd;
+}
