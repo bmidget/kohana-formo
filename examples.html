@@ -14,46 +14,98 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Kohana-formo</title>
+    <title>Formo Examples</title>
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
 
  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="./index.html">Formo</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="">
-                <a href="./index.html">Home</a>
-              </li>
-              <li class="">
-                <a href="./form-basics.html">Form Basics</a>
-              </li>
-              <li class="">
-                <a href="./validation.html">Validation</a>
-              </li>
-              <li class="">
-                <a href="./orm.html">ORM</a>
-              </li>
-              <li class="">
-                <a href="./files.html">Files</a>
-              </li>
-              <li class="active">
-                <a href="./examples.html">Examples</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+	  <div class="navbar-inner">
+		<div class="container">
+		  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="brand" href="./index.html">Formo</a>
+		  <div class="nav-collapse collapse">
+			<ul class="nav">
+			  <li class="">
+				<a href="./index.html">Home</a>
+			  </li>
+			  <li class="">
+				<a href="./form-basics.html">Form Basics</a>
+			  </li>
+			  <li class="">
+				<a href="./validation.html">Validation</a>
+			  </li>
+			  <li class="">
+				<a href="./orm.html">ORM</a>
+			  </li>
+			  <li class="">
+				<a href="./files.html">Files</a>
+			  </li>
+			  <li class="active">
+				<a href="./examples.html">Examples</a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>Examples</h1>
+    <p class="lead">See examples of Formo at work.</p>
+  </div>
+</header>
+
+
+
+  <div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#html5"><i class="icon-chevron-right"></i> HTML5 Inputs</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+
+
+
+<section id="html5">
+	<div class="page-header">
+		<h1>HTML5 Inputs</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+Most HTML5-specific elements are `input` tags with special `type` attributes. For example, `<input type="email" />` is an HTML5-spcific data type.
+
+To easily set the `type` tag with an `input` driver, use a pipe character `|`:
+
+```
+$form->add('email_address', 'input|email');
+
+$form->email_address->set('driver', 'input|email');
+```
+
+</section>
+
+
+
+
+
+
+
       </div>
     </div>
-    
+
+  </div>
+
 
   </body>
 </html>
