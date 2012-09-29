@@ -71,6 +71,7 @@
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#html5"><i class="icon-chevron-right"></i> HTML5 Inputs</a></li>
+          <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/Attributes</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -92,10 +93,85 @@ $form->add('email_address', 'input|email');
 
 $form->email_address->set('driver', 'input|email');
 ```
-
+</div> <!-- md -->
 </section>
 
+<section id="class">
+	<div class="page-header">
+		<h1>Add class/attributes</h1>
+	</div> <!-- page-header -->
 
+
+<div class="md">
+## Add and remove classes
+
+To edit the class for a field, use `Formo::add_class()` and `Formo::remove_class()`. They work just like jQuery.
+
+```
+$form->email->add_class('foo bar');
+$form->email->add_class(['foo', 'bar']);
+
+$form->email->remove_class('foo');
+```
+
+To add a class at a field's creation or using `Formo::set()`, note that a field's class exists in `attr['class']`
+
+```
+$form->add('email', 'input|email', NULL, ['attr.class' => 'foo bar']);
+$form->email->set('attr.class', 'foo bar');
+```
+
+## Attributes
+
+HTML attributes can be directly manipulated in Formo objects as well. They exist in the `attr` field attribute.
+
+Ultimately `attr` is an array of HTML attributes.
+
+```
+$attr = [
+	'onclick' => 'doSomething()',
+	'id' => 'someId',
+	'placeholder' => 'myplaceholdertext',
+	'class' => 'foo bar',
+];
+
+$form->$field->set('attr', $attr);
+```
+
+Because of this, at creation, it is often convenient to just use dot syntax to set a single attribute
+
+```
+$form->add('email', 'input|email', NULL, ['attr.placeholder' => 'john@doe.com']);
+```
+
+To edit attributes, you can always directly get and set them using `Formo::set('attr' => [])`, `Formo::get('attr.name')` and `Formo::merge('attr', $attrs)`, but it's often easier to use `Formo::attr()`.
+
+The arguments for `Formo::attr()`:
+
+- name
+- value (optional, default = NULL)
+
+If you don't specify a second argument, the method will return the attribute for that field.
+
+You can also pass an array of attributes as well.
+
+And to unset an attribute, pass `NULL` as the second parameter.
+
+```
+$form->attr('id', 'foobar');
+
+$id = $form->attr('id');
+
+$form->attr('id', NULL);
+
+$form->attr([
+	'id' => 'foo',
+	'class' => 'foobar',
+	'onclick' => 'do_somethign()',
+])
+```
+</div> <!-- md -->
+</section>
 
 
 
