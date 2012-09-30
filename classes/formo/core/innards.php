@@ -306,13 +306,12 @@ abstract class Formo_Core_Innards {
 		return $array;
 	}
 
-	protected function _get_latest_val()
-	{
-		return ($this->_vals['new'] !== self::NOTSET)
-			? $this->_vals['new']
-			: $this->_vals['original'];
-	}
-
+	/**
+	 * Return the formatted string for a field.
+	 * 
+	 * @access protected
+	 * @return string
+	 */
 	protected function _get_label()
 	{
 		$label_str = $this->driver('get_label');
@@ -371,6 +370,12 @@ abstract class Formo_Core_Innards {
 			: $return_str;
 	}
 
+	/**
+	 * Return a field's value.
+	 * 
+	 * @access protected
+	 * @return void
+	 */
 	protected function _get_val()
 	{
 		$val = ($this->_vals['new'] !== self::NOTSET)
