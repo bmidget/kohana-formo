@@ -1155,6 +1155,8 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function validation( array $array = NULL)
 	{
+		$this->driver('pre_validate');
+
 		if ($array !== NULL)
 		{
 			$validation = new Validation($array);
@@ -1162,6 +1164,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 			foreach ($this->_fields as $field)
 			{
+				$field->driver('pre_validate');
 				$validation->rules($field->alias(), $field->get('rules'));
 			}
 		}
