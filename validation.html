@@ -70,6 +70,7 @@
     <div class="row">
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
+          <li><a href="#rules"><i class="icon-chevron-right"></i> Adding/removing rules</a></li>
           <li><a href="#validation"><i class="icon-chevron-right"></i> Validation</a></li>
           <li><a href="#without-loading"><i class="icon-chevron-right"></i> Validate without loading</a></li>
           <li><a href="#bound"><i class="icon-chevron-right"></i> Bound validation values</a></li>
@@ -79,8 +80,117 @@
 
 
 
-        <!-- Download
-        ================================================== -->
+<section id="rules">
+	<div class="page-header">
+		<h1>Adding/removing rules</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+## Adding rules
+
+To add a rule to a field, use `Formo::add_rule($array)`.
+
+Using this method, you can either:
+
+1. Add a bunch of rules to a bunch of different fields
+2. Add a rule to the field
+
+To add a single rule, pass an array containing a Kohana Validation rule definition
+
+```
+$form->email
+	->add_rule(['not_empty'])
+	->add_rule(['email']);
+```
+
+To add multiple rules to a single field, your array has to have the key of the field.
+
+```
+$form->add_rule([
+	'email' => [
+		['not_empty'],
+		['email'],
+	]
+]);
+```
+
+To add multiple rules to multiple fields, give each set of rules a alias key.
+
+```
+$form->add_rule([
+	'email' => [
+		['not_empty'],
+		['email'],
+	],
+	'password' => [
+		['not_empty']
+	],
+	'confirm' => [
+		['matches', [':form_val', 'password', 'confirm']]
+	]
+]);
+```
+
+You can also attach multiple rules using `Formo::add_rule()` on an individual field. To do this, either specify the field's alias as the key or the special token `:self`.
+
+```
+$form->email->add_rule([
+	':self' => [
+		['not_empty'],
+		['email'],
+	].
+]);
+```
+
+## Removing rules
+
+Removing rules works much like adding rules. You reference the rule you are removing by exactly matching the rule's first parameter (which is the function call).
+
+Here are some examples of removing rules.
+
+```
+$form->email->add_rule(['not_empty']);
+$form->email->remove_rule('not_empty');
+
+$form->confirm->add_rule(['matches', [':form_val', 'password', 'confirm']]);
+$form->confirm->remove_rule('matches');
+
+$form->add_rule([
+	'foo' => [
+		[[$obj, 'bar'], [':value', $other, $other2]]
+	]
+]);
+
+$form->remove_rule([$obj, 'bar']);
+
+$form->add_rule([
+	'foo1' => [
+		['not_empty']
+	],
+	'foo2' => [
+		['not_empty']
+	],
+	'foo3' => [
+		['not_empty']
+	],
+]);
+$form->remove_rule([
+	'foo1' => [
+		'not_empty',
+	],
+	'foo2' => [
+		'not_empty',
+	],
+	'foo3' => [
+		'not_empty',
+	],
+]);
+```
+</div> <!-- md -->
+
+</section>
+
+
 <section id="validation">
 	<div class="page-header">
 		<h1>Validation</h1>

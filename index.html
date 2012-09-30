@@ -107,10 +107,12 @@ That’s it, you’re ready to use Formo.
 <div class="md">
 Here are some changes that you need to know in order to upgrade from the last version of Formo
 
+- Rules are no longer added using `Formo::rule()` or `Formo::rules()`. Instead you must use `Formo::add_rule()`. [See validation documentation](validation.html)
 - There is no longer a `Formo::field()` method. Just use `Formo::form()` and `Formo::factory()`
 - `create_sub()` is now `subform()`, and it returns the form object, not the subform
 - Formo doesn't do automatic belongs to, has many, or has many through relationships because it's ridiculous to auto-generate these
 - File fields have a `NULL` empty value, not an empty `$_FILES` array
+- Out-of-the box styling works now with Twitter Bootstrap. If you need backwards compatibility with the old version of Formo, ste the `template_dir` variable in Formo's config file to `'formo/'`
 </div> <!-- md -->
 </section>
 
