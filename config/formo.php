@@ -5,6 +5,8 @@ return array
 	// File used
 	// FALSE or name of message file (ex: 'label_messages')
 	'label_message_file'      => 'mymessages',
+	// File used for validation messages
+	// FALSE or name of the message file (ex: 'validation_messages')
 	'validation_message_file' => 'validation',
 	// Whether to translate labels and error messages
 	'translate'               => TRUE,
