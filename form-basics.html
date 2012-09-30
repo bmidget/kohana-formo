@@ -359,10 +359,9 @@ It’s dirt-simple using `Formo::merge()`.
 
 ```
 $user = ORM::factory(‘user’, $id);
-$other_email_filters = array
-(
+$other_email_filters = [
 	‘remove_fugly_chars’,
-);
+];
 
 
 $form = Formo::form()
@@ -478,9 +477,9 @@ $form
 	->add('first_name');
 
 $form->order([
-	'first_name' => array(0),
-	'password' => array('after', 'first_name'),
-	'last_name' => array('before', 'password'),
+	'first_name' => [0],
+	'password' => ['after', 'first_name'],
+	'last_name' => ['before', 'password'],
 ]);
 
 $form->order('confirm_password', 'after', 'password');
@@ -555,13 +554,13 @@ $form = Formo::form()
 	->add('city')
 	->add('state');
  
-$form->subform('address', array('street', 'city', 'state'), array('before', 'username'));
+$form->subform('address', ['street', 'city', 'state'], ['before', 'username']);
 ```
 
 You can also specify a numeric order for the subform
 
 ```
-$form->subform('address', array('street', 'city', 'state'), array(1));
+$form->subform('address', ['street', 'city', 'state'], [1]);
 ```
 
 </div> <!-- md -->

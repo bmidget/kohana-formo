@@ -289,7 +289,7 @@ else
 You can also validate a single field this way. The error returned is a string
 
 ```
-$validation = $form->email->validation(array(‘email’ => ‘john@doe.com’));
+$validation = $form->email->validation([‘email’ => ‘john@doe.com’]);
 
 if ( ! $error = $form->email->validation_errors($validation))
 {
@@ -340,7 +340,7 @@ The following special parameters and values are bound to a validation object for
 
 Here's an example of using `in_array` as a rule:  
 ```
-$form->rule('foo', 'in_array', [':value', array('bar, bar2, bar3')));
+$form->add_rule(['in_array', [':value', [$bar, $bar2, $bar3]]]);
 ```
 
 Here's a common one. This is uses Kohana's built-in `Valid::matches()` rule:  

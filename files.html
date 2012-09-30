@@ -105,13 +105,12 @@ A file field’s value is always `NULL` when it’s empty (as opposed to an empt
 You can use Kohana’s file validation rules for any other file field rules.
 
 ```
-$form->add_rule(array(
-	‘upload’ => array
-	(
-		array(‘not_empty’),
-		array('Upload::type', array(':value', array('jpg','png','gif'))),
-	)
-));
+$form->add_rule([
+	‘upload’ => [
+		[‘not_empty’],
+		['Upload::type', [':value', ['jpg','png','gif']]],
+	]
+]);
 ```
 </div> <!-- md -->
 
