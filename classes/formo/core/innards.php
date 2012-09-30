@@ -411,6 +411,13 @@ abstract class Formo_Core_Innards {
 		return $val;
 	}
 
+	/**
+	 * For set() and get(), return the variable name being set, and gotten
+	 * 
+	 * @access protected
+	 * @param mixed $var
+	 * @return string
+	 */
 	protected function _get_var_name($var)
 	{
 		$var_name = '_'.$var;
@@ -425,6 +432,13 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Congert an error returned from the Validation object to a formatted message
+	 * 
+	 * @access protected
+	 * @param array $errors_array (default: NULL)
+	 * @return string
+	 */
 	protected function _error_to_msg( array $errors_array = NULL)
 	{
 		$file = $this->config('validation_message_file');
@@ -507,6 +521,13 @@ abstract class Formo_Core_Innards {
 		return FALSE;
 	}
 
+	/**
+	 * Load values into the form
+	 * 
+	 * @access protected
+	 * @param array $array
+	 * @return void
+	 */
 	protected function _load( array $array)
 	{
 		foreach ($this->_fields as $field)
@@ -524,6 +545,12 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Make an id for a field that doesn't already have one
+	 * 
+	 * @access protected
+	 * @return void
+	 */
 	protected function _make_id()
 	{
 		if ($id = $this->attr('id'))
@@ -537,6 +564,14 @@ abstract class Formo_Core_Innards {
 		return $id;
 	}
 
+	/**
+	 * Merge an array of values with another array of values
+	 * 
+	 * @access protected
+	 * @param mixed $name
+	 * @param array $array
+	 * @return void
+	 */
 	protected function _merge($name, array $array)
 	{
 		$var_array = $this->_get_var_name($name);
@@ -549,6 +584,15 @@ abstract class Formo_Core_Innards {
 		$this->$var_array = Arr::merge($this->$var_array, $array);
 	}
 
+	/**
+	 * Internal method to reorder fields
+	 * 
+	 * @access protected
+	 * @param mixed $field_alias
+	 * @param mixed $new_order
+	 * @param mixed $relative_field (default: NULL)
+	 * @return void
+	 */
 	protected function _order($field_alias, $new_order, $relative_field = NULL)
 	{
 		if (is_array($field_alias))
@@ -615,6 +659,14 @@ abstract class Formo_Core_Innards {
 		array_splice($this->_fields, $new_key, 0, array($field_obj));
 	}
 
+	/**
+	 * Search for and remove a rule if it exists
+	 * 
+	 * @access protected
+	 * @param mixed $alias
+	 * @param mixed $rule
+	 * @return void
+	 */
 	protected function _remove_rule($alias, $rule)
 	{
 		if ($alias != ':self' AND $alias != $this->alias())
@@ -636,6 +688,13 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Internal method to run all applicable callbacks
+	 * 
+	 * @access protected
+	 * @param mixed $type (default: NULL)
+	 * @return void
+	 */
 	protected function _run_callbacks($type = NULL)
 	{
 		$keys = array('fail' => FALSE, 'pass' => TRUE);
@@ -666,6 +725,13 @@ abstract class Formo_Core_Innards {
 		return $return;
 	}
 
+	/**
+	 * Set a field's driver
+	 * 
+	 * @access protected
+	 * @param mixed $driver
+	 * @return void
+	 */
 	protected function _set_driver($driver)
 	{
 		if (strpos($driver, '|') !== FALSE)
@@ -681,6 +747,13 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Set a field's id attribute if the auto_id config setting is TRUE
+	 * 
+	 * @access protected
+	 * @param array & $array
+	 * @return void
+	 */
 	protected function _set_id( array & $array)
 	{
 		if ($this->config('auto_id') === TRUE AND empty($array['attr']['id']))
@@ -694,6 +767,14 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Set the field's value
+	 * 
+	 * @access protected
+	 * @param mixed $val
+	 * @param mixed $force_new (default: FALSE)
+	 * @return void
+	 */
 	protected function _set_val($val, $force_new = FALSE)
 	{
 		if ($this->_vals['original'] === self::NOTSET AND $force_new !== TRUE)
@@ -706,6 +787,13 @@ abstract class Formo_Core_Innards {
 		}
 	}
 
+	/**
+	 * Allow non-associative arrays to define a new field
+	 * 
+	 * @access protected
+	 * @param mixed $array
+	 * @return void
+	 */
 	protected function _resolve_construct_aliases($array)
 	{
 		$_array = $array;
