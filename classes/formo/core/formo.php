@@ -859,21 +859,21 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * @param mixed $rule (default: NULL)
 	 * @return Formo obj
 	 */
-	public function remove_rule( array $array)
+	public function remove_rule($rule)
 	{
-		if (Arr::is_assoc($array))
+		if (is_array($rule) AND Arr::is_assoc($rule))
 		{
-			foreach ($array as $alias => $rules)
+			foreach ($rule as $alias => $rules)
 			{
-				foreach ($rules as $rule)
+				foreach ($rules as $_rule)
 				{
-					$this->_remove_rule($alias, $rule);
+					$this->_remove_rule($alias, $_rule);
 				}
 			}
 		}
 		else
 		{
-			$this->_remove_rule(':self', $array);
+			$this->_remove_rule(':self', $rule);
 		}
 
 		return $this;
