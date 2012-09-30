@@ -56,8 +56,8 @@
 
 <header class="jumbotron subhead" id="overview">
   <div class="container">
-    <h1>Formo</h1>
-    <p class="lead">Formo is a form module for Kohana 3 that lets you work with forms as objects.</p>
+    <h1>Validation</h1>
+    <p class="lead">Add and remove rules, load values into form and validate, validate raw values against form rules.</p>
   </div>
 </header>
 
@@ -185,6 +185,31 @@ $form->remove_rule([
 		'not_empty',
 	],
 ]);
+```
+
+## Setting rules directly
+
+You can always set a field's rules directly using `Formo::set()`.
+
+``` 
+$form->email->set('rules', [
+	['not_empty'],
+	['email'],
+]);
+```
+
+Similarly, you can use this method to clear all rules from a field.
+
+```
+$form->email->set('rules', []);
+```
+
+## Getting rules
+
+You can get all a field's rules using `Formo::get()`.
+
+```
+$rules = $form->email->get('rules');
 ```
 </div> <!-- md -->
 
