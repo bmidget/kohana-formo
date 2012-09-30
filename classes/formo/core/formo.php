@@ -279,23 +279,27 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Setup callbacks
+	 * Setup callback or callbacks
 	 * 
 	 * @access public
 	 * @param mixed $type
 	 * @param array $callbacks
 	 * @return Formo obj
 	 */
-	public function callbacks($type, array $callbacks)
+	public function callback($type, array $callbacks = NULL)
 	{
-		if ( ! isset($this->_callbacks[$type]))
+		if (is_array($type))
 		{
-			$this->_callbacks[$type] = array();
+			foreach ($type as $alias => $callbacks)
+			{
+				$field = $this->find($alias);
+				$field->merge('callbacks', $callbacks);
+			}
 		}
-
-		$this->_callbacks[$type] = Arr::merge($this->_callbacks[$type], $callbacks);
-
-		return $this;
+		else
+		{
+			$this->merge('callbacks', array($type => $callbacks));
+		}
 	}
 
 	/**
