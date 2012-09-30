@@ -183,6 +183,34 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Add a rule or multiple rules
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param array $rule (default: NULL)
+	 * @return Formo obj
+	 */
+	public function add_rule( array $array)
+	{
+		if (Arr::is_assoc($array))
+		{
+			foreach ($array as $alias => $rules)
+			{
+				foreach ($rules as $rule)
+				{
+					$this->_add_rule($alias, $rule);
+				}
+			}
+		}
+		else
+		{
+			$this->_add_rule(':self', $array);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Helper method to return the field's alias
 	 * 
 	 * @access public
@@ -280,7 +308,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if ($tag = $this->driver('get_tag'))
 		{
-			$has_singletag = in_array($tag, $this->_single_tags);
+			$has_singletag = in_array($tag, static::$_single_tags);
 	
 			// Let the config file determine whether to close the tags
 			$str = ($has_singletag === TRUE)
@@ -671,7 +699,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if ($tag = $this->driver('get_tag'))
 		{
-			$has_singletag = in_array($tag, $this->_single_tags);
+			$has_singletag = in_array($tag, static::$_single_tags);
 			
 			$str = '<'.$tag.$this->_attr_to_str();
 			$str.= ($has_singletag === TRUE)
@@ -824,6 +852,34 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Remove a rule or rules from a field.
+	 * 
+	 * @access public
+	 * @param mixed $alias
+	 * @param mixed $rule (default: NULL)
+	 * @return Formo obj
+	 */
+	public function remove_rule( array $array)
+	{
+		if (Arr::is_assoc($array))
+		{
+			foreach ($array as $alias => $rules)
+			{
+				foreach ($rules as $rule)
+				{
+					$this->_remove_rule($alias, $rule);
+				}
+			}
+		}
+		else
+		{
+			$this->_remove_rule(':self', $array);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Render a field from its view file
 	 * 
 	 * @access public
@@ -865,55 +921,6 @@ class Formo_Core_Formo extends Formo_Innards {
 
 			return $view->render();
 		}
-	}
-
-	/**
-	 * Add a rule to a field
-	 * 
-	 * @access public
-	 * @param mixed $alias
-	 * @param mixed $rule
-	 * @param array $params (default: NULL)
-	 * @return Formo obj
-	 */
-	public function rule($alias, $rule, array $params = NULL)
-	{
-		$this->_add_rule($alias, $rule, $params);
-
-		return $this;
-	}
-
-	/**
-	 * Add multiple rules to a fielld
-	 * 
-	 * @access public
-	 * @param mixed $alias (default: NULL)
-	 * @param array $rules (default: NULL)
-	 * @return Formo obj
-	 */
-	public function rules($alias = NULL, array $rules = NULL)
-	{
-		if (func_num_args() === 0)
-		{
-			return $this->_rules;
-		}
-
-		if (is_array($alias))
-		{
-			foreach ($alias as $_alias => $rules)
-			{
-				$this->rules($_alias, $rules);
-			}
-		}
-		else
-		{
-			foreach ($rules as $rule)
-			{
-				$this->_add_rule($alias, $rule[0], Arr::get($rule, 1));
-			}
-		}
-
-		return $this;
 	}
 
 	/**

@@ -37,10 +37,7 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 
 		if ($rules = $model->rules())
 		{
-			foreach ($rules as $alias => $_rules)
-			{
-				$field->rules($alias, $_rules);
-			}
+			$field->add_rule($rules);
 		}
 
 		if ($filters = $model->filters())

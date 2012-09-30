@@ -45,7 +45,9 @@ class Formo_Core_Driver_Input extends Formo_Driver {
 
 		if ($rules = $field->config('input_rules.'.static::_get_type($field)))
 		{
-			$field->rules(':self', $rules);
+			$field->add_rule(array(
+				':self' => $rules,
+			));
 		}
 	}
 

@@ -5,43 +5,197 @@ abstract class Formo_Core_Innards {
 	const NOTSET = '_NOTSET';
 	const OPTS = 3;
 
-	protected $_alias;
-	protected $_attr = array
-	(
-		'class' => null,
-	);
-	protected $_config = array();
-	protected $_construct_aliases = array
+	/**
+	 * Used at construct for reconciling variables
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected static $_construct_aliases = array
 	(
 		'alias' => 0,
 		'driver' => 1,
 		'val' => 2,
 	);
-	protected $_driver;
-	protected $_editable = true;
-	protected $_render = true;
-	protected $_errors = array();
-	protected $_fields = array();
-	protected $_filters = array();
-	protected $_label = self::NOTSET;
-	protected $_opts = array();
-	protected $_parent;
-	protected $_rules = array();
-	protected $_callbacks = array();
-	protected $_single_tags = array
+
+	/**
+	 * HTML tags that don't have a closing </tagname>
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected static $_single_tags = array
 	(
 		'br',
 		'hr',
 		'input',
 	);
+
+	/**
+	 * The field alias
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_alias;
+
+	/**
+	 * Array of HTML attributes
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_attr = array
+	(
+		'class' => null,
+	);
+
+	/**
+	 * Config options
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_config = array();
+
+	/**
+	 * Field's driver name
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_driver;
+
+	/**
+	 * Whether the field is editable
+	 * 
+	 * (default value: true)
+	 * 
+	 * @var bool
+	 * @access protected
+	 */
+	protected $_editable = true;
+
+	/**
+	 * Whether the field should be rendered
+	 * 
+	 * (default value: true)
+	 * 
+	 * @var bool
+	 * @access protected
+	 */
+	protected $_render = true;
+
+	/**
+	 * Field errors
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_errors = array();
+
+	/**
+	 * Field objects within the field
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_fields = array();
+
+	/**
+	 * Array of filters
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_filters = array();
+
+	/**
+	 * Label string
+	 * 
+	 * (default value: self::NOTSET)
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_label = self::NOTSET;
+
+	/**
+	 * Array of options used for select, checkboxes and radios
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_opts = array();
+
+	/**
+	 * Field's parent object
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_parent;
+
+	/**
+	 * Array of rules for field
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_rules = array();
+
+	/**
+	 * Array of callbacks
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_callbacks = array();
+
+	/**
+	 * Keep track of field's values
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
 	protected $_vals = array
 	(
 		'original' => self::NOTSET,
 		'new' => self::NOTSET,
 	);
-	protected $_vars = array();
-	protected $_validation;
 
+	/**
+	 * Any other variables set with Formo::set()
+	 * 
+	 * (default value: array())
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $_vars = array();
+
+	/**
+	 * Find a config value.
+	 * 
+	 * @access public
+	 * @param mixed $param
+	 * @param mixed $default (default: NULL)
+	 * @return void
+	 */
 	public function config($param, $default = NULL)
 	{
 		$val = Arr::path($this->_config, $param, self::NOTSET);
@@ -64,22 +218,44 @@ abstract class Formo_Core_Innards {
 		return $default;
 	}
 
-	protected function _add_rule($alias, $rule, array $params = NULL)
-	{
-		if ($alias != ':self' AND $alias != $this->alias())
-		{
-			$field = $this->find($alias);
-			return $field->rule($alias, $rule, $params);
-		}
+	/**
+	 * Add a rule to a field.
+	 * 
+	 * @access protected
+	 * @param mixed $alias
+	 * @param mixed $rule
+	 * @param array $params (default: NULL)
+	 * @return void
+	 */
+	 protected function _add_rule($alias, array $rule)
+	 {
+		 if ($alias != ':self' AND $alias != $this->alias())
+		 {
+			 $field = $this->find($alias);
+			 return $field->add_rule($rule);
+		 }
 
-		$this->_rules[] = array($rule, $params);
-	}
+		 $this->_rules[] = $rule;
+	 }
 
+	/**
+	 * Add rules to a validation object.
+	 * 
+	 * @access protected
+	 * @param Validation $validation
+	 * @return void
+	 */
 	protected function _add_rules_to_validation( Validation $validation)
 	{
 		$validation->rules($this->alias(), $this->_rules);
 	}
 
+	/**
+	 * Turn attributes array into a string.
+	 * 
+	 * @access protected
+	 * @return void
+	 */
 	protected function _attr_to_str()
 	{
 		$str = NULL;
@@ -97,6 +273,12 @@ abstract class Formo_Core_Innards {
 		return $str;
 	}
 
+	/**
+	 * Get array from $_FILES.
+	 * 
+	 * @access protected
+	 * @return void
+	 */
 	protected function _get_files_array()
 	{
 		$files = $_FILES;
@@ -428,6 +610,27 @@ abstract class Formo_Core_Innards {
 		array_splice($this->_fields, $new_key, 0, array($field_obj));
 	}
 
+	protected function _remove_rule($alias, $rule)
+	{
+		if ($alias != ':self' AND $alias != $this->alias())
+		{
+			 $field = $this->find($alias);
+			 return $field->remove_rule(':self', $rule);
+		}
+		else
+		{
+			foreach ($this->_rules as $key => $_rule)
+			{
+				$compare_val = Arr::get($_rule, 0);
+
+				if ($rule == $compare_val)
+				{
+					unset($this->_rules[$key]);
+				}
+			}
+		}
+	}
+
 	protected function _run_callbacks($type = NULL)
 	{
 		$keys = array('fail' => FALSE, 'pass' => TRUE);
@@ -508,7 +711,7 @@ abstract class Formo_Core_Innards {
 			unset($_array[Formo::OPTS]);
 		}
 
-		foreach ($this->_construct_aliases as $key => $key_alias)
+		foreach (static::$_construct_aliases as $key => $key_alias)
 		{
 			if (array_key_exists($key_alias, $array))
 			{
