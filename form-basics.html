@@ -479,6 +479,23 @@ Additionally, since PHP passes objects by reference, you could access the same v
 $address->street->val();
 ```
 
+## Subforms and validation
+
+Subforms can still validate separately from the rest of the form.
+
+```
+$form->add($subform);
+
+if ($form->load()->validate())
+{
+
+}
+elseif ($form->subform->validate())
+{
+
+}
+```
+
 ## Create a subform on the fly from existing fields
 
 You may want to namespace a part of your form or simply turn a few fields into a subform on the fly. There are many reasons you may want to do this, but one is to allow the "group" or other specific driver for formatting reasons.
