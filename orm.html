@@ -139,17 +139,27 @@ This gives you a chance to do anything else you may want to do with your form.
 
 Since the entire form object is passed into the method, you can manipulate it however you want.
 
-Here’s an example:
+Here’s an example of using `model::formo()`:
 
 ```
-$form->set([
-	'id' => ['render' => FALSE],
-	'class_id' => ['label' => 'Class', 'blank' => TRUE],
-	'email' => ['driver' => 'input|email',],
-	'logins' => ['render' => FALSE],
-	'last_login' => ['render' => FALSE],
-	'password' => ['render' => FALSE],
-]);
+$user = ORM::factory('user', 10);
+$form->orm('load', ['model' => $user, $opt2, $opt3]);
+
+// From the methods above, when the ORM driver calls formo(), it passes
+// any options from 'load' except for the model option as the second parameter
+// which means the parameter can be empty or an array of values
+// Here it would runs this: $user->formo($form, [$opt2, $opt3])
+public function formo($form, $opts)
+{
+	$form->set([
+		'id' => ['render' => FALSE],
+		'class_id' => ['label' => 'Class', 'blank' => TRUE],
+		'email' => ['driver' => 'input|email',],
+		'logins' => ['render' => FALSE],
+		'last_login' => ['render' => FALSE],
+		'password' => ['render' => FALSE],
+	]);
+}
 ```
 
 In this example, we are setting many fields (id, logins, last_login, password) to not render by default. Also, we are defining any special parameters for `class_id` and `email` fields so they render correctly by default.
