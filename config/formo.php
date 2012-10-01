@@ -16,7 +16,7 @@ return array
 	'auto_id'                 => TRUE,
 	// The directory for the formo templates (ex: 'formo' or 'formo_bootstrap')
 	'template_dir'            => 'formo_bootstrap/',
-	// Namespace fields
+	// Namespace fields (name="parent_alias[field_alias]")
 	'namespaces'              => TRUE,
 	// Driver used for ORM integration
 	'orm_driver'              => 'kohana',

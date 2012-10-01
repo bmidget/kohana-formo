@@ -1143,11 +1143,14 @@ class Formo_Core_Formo extends Formo_Innards {
 			}
 		}
 
-		$result = $this->_run_callbacks($pass_validation);
+		$this->_run_callbacks($pass_validation);
 
-		return ($pass_validation === TRUE AND $result === FALSE)
-			? FALSE
-			: $pass_validation;
+		if ($this->error())
+		{
+			$pass_validation = FALSE;
+		}
+
+		return $pass_validation;
 	}
 
 	/**
