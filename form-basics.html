@@ -401,62 +401,6 @@ $form->merge([
 </div> <!-- md -->
 </section>
 
-
-<section id="terminology">
-	<div class="page-header">
-		<h1>Formo Terminology</h1>
-	</div>
-
-<div class="md">
-While using Formo, it's important to understand Formo's terminology.
-
-### Field
-
-A field is a form field attached to a form. You attach fields using `Formo::add()`. Fields are accessed directly from its form.
-
-In this example, `email` is the field's alias, and it can be accessed as `$form->email`.
-
-```
-$form->add('email', 'input|email');
-```
-
-### Driver
-
-The driver handles field-specific functionality. For instance, a `checkbox` field functions totally different from an `input type="text"` field.
-
-Formo drivers handle every field-specific function from setting the value correctly to getting the field's label.
-
-In this example, the driver is `select`, and a `select` driver requires an extra array of `opts` (options).
-
-```
-$form->add('hobbies', 'select', NULL, ['opts' => $options]);
-```
-
-### Subform
-
-A group of fields added to a form.
-
-In this example, `$f2` is the subform.
-
-```
-$form = Formo::form();
-
-$f2 = Formo::form(['alias' => 'mysubform']);
-
-$form->add($f2);
-```
-
-### Rules
-
-Rules are validation rules
-
-### Filters
-
-Filters are run on field values before validation
-
-</div> <!-- md -->
-</section>
-
 <section id="ordering">
 	<div class="page-header">
 		<h1>Ordering</h1>
@@ -670,6 +614,61 @@ $form2->middle_initial - 'mymessages3'
 </table>
 
 <table>
+
+</div> <!-- md -->
+</section>
+
+<section id="terminology">
+	<div class="page-header">
+		<h1>Formo Terminology</h1>
+	</div>
+
+<div class="md">
+While using Formo, it's important to understand Formo's terminology.
+
+### Field
+
+A field is a form field attached to a form. You attach fields using `Formo::add()`. Fields are accessed directly from its form.
+
+In this example, `email` is the field's alias, and it can be accessed as `$form->email`.
+
+```
+$form->add('email', 'input|email');
+```
+
+### Driver
+
+The driver handles field-specific functionality. For instance, a `checkbox` field functions totally different from an `input type="text"` field.
+
+Formo drivers handle every field-specific function from setting the value correctly to getting the field's label.
+
+In this example, the driver is `select`, and a `select` driver requires an extra array of `opts` (options).
+
+```
+$form->add('hobbies', 'select', NULL, ['opts' => $options]);
+```
+
+### Subform
+
+A group of fields added to a form.
+
+In this example, `$f2` is the subform.
+
+```
+$form = Formo::form();
+
+$f2 = Formo::form(['alias' => 'mysubform']);
+
+$form->add($f2);
+```
+
+### Rules
+
+Rules are validation rules
+
+### Filters
+
+Filters are run on field values before validation
 
 </div> <!-- md -->
 </section>
