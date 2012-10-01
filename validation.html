@@ -75,6 +75,7 @@
           <li><a href="#errors"><i class="icon-chevron-right"></i> Errors</a></li>
           <li><a href="#without-loading"><i class="icon-chevron-right"></i> Validate without loading</a></li>
           <li><a href="#bound"><i class="icon-chevron-right"></i> Bound validation values</a></li>
+          <li><a href="#filters"><i class="icon-chevron-right"></i> Filters</a></li>
           <li><a href="#callbacks"><i class="icon-chevron-right"></i> Callbacks</a></li>
         </ul>
       </div>
@@ -410,6 +411,50 @@ $form
 
 </div> <!-- md -->
 </section>
+
+<section id="filters">
+	<div class="page-header">
+		<h1>Filters</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+Formo supports field filters either as defined by Kohana's orm or as anonymous functions. When you use Kohana style filters, you can specify `:value` as a parameter, and the field's value will be passed into the filter function.
+
+Some things to know:
+
+- If no parameters are specified, `:value` will be the sole value passed into the filter function
+- If you use an anonymous function as a filter, only the field's value is passed into that function
+
+Here are some examples of using both anonymous function filters and filters that are compatible with Kohana's ORM filters.
+
+```
+$form = Formo::form()
+	->add([
+		'aliaa' => 'email',
+		'driver' => 'input|email',
+		'attr.placeholder' => 'john@doe.com',
+		'filters' => [
+			['strtolower']
+		]
+	])
+	->add([
+		'alias' => 'foo',
+		'filters' => [
+			['bar', [$foobar, ':value']]
+		]
+	])
+	->add([
+		'alias' => 'foo2',
+		'filters' => [
+			function($val) {
+				return foobar($val);
+			}
+		]
+	]);
+```
+</div> <!-- md -->
+</section>
+
 
 
 <section id="callbacks">
