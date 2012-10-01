@@ -74,6 +74,7 @@
           <li><a href="#validation"><i class="icon-chevron-right"></i> Validation</a></li>
           <li><a href="#without-loading"><i class="icon-chevron-right"></i> Validate without loading</a></li>
           <li><a href="#bound"><i class="icon-chevron-right"></i> Bound validation values</a></li>
+          <li><a href="#callbacks"><i class="icon-chevron-right"></i> Callbacks</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -362,11 +363,102 @@ $form
 ```
 
 </div> <!-- md -->
-
-
 </section>
 
 
+<section id="callbacks">
+	<div class="page-header">
+		<h1>Callbacks</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+You can attach 'pass' and 'fail' callbacks to fields and forms. Callbacks are anonymous functions that run in the order they are added to the field or form.
+
+The field or form object — whichever object contains the callback — is the single value passed into the callback function.
+
+## Adding pass callbacks
+
+These callbacks run on the field passing
+
+```
+$form->email->callback('pass', function($field) {
+	// Do something
+});
+
+$form->callback([
+	'email' => [
+		'pass' => [
+			function($field) {
+				// Do something
+			},
+			function($field) {
+				// Do something else
+			}
+		]
+	]
+]);
+```
+
+## Adding fail callbacks
+
+These callbacks run on the field failing
+
+```
+$form->email->callback('fail', function($field) {
+	// Do something
+});
+
+$form->callback([
+	'email' => [
+		'fail' => [
+			function($field) {
+				// Do something
+			},
+			function($field) {
+				// Do something else
+			}
+		]
+	]
+]);
+```
+
+## Form-level callbacks
+
+You can also attach callbacks to form or group. These will run under after validation and callbacks run on all their contained fields.
+
+That means, a form or group's 'pass' callbacks only run after every field passes validation and also has run their respective validation. Likewise the form or group's 'fail' callbacks run after all fields finish validating and running their respective callbacks and at least one field failed validation.
+
+Thus, you can have scenarios where individual fields would run their attached 'pass' callbacks, but the parent form or subform would run its 'fail' callbacks.
+
+```
+$form->callback([
+	':self' => [
+		'fail' => function($field) {
+		
+		}
+	],
+	'email' => [
+		'pass' => function($field) {
+		
+		}
+	],
+]);
+```
+
+## Setting errors in the callback
+
+Since you have access to the field object, you can set errors to the field
+
+```
+$form->email->callback('pass', function($field) {
+	if ($foo)
+	{
+		$field->error($new_error);
+	}
+});
+```
+</div> <!-- md -->
+</section>
 
 
       </div>
