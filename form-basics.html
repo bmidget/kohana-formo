@@ -79,6 +79,7 @@
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
           <li><a href="#ordering"><i class="icon-chevron-right"></i> Ordering</a></li>
           <li><a href="#subforms"><i class="icon-chevron-right"></i> Subforms</a></li>
+          <li><a href="#config"><i class="icon-chevron-right"></i> Config settings</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -459,6 +460,7 @@ Filters are run on field values before validation
 <section id="ordering">
 	<div class="page-header">
 		<h1>Ordering</h1>
+	<div class="page-header">
 
 <div class="md">
 Use `Formo::order()` to reorder field and subform elements. The arguments:
@@ -494,6 +496,7 @@ $form->order('confirm_password', 'after', 'password');
 <section id="subforms">
 	<div class="page-header">
 		<h1>Subforms</h1>
+	<div class="page-header">
 
 <div class="md">
 A subform is a form within a form.
@@ -562,6 +565,111 @@ You can also specify a numeric order for the subform
 ```
 $form->subform('address', ['street', 'city', 'state'], [1]);
 ```
+
+</div> <!-- md -->
+</section>
+
+<section id="config">
+	<div class="page-header">
+		<h1>Config settings</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+## How Formo looks for the config setting
+
+For flexibility, when Formo retrieves a config setting, it follows this pattern looking for the setting:
+
+1. Field itself
+2. Field's parent
+3. Inside the Formo `config.php` file
+
+Here's a rather complicated example:
+
+```
+$form = Formo::form()
+	->add('first_name', 'input', NULL, array('label_message_file' => 'mymessages2'));
+
+$form2 = Formo::form([
+	'alias' => 'form2',
+	'label_message_file' => 'mymessages3',
+])
+->add('last_name', 'input', NULL, array('label_message_file' => FALSE))
+->add('middle_initial', 'input', NULL);
+
+$form->add($form2);
+```
+
+Based on the form definition above, here are what each field would use for its label messages file:
+
+```
+$form - Kohana::$config->load('formo.label_message_file');
+$form->first_name - mymessages2
+$form2 - 'mymessages3'
+$form2->last_name - FALSE
+$form2->middle_initial - 'mymessages3'
+```
+
+## Config setting explanations
+
+<table>
+	<thead>
+		<tr>
+			<th>Variable</th>
+			<th>Explanation</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr>
+			<td>`label_message_file`</td>
+			<td>The file used for label messages. You can set this to `FALSE` to not use Kohana messages at all.</td>
+		</tr>
+
+		<tr>
+			<td>`validation_message_file`</td>
+			<td>The file used for Kohana validation messages.</td>
+		</tr>
+
+		<tr>
+			<td>`translate`</td>
+			<td>Set to `TRUE` or `FALSE` whether to run labels and errors through Kohana's translation `__()` function.</td>
+		</tr>
+
+		<tr>
+			<td>`close_single_html_tags`</td>
+			<td>Set to `TRUE` or `FALSE` whether to add a closing `/` to single tags. For instance, when `TRUE`, you would get `<input type="text" />` and set to `FALSE` you get the HTML 5 styled `<input type="text">`</td>
+		</tr>
+
+		<tr>
+			<td>`auto_id`</td>
+			<td>Set to `TRUE` or `FALSE` whether fields should that don't have manually specified `ID` tags set will auto-generate them.</td>
+		</tr>
+
+		<tr>
+			<td>`template_dir`</td>
+			<td>The directory to look for template view files</td>
+		</tr>
+
+		<tr>
+			<td>`namespaces`</td>
+			<td>Boolean setting whether to namespace field names. For example `<input type="text" name="parent_alias[field_alias]" />`</td>
+		</tr>
+
+		<tr>
+			<td>`orm_driver`</td>
+			<td>The driver to use for your ORM</td>
+		</tr>
+
+		<tr>
+			<td>`input_rules`</td>
+			<td>These are pre-defined rules that get added to `input` elements with HTML 5 `type` attributes that are supposed to have built-in validation. These pre-defined rules are supposed to mimic those that are built into the browser with these type tags.</td>
+		</tr>
+
+	</tbody>
+
+</table>
+
+<table>
 
 </div> <!-- md -->
 </section>
