@@ -400,21 +400,14 @@ abstract class Formo_Core_Innards {
 				{
 					// Support filters as defined in Kohana ORM
 					$func = array_shift($filter);
-					$params = $filter;
+					$params = Arr::get($filter, 0, array($val));
 
-					if (empty($params))
+					$value_key = array_search(':value', $params);
+
+					if ($value_key !== FALSE)
 					{
-						$params[] = $this->val();
-					}
-					else
-					{
-						$value_key = array_search(':value', $params);
-	
-						if ($value_key !== FALSE)
-						{
-							// Substitute :value with the field's value
-							$params[$value_key] = $this->val();
-						}
+						// Substitute :value with the field's value
+						$params[$value_key] = $val;
 					}
 
 					$val = call_user_func_array($func, $params);
