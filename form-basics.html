@@ -462,7 +462,7 @@ $address = Formo::form(['alias' => 'address'])
 $user_form = Formo::form()
 	->add('first name')
 	->add('last name')
-	->add('address', 'group', $address);
+	->add($address);
 ```
 
 In the example above, the address form is added to $user_form after last_name. It is given the alias address and is using the driver group to handle it.
