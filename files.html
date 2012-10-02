@@ -92,6 +92,8 @@ Use the file driver (not `input|file`)
 ```
 $form->add(‘upload’, ‘file’);
 ```
+
+When you add a file field to a form, the form automatically adds the `enctype="multipart/form-data"` attribute.
 </div> <!-- md -->
 
 </section>
@@ -114,6 +116,26 @@ $form->add_rule([
 	]
 ]);
 ```
+When you run `Formo::load()`, Formo always looks for any file fields inside the $_FILES array without having to pass the array into `Formo::load()`.
+
+Thus, this will work correctly:
+
+``
+$form->add('thumbnail', 'file')
+	->rule([
+		'thumbnail' => [
+			['not_empty'],
+			['Upload::type', [':value', ['jpg','png','gif']]],
+		]
+	]);
+
+// Formo will load the 'thumbnail' field from $_FILES when you call Formo::load()
+if ($form->load()->validate())
+{
+	// File passed
+}
+```
+
 </div> <!-- md -->
 
 </section>
