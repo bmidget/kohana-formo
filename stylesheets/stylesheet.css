@@ -13,7 +13,7 @@
 }
 #navbar .navbar-inner {
 	background: #65A8A6;
-	height: 70px;
+	min-height: 70px;
 }
 
 #navbar.navbar-inverse .nav > li > a {
@@ -28,11 +28,16 @@
 	background-color: #68bcb9;
 }
 
+.navbar-fixed-top {
+	margin-bottom: 0;
+}
+
 .jumbotron {
 	position: relative;
-	padding: 110px 0 0;
+	padding: 80px 20px 0;
 	background: #79896D;
 	color: #9caa92;
+	margin: 0 -20px 0;
 	border-bottom: 1px solid #000;
 	box-shadow: rgba(0, 0, 0, 0.0976563) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.0976563) 0px 1px 10px 0px;
 }
@@ -45,13 +50,19 @@
   right: 0;
   bottom: 0;
   left: 0;
+  background: url(../img/bs-docs-masthead-pattern.png) repeat center center;
   opacity: .4;
 }
 
+
+#main-container {
+	margin-top: 20px;
+}
+
+
 .bs-docs-sidenav {
-  width: 228px;
-  margin: 50px 0 0;
-  padding: 0;
+  margin: 0;
+  padding: 20px 0 0;
   background-color: #fff;
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
@@ -106,7 +117,7 @@
   opacity: 1;
 }
 .bs-docs-sidenav.affix {
-  top: 40px;
+  top: 90px;
 }
 .bs-docs-sidenav.affix-bottom {
   position: absolute;
@@ -126,7 +137,6 @@ h1 {
 	background: #F8ECC2;
 	font-size: 28px;
 	line-height: 18px;
-	margin-left: -20px;
 	box-shadow: rgba(0, 0, 0, 0.0976563) 0px -1px 0px 0px inset, rgba(0, 0, 0, 0.0976563) 0px 1px 10px 0px;
 }
 
@@ -140,7 +150,7 @@ h1 {
 	border-radius: 0;
 	padding: 0;
 	font-size: 117px;
-	line-height: 75px;
+	line-height: 110px;
 	box-shadow: none;
 	text-shadow: 5px 5px 0px #79896d, 7px 7px 0px #59684e;
 }
@@ -187,4 +197,128 @@ section table tr:last-child td {
 section table th {
 	text-align: left;
 	background: #ddd;
+}
+
+.code-content {
+}
+
+/* Responsive
+-------------------------------------------------- */
+
+/* Desktop large
+------------------------- */
+@media (min-width: 1200px) {
+  .bs-docs-container {
+    max-width: 970px;
+  }
+  .bs-docs-sidenav {
+    width: 258px;
+  }
+}
+
+@media (max-width: 980px) {
+  /* Unfloat brand */
+  body > .navbar-fixed-top .brand {
+    float: left;
+    margin-left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* Inline-block quick links for more spacing */
+  .quick-links li {
+    display: inline-block;
+    margin: 5px;
+  }
+
+  /* When affixed, space properly */
+  .bs-docs-sidenav {
+    top: 0;
+    margin-top: 30px;
+    margin-right: 0;
+  }
+  .jumbotron {
+	  padding-top: 20px;
+  }
+}
+
+/* Tablet to desktop
+------------------------- */
+@media (min-width: 768px) and (max-width: 980px) {
+  /* Remove any padding from the body */
+  body {
+    padding-top: 0;
+  }
+  /* Widen masthead and social buttons to fill body padding */
+  .jumbotron {
+    margin-top: -20px; /* Offset bottom margin on .navbar */
+  }
+  /* Adjust sidenav width */
+  .bs-docs-sidenav {
+    width: 166px;
+    margin-top: 0px;
+  }
+  .bs-docs-sidenav.affix {
+    top: 0;
+  }
+}
+
+/* Tablet
+------------------------- */
+@media (max-width: 767px) {
+  /* Remove any padding from the body */
+  body {
+    padding-top: 0;
+  }
+
+  /* Widen masthead and social buttons to fill body padding */
+  .jumbotron {
+    padding: 40px 20px;
+    margin-top:   -20px; /* Offset bottom margin on .navbar */
+    margin-right: -20px;
+    margin-left:  -20px;
+  }
+  .masthead h1 {
+    font-size: 90px;
+  }
+  .masthead p,
+  .masthead .btn {
+    font-size: 24px;
+  }
+  .marketing .span4 {
+    margin-bottom: 40px;
+  }
+  .bs-docs-social {
+    margin: 0 -20px;
+  }
+
+  /* Space out the show-grid examples */
+  .show-grid [class*="span"] {
+    margin-bottom: 5px;
+  }
+
+  /* Sidenav */
+  .bs-docs-sidenav {
+    width: auto;
+    margin-bottom: 20px;
+    margin-top: 0;
+  }
+  .bs-docs-sidenav.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }
+
+  /* Unfloat the back to top link in footer */
+  .footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .footer p {
+    margin-bottom: 9px;
+  }
 }
