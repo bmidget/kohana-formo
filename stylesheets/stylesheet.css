@@ -120,7 +120,7 @@
 }
 
 h1 {
-	color: #E65540;
+	color: #000;
 	padding: 20px 20px;
 	margin: 20px 0 0;
 	background: #F8ECC2;
@@ -146,7 +146,6 @@ h1 {
 }
 
 h2 {
-	font-family: "belleroselight", Helvetica, Arial, sans-serif;
 	color: #999;
 	border-bottom: 1px solid #999;
 	font-size: 24px;

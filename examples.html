@@ -74,6 +74,7 @@
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#html5"><i class="icon-chevron-right"></i> HTML5 Inputs</a></li>
           <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/Attributes</a></li>
+          <li><a href="#templates"><i class="icon-chevron-right"></i> Custom templates</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -175,7 +176,48 @@ $form->attr([
 </div> <!-- md -->
 </section>
 
+<section id="templates">
+	<div class="page-header">
+		<h1>Custom Templates</h1>
+	</div> <!-- page-header -->
 
+<div class="md">
+There are two variables Formo uses to decide which view file to use as a field's template:
+
+- `template_dir`
+- `template`
+
+The default `template_dir` is defined in the Formo config.php file.
+
+The `template` variable is defined per-driver (and can also be customized per field or form). When the field renders, Formo finds a view file named `$template_dir/$template`.
+
+In the view, Formo passes a single variable named `$field` which is either the form or field object. To customize your form, set these files, then create custom HTML that looks the way you want it.
+
+Here's an example of styling a form by changing all the template directories.
+
+```
+$form->set('template_dir', 'my_special_form');
+
+foreach ($form->get('fields') as $field)
+{
+	$field->set('template_dir', 'my_special_form');
+}
+```
+
+Or just set a template for a specific field that has complicated styling.
+
+```
+$form->complicated_field->set('template', 'complicated_template');
+```
+
+It's also easy to set a template for a specific form.
+
+```
+$form->set('template', 'my_form_template');
+```
+
+</div> <!-- md -->
+</section>
 
 
 

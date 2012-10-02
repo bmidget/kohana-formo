@@ -238,6 +238,15 @@ Note that a `Formo` object's `__toString()` method also runs `$form->render()`.
 ```
 echo $form;
 ```
+
+There are two variables Formo uses to decide which view file to use as a field's template:
+
+- `template_dir`
+- `template`
+
+The default `template_dir` is defined in the Formo config.php file.
+
+The `template` variable is defined per-driver (and can also be customized per field or form). When the field renders, Formo finds a view file named `$template_dir/$template`.
 </div> <!-- md -->
 </section>
 
