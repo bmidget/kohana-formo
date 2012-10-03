@@ -74,6 +74,7 @@
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#html5"><i class="icon-chevron-right"></i> HTML5 Inputs</a></li>
           <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/Attributes</a></li>
+          <li><a href="#cb"><i class="icon-chevron-right"></i> Checkboxes, Radios, Select</a></li>
           <li><a href="#templates"><i class="icon-chevron-right"></i> Custom templates</a></li>
         </ul>
       </div>
@@ -96,6 +97,39 @@ $form->add('email_address', 'input|email');
 
 $form->email_address->set('driver', 'input|email');
 ```
+
+## HTML 5 Input types
+
+Use any of the following driver|type combindations:
+
+- input|tel
+- input|email
+- input|url
+- input|date
+- input|datetime
+- input|datetime-local
+- input|color
+- input|week
+- input|time
+- input|month
+- input|range
+- input|number
+
+## Datalist
+
+```
+$opts = array
+(
+	'run'        => 'running',
+	'jump'       => 'jumping',
+	'crawl'      => 'crawling',
+	'swim'       => 'swimming',
+	'basketball' => 'basketball',
+);
+
+$form->add('hobbies', 'datalist', NULL, ['opts' => $opts]);
+```
+
 </div> <!-- md -->
 </section>
 
@@ -166,13 +200,73 @@ $form->attr('id', 'foobar');
 $id = $form->attr('id');
 
 $form->attr('id', NULL);
+```
 
+You can also set an array of attributes. Like all other Formo set methods, if you pass an array
+of values, the first key is the field to assign the attributes to.
+
+```
 $form->attr([
-	'id' => 'foo',
-	'class' => 'foobar',
-	'onclick' => 'do_somethign()',
+	':self' => [
+		'id' => 'foo',
+		'class' => 'foobar',
+		'onclick' => 'do_somethign()',
+	]
 ])
 ```
+</div> <!-- md -->
+</section>
+
+<section id="cb">
+	<div class="page-header">
+		<h1>Checkboxes, Radios, Select</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+These field types require an `opts` array of `value => label` pairs that are used for the checkboxes, readios and options.
+
+Here, we are creating all three field types from one array.
+
+```
+$opts = array
+(
+	'run'        => 'running',
+	'jump'       => 'jumping',
+	'crawl'      => 'crawling',
+	'swim'       => 'swimming',
+	'basketball' => 'basketball',
+);
+```
+
+## Select
+
+```
+// Select field with 'jump' option selected
+$form->add('hobbies', 'select', 'jump', ['opts' => $opts]);
+```
+
+## Radios
+
+```
+// Radios with 'swim' option selected
+$form->add('hobbies', 'radios', 'swim', ['opts' => $opts]);
+```
+
+## Checkboxes
+
+```
+// Checkboxes with 'jump' and 'swim' selected
+$form->add('hobbies', 'checkboxes', ['jump', 'swim'], ['opts' => $opts]);
+```
+
+## Single checkbox
+
+```
+// Single checkbox checked by default
+$form->add('bool_field', 'checkbox', 1);
+```
+
+
 </div> <!-- md -->
 </section>
 
