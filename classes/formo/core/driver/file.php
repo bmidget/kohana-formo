@@ -5,7 +5,9 @@ class Formo_Core_Driver_File extends Formo_Driver {
 	public static function added( array $array)
 	{
 		$field = $array['field'];
-		$field->parent()->attr('enctype', 'multipart/form-data');
+
+		// Add necessary multipart/form-data attribute
+		$field->parent(TRUE)->attr('enctype', 'multipart/form-data');
 	}
 
 	public static function get_tag()
