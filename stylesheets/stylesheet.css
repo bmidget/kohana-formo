@@ -61,8 +61,8 @@
 
 
 .bs-docs-sidenav {
-  margin: 0;
-  padding: 20px 0 0;
+  margin: 20px 0 0;
+  padding: 0;
   background-color: #fff;
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
@@ -117,7 +117,7 @@
   opacity: 1;
 }
 .bs-docs-sidenav.affix {
-  top: 90px;
+  top: 70px;
 }
 .bs-docs-sidenav.affix-bottom {
   position: absolute;
@@ -258,7 +258,7 @@ section table th {
   /* Adjust sidenav width */
   .bs-docs-sidenav {
     width: 166px;
-    margin-top: 0px;
+    margin-top: 20px;
   }
   .bs-docs-sidenav.affix {
     top: 0;
@@ -303,7 +303,7 @@ section table th {
   .bs-docs-sidenav {
     width: auto;
     margin-bottom: 20px;
-    margin-top: 0;
+    margin-top: 20px;
   }
   .bs-docs-sidenav.affix {
     position: static;
