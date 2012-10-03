@@ -19,7 +19,7 @@ $(document).ready(function(){
 
 	$('.bs-docs-sidenav').affix({
 	  offset: {
-		top: function () { return $(window).width() <= 980 ? 290 : 210 }
+		top: function () { return $(window).width() <= 980 ? 290 : 170 }
 	  , bottom: 0
 	  }
 	})
