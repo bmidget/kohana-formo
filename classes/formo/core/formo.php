@@ -247,7 +247,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Set an html attribute
+	 * Set an html attribute or attributes
 	 * 
 	 * @access public
 	 * @param mixed $get
@@ -260,9 +260,19 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			if (is_array($get))
 			{
-				foreach ($get as $_get => $_set)
+				foreach ($get as $alias => $values)
 				{
-					$this->attr($_get, $_set);
+					$field = $this->find($alias);
+
+					if ( ! $field)
+					{
+						throw new Kohana_Exception('An array passed into Formo::attr() should be in the form of $alias => array($attr => $attr_val, etc), you passed :param', array(':param' => print_r($get,1)));
+					}
+
+					foreach ($values as $key => $value)
+					{
+						$field->attr($key, $value);
+					}
 				}
 
 				return $this;

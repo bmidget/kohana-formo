@@ -851,6 +851,11 @@ abstract class Formo_Core_Innards {
 
 		$this->_set_id($_array);
 
+		if (array_key_exists('attr', $_array))
+		{
+			$_array['attr'] = array(':self' => (array) $_array['attr']);
+		}
+
 		return $_array;
 	}
 }

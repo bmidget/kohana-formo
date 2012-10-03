@@ -18,7 +18,8 @@ class Formo_FormoTest extends Unittest_TestCase {
 	 */
 	public function provider_form()
 	{
-		return array(
+		return array
+		(
 			// No alias
 			array(array(), array('alias' => 'formo', 'driver' => 'form')),
 			// Alias set
@@ -34,8 +35,6 @@ class Formo_FormoTest extends Unittest_TestCase {
 
 	/**
 	 * @dataProvider provider_form
-	 * @param string $page  Page name passed in the URL
-	 * @param string $expected_file  Expected result from Controller_Userguide::file
 	 */
 	public function test_form( array $args, array $array)
 	{
@@ -55,5 +54,79 @@ class Formo_FormoTest extends Unittest_TestCase {
 		$this->assertSame($expected, $result);
 	}
 
+	public function provider_alias()
+	{
+		return array
+		(
+			array('melmon', 'melmon')
+		);
+	}
+
+	/**
+	 * @dataProvider provider_alias
+	 */
+	public function test_alias($alias, $expected)
+	{
+		$field = Formo::factory(array(
+			'alias' => $alias,
+		));
+
+		$result = $field->alias();
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function provider_attr()
+	{
+		return array
+		(
+			// Setting an array
+			array
+			(
+				array('foo'),
+				array(':self' => array('class' => 'specialclass', 'onclick' => 'go()')),
+				NULL,
+				array('class' => 'specialclass', 'onclick' => 'go()'),
+			),
+			// Unsetting attribute
+			array
+			(
+				array('alias' => 'foo', 'attr.onclick' => 'good_dog()'),
+				'onclick',
+				NULL,
+				array('onclick' => NULL),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider provider_attr
+	 */
+	public function test_attr( array $construct, $attr, $val, array $checks)
+	{
+		$expected = TRUE;
+		$result = TRUE;
+
+		$field = Formo::factory($construct);
+
+		if (is_array($attr))
+		{
+			$field->attr($attr);
+		}
+		else
+		{
+			$field->attr($attr, $val);
+		}
+
+		foreach ($checks as $key => $value)
+		{
+			if ($field->attr($key) !== $value)
+			{
+				$result = FALSE;
+			}
+		}
+
+		$this->assertSame($expected, $result);
+	}
 
 }
