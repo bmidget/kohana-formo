@@ -200,11 +200,18 @@ $form->attr('id', 'foobar');
 $id = $form->attr('id');
 
 $form->attr('id', NULL);
+```
 
+You can also set an array of attributes. Like all other Formo set methods, if you pass an array
+of values, the first key is the field to assign the attributes to.
+
+```
 $form->attr([
-	'id' => 'foo',
-	'class' => 'foobar',
-	'onclick' => 'do_somethign()',
+	':self' => [
+		'id' => 'foo',
+		'class' => 'foobar',
+		'onclick' => 'do_somethign()',
+	]
 ])
 ```
 </div> <!-- md -->
