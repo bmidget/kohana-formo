@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Tests the Arr lib that's shipped with kohana
+ * Tests the Formo module
  *
  * @group formo
  * @group formo.formo
