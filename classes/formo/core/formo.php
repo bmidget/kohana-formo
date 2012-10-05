@@ -183,7 +183,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Add a rule or multiple rules
+	 * Add a rule for multiple rules
 	 * 
 	 * @access public
 	 * @param mixed $alias
@@ -192,22 +192,50 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function add_rule( array $array)
 	{
-		if (Arr::is_assoc($array))
+		$this->_add_rule($array);
+
+		return $this;
+	}
+
+	/**
+	 * Add multiple rules at a time
+	 * 
+	 * @access public
+	 * @param array $array)
+	 * @return void
+	 */
+	public function add_rules( array $array)
+	{
+		foreach ($array as $rule)
 		{
-			foreach ($array as $alias => $rules)
-			{
-				foreach ($rules as $rule)
-				{
-					$this->_add_rule($alias, $rule);
-				}
-			}
-		}
-		else
-		{
-			$this->_add_rule(':self', $array);
+			$this->add_rule($rule);
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Add rules for multiple fields
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @return Formo obj
+	 */
+	public function add_rules_fields( array $array)
+	{
+		foreach ($array as $alias => $rules)
+		{
+			$field = $this->find($alias);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->add_rule($rules);
+		}
+
+		return $this;	
 	}
 
 	/**
@@ -260,19 +288,9 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			if (is_array($get))
 			{
-				foreach ($get as $alias => $values)
+				foreach ($get as $key => $value)
 				{
-					$field = $this->find($alias);
-
-					if ( ! $field)
-					{
-						throw new Kohana_Exception('An array passed into Formo::attr() should be in the form of $alias => array($attr => $attr_val, etc), you passed :param', array(':param' => print_r($get,1)));
-					}
-
-					foreach ($values as $key => $value)
-					{
-						$field->attr($key, $value);
-					}
+					$this->attr($key, $value);
 				}
 
 				return $this;
@@ -284,6 +302,30 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$this->_attr = \Arr::merge($this->_attr, array($get => $set));
+
+		return $this;
+	}
+
+	/**
+	 * Set attributes for a set of fields
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @return void
+	 */
+	public function attr_fields( array $array)
+	{
+		foreach ($array as $alias => $values)
+		{
+			$field = $this->find($alias);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->attr($values);
+		}
 
 		return $this;
 	}
@@ -674,17 +716,38 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if (is_array($property))
 		{
-			foreach ($property as $alias => $stuff)
+			foreach ($property as $_property => $_array)
 			{
-				foreach ($stuff as $key => $value)
-				{
-					$this->find($alias)->merge($key, $value);
-				}
+				$this->merge($_property, $_array)
 			}
 		}
 		else
 		{
 			$this->_merge($property, $array);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Merge properties for multiple fields
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @return Formo obj
+	 */
+	public function merge_fields( array $array)
+	{
+		foreach ($array as $alias => $properties)
+		{
+			$field = $this->find($alias);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->merge($properties);
 		}
 
 		return $this;
@@ -875,22 +938,46 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function remove_rule($rule)
 	{
-		if (is_array($rule) AND Arr::is_assoc($rule))
-		{
-			foreach ($rule as $alias => $rules)
-			{
-				foreach ($rules as $_rule)
-				{
-					$this->_remove_rule($alias, $_rule);
-				}
-			}
-		}
-		else
-		{
-			$this->_remove_rule(':self', $rule);
-		}
+		$this->_remove_rule($rule);
 
 		return $this;
+	}
+
+	/**
+	 * Remove multiple rules at a time
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @return void
+	 */
+	public function remove_rules( array $array)
+	{
+		foreach ($array as $rule_to_remove)
+		{
+			$this->remove_rule($rule_to_remove);
+		}
+	}
+
+	/**
+	 * Remove rules for multiple fields
+	 * 
+	 * @access public
+	 * @param mixed $array
+	 * @return void
+	 */
+	public function remove_rules_fields($array)
+	{
+		foreach ($array as $alias => $rules)
+		{
+			$field = $this->find($alias);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->remove_rule($rules);
+		}
 	}
 
 	/**
@@ -941,11 +1028,6 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * Set a value for a field's attribute
 	 * You can use Arr::set_path's dot-syntax to set an attribute
 	 *
-	 * If you are passing multiple values at a time with $var as an array
-	 * you can pass surround the alias name in square brackets to 
-	 * gracefully ignore any missing fields. This is useful when mass
-	 * setting default values in models.
-	 * 
 	 * @access public
 	 * @param mixed $var
 	 * @param mixed $val (default: NULL)
@@ -955,25 +1037,9 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		if (is_array($var))
 		{
-			foreach ($var as $alias => $vals)
+			foreach ($var as $key => $value)
 			{
-				list($alias, $required) = $this->_is_required($alias);
-
-				$field = $this->find($alias);
-
-				if ( ! $field AND ! $required)
-				{
-					continue;
-				}
-				elseif ( ! $field)
-				{
-					throw new Kohana_Exception('Tried to run Formo::set() on field :field, which doesn\'t exist', array(':field' => $alias));
-				}
-
-				foreach ($vals as $_var => $_val)
-				{
-					$field->set($_var, $_val);
-				}
+				$this->set($key, $value);
 			}
 
 			return $this;
@@ -1020,6 +1086,30 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			// Set the value
 			$this->$array_name = $val;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set variables for a set of fields
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @return void
+	 */
+	public function set_fields( array $array)
+	{
+		foreach ($array as $alias => $vals)
+		{
+			$field = $this->find($alias);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->set($vals);
 		}
 
 		return $this;

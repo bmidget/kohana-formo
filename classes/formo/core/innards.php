@@ -227,14 +227,8 @@ abstract class Formo_Core_Innards {
 	 * @param array $params (default: NULL)
 	 * @return void
 	 */
-	 protected function _add_rule($alias, array $rule)
+	 protected function _add_rule(array $rule)
 	 {
-		 if ($alias != ':self' AND $alias != $this->alias())
-		 {
-			 $field = $this->find($alias);
-			 return $field->add_rule($rule);
-		 }
-
 		 $this->_rules[] = $rule;
 	 }
 
@@ -531,30 +525,6 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
-	 * Determine if a field alias is required when setting something. This is
-	 * indicated by being wrapped in square brackets like [email]
-	 * Returns formatted alias and whether field is required
-	 * 
-	 * @access protected
-	 * @param mixed $alias
-	 * @return array($alias, $required)
-	 */
-	protected function _is_required($alias)
-	{
-		$bracket_on_front = strpos($alias, '[') === 0;
-		$bracket_on_back = strpos($alias, ']') === (strlen($alias) - 1);
-
-		$not_required = ($bracket_on_front === TRUE AND $bracket_on_back === TRUE);
-
-		if ($not_required === TRUE)
-		{
-			$alias = trim($alias, '[]');
-		}
-
-		return array($alias, $not_required !== TRUE);
-	}
-
-	/**
 	 * Load values into the form
 	 * 
 	 * @access protected
@@ -700,23 +670,15 @@ abstract class Formo_Core_Innards {
 	 * @param mixed $rule
 	 * @return void
 	 */
-	protected function _remove_rule($alias, $rule)
+	protected function _remove_rule($rule)
 	{
-		if ($alias != ':self' AND $alias != $this->alias())
+		foreach ($this->_rules as $key => $_rule)
 		{
-			 $field = $this->find($alias);
-			 return $field->remove_rule(':self', $rule);
-		}
-		else
-		{
-			foreach ($this->_rules as $key => $_rule)
-			{
-				$compare_val = Arr::get($_rule, 0);
+			$compare_val = Arr::get($_rule, 0);
 
-				if ($rule == $compare_val)
-				{
-					unset($this->_rules[$key]);
-				}
+			if ($rule == $compare_val)
+			{
+				unset($this->_rules[$key]);
 			}
 		}
 	}
@@ -870,15 +832,10 @@ abstract class Formo_Core_Innards {
 
 		if (empty($_array['alias']))
 		{
-			throw new Kohana_Exception('Formo.Every formo field must have an alias');
+			throw new Kohana_Exception('Every formo field must have an alias');
 		}
 
 		$this->_set_id($_array);
-
-		if (array_key_exists('attr', $_array))
-		{
-			$_array['attr'] = array(':self' => (array) $_array['attr']);
-		}
 
 		return $_array;
 	}
