@@ -377,22 +377,16 @@ $other_email_filters = [
 
 
 $form = Formo::form()
-	->orm(‘load’, [‘model’ => $user])
-	->merge(‘email’, [
-		‘filters’ => $other_email_filters,
-	]);
+	->orm(‘load’, [‘model’ => $user]);
+
+$form->email
+	->merge(‘filters’, $other_email_filters);
 ```
 
-To merge to itself, use `:self` as the alias
+You can also pass an array of stuff into `Formo::merge_fields()` and merge all sorts of stuff at once.
 
 ```
-$form->merge(‘:self’, [‘config’ => $config_vals]);
-```
-
-You can also pass an array of stuff into `Formo::merge()` and merge all sorts of stuff at once.
-
-```
-$form->merge([
+$form->merge_fields([
 	‘:self’ => [
 		‘config’ => $new_config_values,
 	],

@@ -108,21 +108,19 @@ $form->email
 	->add_rule(['email']);
 ```
 
-To add multiple rules to a single field, your array has to have the key of the field.
+To add more than one field at a time, use `Formo::add_rules()`:
 
 ```
-$form->add_rule([
-	'email' => [
-		['not_empty'],
-		['email'],
-	]
+$form->email->add_rules([
+	['not_empty'],
+	['email'],
 ]);
 ```
 
-To add multiple rules to multiple fields, give each set of rules a alias key.
+You can also attach multiple rules for multiple fields using `Formo::add_rules_fields()` on an individual field. To do this, either specify the field's alias as the key or the special token `:self`.
 
 ```
-$form->add_rule([
+$form->add_rules_fields([
 	'email' => [
 		['not_empty'],
 		['email'],
@@ -133,17 +131,6 @@ $form->add_rule([
 	'confirm' => [
 		['matches', [':form_val', 'password', 'confirm']]
 	]
-]);
-```
-
-You can also attach multiple rules using `Formo::add_rule()` on an individual field. To do this, either specify the field's alias as the key or the special token `:self`.
-
-```
-$form->email->add_rule([
-	':self' => [
-		['not_empty'],
-		['email'],
-	].
 ]);
 ```
 
