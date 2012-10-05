@@ -531,6 +531,30 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
+	 * Determine if a field alias is required when setting something. This is
+	 * indicated by being wrapped in square brackets like [email]
+	 * Returns formatted alias and whether field is required
+	 * 
+	 * @access protected
+	 * @param mixed $alias
+	 * @return array($alias, $required)
+	 */
+	protected function _is_required($alias)
+	{
+		$bracket_on_front = strpos($alias, '[') === 0;
+		$bracket_on_back = strpos($alias, ']') === (strlen($alias) - 1);
+
+		$not_required = ($bracket_on_front === TRUE AND $bracket_on_back === TRUE);
+
+		if ($not_required === TRUE)
+		{
+			$alias = trim($alias, '[]');
+		}
+
+		return array($alias, $not_required !== TRUE);
+	}
+
+	/**
 	 * Load values into the form
 	 * 
 	 * @access protected

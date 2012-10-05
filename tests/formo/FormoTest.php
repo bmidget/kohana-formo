@@ -76,6 +76,51 @@ class Formo_FormoTest extends Unittest_TestCase {
 		$this->assertSame($expected, $result);
 	}
 
+	public function provider_addRule()
+	{
+		return array
+		(
+			array
+			(
+				array('not_empty'),
+				array(array('not_empty')),
+			),
+			array
+			(
+				array
+				(
+					':self' => array
+					(
+						array('not_empty'),
+						array('matches', array(':form_val', 'foo1', 'bar1')),
+					)
+				),
+				array
+				(
+					array('not_empty'),
+					array
+					(
+						'matches',
+						array(':form_val', 'foo1', 'bar1'),
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider provider_addRule
+	 */
+	public function test_addRule( array $array, $expected)
+	{
+		$field = Formo::factory(array('alias' => 'foo'))
+			->add_rule($array);
+
+		$rules = $field->get('rules');
+
+		$this->assertSame($expected, $rules);
+	}
+
 	public function provider_attr()
 	{
 		return array

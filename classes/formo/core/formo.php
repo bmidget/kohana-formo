@@ -940,6 +940,11 @@ class Formo_Core_Formo extends Formo_Innards {
 	/**
 	 * Set a value for a field's attribute
 	 * You can use Arr::set_path's dot-syntax to set an attribute
+	 *
+	 * If you are passing multiple values at a time with $var as an array
+	 * you can pass surround the alias name in square brackets to 
+	 * gracefully ignore any missing fields. This is useful when mass
+	 * setting default values in models.
 	 * 
 	 * @access public
 	 * @param mixed $var
@@ -948,13 +953,22 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function set($var, $val = NULL)
 	{
-		if (is_array($var) AND $val === NULL)
+		if (is_array($var))
 		{
 			foreach ($var as $alias => $vals)
 			{
-				$field = (in_array($alias, array($this->alias(), ':self')))
-					? $this
-					: $this->$alias;
+				list($alias, $required) = $this->_is_required($alias);
+
+				$field = $this->find($alias);
+
+				if ( ! $field AND ! $required)
+				{
+					continue;
+				}
+				elseif ( ! $field)
+				{
+					throw new Kohana_Exception('Tried to run Formo::set() on field :field, which doesn\'t exist', array(':field' => $alias));
+				}
 
 				foreach ($vals as $_var => $_val)
 				{
