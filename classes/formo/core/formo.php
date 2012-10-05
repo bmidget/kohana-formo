@@ -718,7 +718,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			foreach ($property as $_property => $_array)
 			{
-				$this->merge($_property, $_array)
+				$this->merge($_property, $_array);
 			}
 		}
 		else
