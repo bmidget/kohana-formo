@@ -35,9 +35,12 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 				->add($options);
 		}
 
-		if ($rules = $model->rules())
+		$rules = static::_get_base_rules($model);
+		$rules = Arr::merge($rules, $model->rules());
+
+		if ($rules)
 		{
-			$field->add_rule($rules);
+			$field->add_rules_fields($rules);
 		}
 
 		if ($filters = $model->filters())
@@ -90,6 +93,32 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 				$std->{$type}['foreign_keys'][$value] = $key;
 			}
 		}
+	}
+
+	protected static function _get_base_rules($model)
+	{
+		$info = $model->list_columns();
+
+		$rules = array();
+		foreach ($info as $alias => $data)
+		{
+			if ($data['is_nullable'] !== TRUE)
+			{
+				$rules[$alias][] = array('not_empty');
+			}
+
+			if ($data['type'] === 'int')
+			{
+				$rules[$alias][] = array('digit', array(':value', true));
+				$rules[$alias][] = array('range', array(':value', Arr::get($data, 'min', 0), Arr::get($data, 'max', 1)));
+			}
+			elseif ($data['type'] === 'varchar')
+			{
+				$rules[$alias][] = array('maxlength', array(':value', Arr::get($data, 'character_maximum_length')));
+			}
+		}
+
+		return $rules;
 	}
 
 	protected static function _process_belongs_to($alias, Kohana_ORM $model, stdClass $std, array & $options)

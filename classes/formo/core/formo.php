@@ -232,10 +232,10 @@ class Formo_Core_Formo extends Formo_Innards {
 				continue;
 			}
 
-			$field->add_rule($rules);
+			$field->add_rules($rules);
 		}
 
-		return $this;	
+		return $this;
 	}
 
 	/**
