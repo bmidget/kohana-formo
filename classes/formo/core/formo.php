@@ -86,6 +86,18 @@ class Formo_Core_Formo extends Formo_Innards {
 		return (bool) $this->find($key, TRUE);
 	}
 
+	public function __set($key, $value)
+	{
+		if ( ! $value instanceof Formo)
+		{
+			throw new Kohana_Exception('New fields must be instances of Formo, :param given instead', array(':param' => print_r($value, 1)));
+		}
+
+		$value->set('alias', $key);
+
+		$this->add($value);
+	}
+
 	/**
 	 * Render the Formo object
 	 * 
