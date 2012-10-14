@@ -702,7 +702,7 @@ class Formo_Core_Formo extends Formo_Innards {
 				{
 					$this->_load($values);
 				}
-				elseif ($field = $this->find($namespace, true) AND $field->driver('is_a_parent'))
+				elseif ($field = $this->find($namespace) AND $field->driver('is_a_parent'))
 				{
 					$field->_load($values);
 				}
