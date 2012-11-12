@@ -9,7 +9,7 @@ class Formo_Core_Driver_Form extends Formo_Driver {
 		return array
 		(
 			'method' => ($method = $field->attr('method')) ? $method : 'post',
-			'action' => ($action = $field->attr('action')) ? $action : '',
+			'action' => ($action = $field->attr('action')) ? $action : Request::$current->url(),
 		);
 	}
 
