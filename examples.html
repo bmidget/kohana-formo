@@ -76,6 +76,7 @@
           <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/Attributes</a></li>
           <li><a href="#cb"><i class="icon-chevron-right"></i> Checkboxes, Radios, Select</a></li>
           <li><a href="#templates"><i class="icon-chevron-right"></i> Custom templates</a></li>
+          <li><a href="#optional-subforms"><i class="icon-chevron-right"></i> Optional subforms</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -242,6 +243,29 @@ $opts = array
 $form->add('hobbies', 'select', 'jump', ['opts' => $opts]);
 ```
 
+For optgroups, use arrays within the `opts` array, like this:
+
+```
+$opts = array
+(
+	'on foot' => array
+	(
+		'run'  => 'running',
+		'jump' => 'jumping',
+		'skip' => 'skipping',
+	),
+	'on water' => array
+	(
+		'swim' => 'swimming',
+		'boat' => 'boating',
+		'dive' => 'diving',
+	),
+	'basketball' => 'basketball',
+);
+
+$form->('hobbies', 'select', null, ['opts' => $opts]);
+```
+
 ## Radios
 
 ```
@@ -310,6 +334,61 @@ $form->set('template', 'my_form_template');
 </div> <!-- md -->
 </section>
 
+
+<section id="optional-subforms">
+	<div class="page-header">
+		<h1>Optional Subforms</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+It's common to have an entire subform that needs to be validated as a whole subform under specific situations.
+
+A typical situation goes like this:
+
+```
+- Enter mailing address
+- Choose whether shipping address is different from mailin address
+- If so, enter shipping address
+```
+
+Consider the situation above. The second form has a bunch of validation rules that only matter at all if the user selected 'shipping address is different from mailing address.'
+
+You can do this with Formo subforms.
+
+Here's an example
+
+```
+$form = Formo::form();
+
+$form->mailing_address = Formo::form()
+	->add('city', 'input', null, array('rules' => array(array('not_empty'))))
+	->add('state', 'input', null, array('rules' => array(array('not_empty'))))
+	->add('zip', 'input', null, array('rules' => array(array('not_empty'))));
+
+$form->add('different_shipping_address', 'checkbox');
+
+$form->shipping_address = Formo::form()
+	->add('city', 'input', null, array('rules' => array(array('not_empty'))))
+	->add('state', 'input', null, array('rules' => array(array('not_empty'))))
+	->add('zip', 'input', null, array('rules' => array(array('not_empty'))));
+
+$form->add('submit', 'input|submit', 'save')
+	->load($this->request->post());
+
+if ($form->address->validate())
+{
+	
+}
+
+if ($form->different_shipping_address->val() AND $form->address2->validate())
+{
+	
+}
+```
+
+You can see it's not difficult to validate an entire subform based on meeting certain criteria.
+</div> <!-- md -->
+</section>
 
 
       </div>
