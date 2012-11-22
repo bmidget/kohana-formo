@@ -1,40 +1,53 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Checkbox_Core class.
- *
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Checkbox extends Formo_Driver {
 
-	protected $_view_file = 'checkbox';
-	public $empty_input = TRUE;
-
-	public function checked()
+	public static function can_be_empty()
 	{
-		$parent_newval = $this->_field->parent()->get('new_value');
-		$parent_value = $this->_field->parent()->get('value');
-
-		if (Formo::is_set($parent_newval) === FALSE AND ! $this->_field->parent(Formo::PARENT)->sent())
-			return in_array($this->val(), (array) $parent_value);
-
-		return (in_array($this->_field->val(), (array) $parent_newval));
+		return TRUE;
 	}
 
-	// Setup the html field
-	public function html()
+	public static function get_attr( array $array)
 	{
-		$this->_view
-			->set_var('tag', 'input')
-			->attr('type', 'checkbox')
-			->attr('name', $this->_field->name().'[]')
-			->attr('value', $this->_field->val());
+		$field = $array['field'];
 
-		if ($this->_field->checked())
+		$array = array
+		(
+			'type' => 'checkbox',
+			'value' => 1,
+			'name' => $field->name(),
+		);
+
+		if ($field->val() === TRUE)
 		{
-			$this->_view->attr('checked', 'checked');
+			$array += array('checked' => 'checked');
 		}
+
+		return $array;
+	}
+
+	public static function get_template( array $array)
+	{
+		$field = $array['field'];
+
+		if ($template = $field->get('template'))
+		{
+			return $template;
+		}
+
+		return 'checkbox_template';
+	}
+
+	public static function get_tag()
+	{
+		return 'input';
+	}
+
+	public static function new_val( array $array)
+	{
+		$new_val = $array['new_val'];
+
+		return (bool) $new_val;
 	}
 
 }

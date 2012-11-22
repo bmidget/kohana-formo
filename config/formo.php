@@ -2,41 +2,24 @@
 
 return array
 (
-	// Whether to translate labels
-	'translate'              => FALSE,
-	// Whether to use Kohana messages
-	'use_messages'           => FALSE,
-	// File for validate messages
-	'message_file'           => 'validate',
-	// Default path to view files
-	'view_prefix'            => 'formo/html/',
-	// For determining path to driver files
-	'driver_prefix'          => 'Formo_Driver_',
-	// Default form driver
-	'form_driver'            => 'form',
-	// Default form alias
-	'form_alias'             => 'form',
-	// Default field driver
-	'default_driver'         => 'input',
-	// Default render kind
-	'kind'                   => 'html',
+	// File used
+	// FALSE or name of message file (ex: 'label_messages')
+	'label_message_file'      => 'mymessages',
+	// File used for validation messages
+	// FALSE or name of the message file (ex: 'validation_messages')
+	'validation_message_file' => 'validation',
+	// Whether to translate labels and error messages
+	'translate'               => TRUE,
 	// Close single html tags (TRUE = <br/>. FALSE = <br>)
-	'close_single_html_tags' => TRUE,
-	// Default subform driver
-	'default_subform_driver' => 'subform',
-	// Namespace fields
-	'namespaces'             => FALSE,
-	// ORM driver to use
-	'orm_driver'             => 'Formo_ORM_Kohana',
-	// Config file for the ORM driver
-	'orm_config'             => 'formo_kohana',
-	// The default ORM primary val because this bug still isn't fixed in ORM
-	'orm_primary_val'        => 'name',
+	'close_single_html_tags'  => TRUE,
 	// Auto-generate IDs on form elements
-	'auto_id'                => FALSE,
-	// If set to true, all Validate helper functions are auto-preceded
-	// by :value if it's not explicitly set
-	'validate_compatible'    => TRUE,
+	'auto_id'                 => TRUE,
+	// The directory for the formo templates (ex: 'formo' or 'formo_bootstrap')
+	'template_dir'            => 'formo_bootstrap/',
+	// Namespace fields (name="parent_alias[field_alias]")
+	'namespaces'              => TRUE,
+	// Driver used for ORM integration
+	'orm_driver'              => 'kohana',
 	// Automatically add these rules to 'input' fields for html5 compatability
 	'input_rules' => array
 	(

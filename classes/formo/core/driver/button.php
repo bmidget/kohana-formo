@@ -1,31 +1,34 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Button_Core class.
- * 
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Button extends Formo_Driver {
 
-	protected $_view_file = 'button';
-	
-	public function html()
+	public static function get_attr( array $array)
 	{
-		$this->_view
-			->set_var('tag', 'button')
-			->attr('name', $this->name())
-			->attr('value', $this->val());
-		
-		if ( ! $this->_view->text())
-		{
-			$this->_view->text($this->_field->alias());
-		}
+		$field = $array['field'];
+
+		return array
+		(
+			'name' => $field->name(),
+			'value' => $field->val(),
+		);
 	}
 
-	public function sent()
+	public static function get_label( array $array)
 	{
-		return $this->_field->not_empty() !== FALSE;
+		return NULL;
+	}
+
+	public static function get_tag()
+	{
+		return 'button';
+	}
+
+	public static function open( array $array)
+	{
+		$str = $array['str'];
+		$field = $array['field'];
+
+		return $str.= $field->alias();
 	}
 
 }

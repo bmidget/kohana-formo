@@ -1,21 +1,28 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_Textarea_Core class.
- * 
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_Textarea extends Formo_Driver {
 
-	protected $_view_file = 'textarea';
-	
-	public function html()
+	public static function get_attr( array $array)
 	{
-		$this->_view
-			->set_var('tag', 'textarea')
-			->set_var('text', $this->_field->val())
-			->attr('name', $this->name());
+		$field = $array['field'];
+
+		return array
+		(
+			'name' => $field->name(),
+		);
+	}
+
+	public static function get_tag()
+	{
+		return 'textarea';
+	}
+
+	public static function open( array $array)
+	{
+		$str = $array['str'];
+		$field = $array['field'];
+
+		return $str.= $field->val();
 	}
 
 }

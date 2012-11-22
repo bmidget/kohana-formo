@@ -1,45 +1,84 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Formo_Driver_File_Core class.
- *
- * @package   Formo
- * @category  Drivers
- */
 class Formo_Core_Driver_File extends Formo_Driver {
 
-	protected $_view_file = 'file';
-	public $file = TRUE;
-	
-	public function html_append()
-	{	
-		$this->_field->parent()->view()->attr('enctype', 'multipart/form-data');
-	}
-	
-	public function html()
+	public static function added( array $array)
 	{
-		$this->_view
-			->set_var('tag', 'input')
-			->attr('type', 'file')
-			->attr('name', $this->_field->alias());
-	}
-	
-	public function setval($value)
-	{
-		// Check for the appropriate "$_FILES" entry
-		$this->set_var('new_value', $value['name']);
-	}
-	
-	protected function _get_val()
-	{
-		$new_value = $this->_field->get('new_value');
+		$field = $array['field'];
 
-		if (Formo::is_set($new_value) === TRUE)
-			return $new_value;
-		
-		return ($val = $this->_field->get('value'))
+		// Add necessary multipart/form-data attribute
+		$field->parent(TRUE)->attr('enctype', 'multipart/form-data');
+	}
+
+	public static function get_tag()
+	{
+		return 'input';
+	}
+
+	public static function get_val( array $array)
+	{
+		$val = $array['val'];
+
+		if (is_array($val))
+		{
+			if ( ! Arr::get($val, 'custom') AND ! Upload::not_empty($val))
+			{
+				$val = NULL;
+			}
+		}
+
+		return $val
 			? $val
-			: array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => '', 'size' => '');
+			: NULL;
+	}
+
+	public static function get_attr( array $array)
+	{
+		$field = $array['field'];
+
+		return array
+		(
+			'type' => 'file',
+			'value' => null,
+			'name' => $field->name(),
+		);
+	}
+
+	public static function new_val( array $array)
+	{
+		$new_val = $array['new_val'];
+
+		if (is_array($new_val))
+		{
+			
+		}
+		else
+		{
+			if (file_exists($new_val))
+			{
+				/*
+					"name" => string(22) "php-docblock-1.2.0.zip"
+					"type" => string(15) "application/zip"
+					"tmp_name" => string(26) "/private/var/tmp/phpP9kI0O"
+					"error" => integer 0
+					"size" => integer 2580673
+				*/
+
+				$filename = $new_val;
+				$parts = explode('/', $filename);
+				$new_val = array
+				(
+					'name' => Arr::get($parts, count($parts) - 1),
+					'type' => mime_content_type($filename),
+					'tmp_name' => $filename,
+					'error' => 0,
+					'size' => filesize($new_val),
+					'custom' => TRUE,
+				);
+			}
+		}
+
+		return $new_val;
 	}
 
 }

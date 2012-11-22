@@ -1,1 +1,0 @@
-<span class="error-message"><?php echo $this->error(); ?></span>

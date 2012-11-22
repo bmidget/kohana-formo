@@ -1,5 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Formo extends Formo_Core_Formo {
-	
-}
+abstract class Formo_Innards extends Formo_Core_Innards {}
