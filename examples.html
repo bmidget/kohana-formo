@@ -375,7 +375,7 @@ $form->shipping_address = Formo::form()
 $form->add('submit', 'input|submit', 'save')
 	->load($this->request->post());
 
-if ($form->address->validate())
+if ($form->mailing_address->validate())
 {
 	
 }
