@@ -124,6 +124,7 @@ Here are some changes that you need to know in order to upgrade from the last ve
 - File fields have a `NULL` empty value, not an empty `$_FILES` array
 - Out-of-the box styling works now with Twitter Bootstrap. If you need backwards compatibility with the old version of Formo, ste the `template_dir` variable in Formo's config file to `'formo/'`
 - Views are not located in `views/formo/html/{file}`, they are instead located in `template_dir/template`
+- Since there is no longer a `submit` driver, convert all submit drivers to `input|submit` which ultimately becomes an `input` field with the tag `type=submit`
 </div> <!-- md -->
 </section>
 
