@@ -80,6 +80,7 @@
           <li><a href="#merging"><i class="icon-chevron-right"></i> Merging stuff</a></li>
           <li><a href="#ordering"><i class="icon-chevron-right"></i> Ordering</a></li>
           <li><a href="#subforms"><i class="icon-chevron-right"></i> Subforms</a></li>
+          <li><a href="#drivers"><i class="icon-chevron-right"></i> Driver Descriptions</a></li>
           <li><a href="#config"><i class="icon-chevron-right"></i> Config settings</a></li>
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
         </ul>
@@ -531,6 +532,69 @@ You can also specify a numeric order for the subform
 ```
 $form->subform('address', ['street', 'city', 'state'], [1]);
 ```
+
+</div> <!-- md -->
+</section>
+
+<section id="drivers">
+	<div class="page-header">
+		<h1>Driver Descriptions</h1>
+	<div class="page-header">
+
+<div class="md">
+Formo fields use static **drivers** to handle all field-specific functionality. Here is a list of the default drivers that ship with Formo.
+
+### Form driver
+
+Forms begin and end with a `<form>` tag. There can only be one Formo object with a `form` driver inside a Formo object. Thus subforms are converted by default to the `group` driver when added to a form as a subform.
+
+A field with the `form` driver is returned from `Formo::form()`.
+
+### Input driver
+
+The input driver is the default Formo field driver. If you add a field without a driver specified, it will be a field with the `input` driver.
+
+Since **input** is used for so many types of field in HTML, Formo allows a short syntax for specifying an `input` field with a special `type` tag. Don't use these with types `checkbox` or `radio` as they function much different from regular `input type=text` fields.
+
+### Group driver
+
+Used for subforms. The `group` acts like the `form` driver without the opening and closing form tags.
+
+### Button driver
+
+Used for `<button>`
+
+### Checkbox driver
+
+For single `<input type="checkbox" />`
+
+### Checkboxes driver
+
+For multiple checkboxes
+
+### Datalist driver
+
+Used for HTML5 datalists
+
+### File driver
+
+For file uploads
+
+### Radio driver
+
+For single `<input type="radio" />`
+
+### Radios driver
+
+For multiple radios
+
+### Select driver
+
+For select dropdowns
+
+### Textarea driver
+
+For textarea fields
 
 </div> <!-- md -->
 </section>
