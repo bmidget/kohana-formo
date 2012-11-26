@@ -124,7 +124,12 @@ Here are some changes that you need to know in order to upgrade from the last ve
 - File fields have a `NULL` empty value, not an empty `$_FILES` array
 - Out-of-the box styling works now with Twitter Bootstrap. If you need backwards compatibility with the old version of Formo, ste the `template_dir` variable in Formo's config file to `'formo/'`
 - Views are not located in `views/formo/html/{file}`, they are instead located in `template_dir/template`
-- Since there is no longer a `submit` driver, convert all submit drivers to `input|submit` which ultimately becomes an `input` field with the tag `type=submit`
+- The array of values for select options, radios and checkboxes is no longer called `options` and is now called `opts`.
+- If creating a field using an array of key/value pairs, use `val` instead of `value` as the option for the field's value
+- `bool` driver is now `checkbox`
+- `hidden`, `password`, `submit` are now `input|hidden`, `input|password`, `input|submit`
+- `Field::set_all($array)` is now `Formo::set_fields($array)`
+- `Formo_Form::add_group()` has been deprecated. Now just use `Formo::add()` and set the `opts` array for option values
 </div> <!-- md -->
 </section>
 
