@@ -117,7 +117,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * @param mixed $driver (default: NULL)
 	 * @param mixed $value (default: NULL)
 	 * @param array $opts (default: NULL)
-	 * @return void
+	 * @return Formo_Core_Formo
 	 */
 	public function add($alias, $driver = NULL, $value = NULL, array $opts = NULL)
 	{
@@ -675,7 +675,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 *
 	 * @access public
 	 * @param array $array (default: NULL)
-	 * @return void
+	 * @return Formo_Core_Formo
 	 */
 	public function load( array $array = NULL)
 	{
@@ -810,7 +810,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * @param mixed $field
 	 * @param mixed $new_order (default: NULL)
 	 * @param mixed $relative_field (default: NULL)
-	 * @return Formo obj
+	 * @return Formo_Core_Formo
 	 */
 	public function order($field, $new_order = NULL, $relative_field = NULL)
 	{

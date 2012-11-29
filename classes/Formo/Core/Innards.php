@@ -7,7 +7,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Used at construct for reconciling variables
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -20,7 +20,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * HTML tags that don't have a closing </tagname>
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -33,7 +33,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * The field alias
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -41,7 +41,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Array of HTML attributes
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -52,9 +52,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Config options
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -62,7 +62,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Field's driver name
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -70,9 +70,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Whether the field is editable
-	 * 
+	 *
 	 * (default value: true)
-	 * 
+	 *
 	 * @var bool
 	 * @access protected
 	 */
@@ -80,9 +80,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Whether the field should be rendered
-	 * 
+	 *
 	 * (default value: true)
-	 * 
+	 *
 	 * @var bool
 	 * @access protected
 	 */
@@ -90,9 +90,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Field errors
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -100,9 +100,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Field objects within the field
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -110,9 +110,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Array of filters
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -120,9 +120,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Label string
-	 * 
+	 *
 	 * (default value: self::NOTSET)
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -130,9 +130,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Array of options used for select, checkboxes and radios
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -140,7 +140,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Field's parent object
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -148,9 +148,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Array of rules for field
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -158,9 +158,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Array of callbacks
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -168,7 +168,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Keep track of field's values
-	 * 
+	 *
 	 * @var mixed
 	 * @access protected
 	 */
@@ -180,9 +180,9 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Any other variables set with Formo::set()
-	 * 
+	 *
 	 * (default value: array())
-	 * 
+	 *
 	 * @var array
 	 * @access protected
 	 */
@@ -190,7 +190,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Find a config value.
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $param
 	 * @param mixed $default (default: NULL)
@@ -220,7 +220,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Add a rule to a field.
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed $rule
@@ -234,7 +234,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Add rules to a validation object.
-	 * 
+	 *
 	 * @access protected
 	 * @param Validation $validation
 	 * @return void
@@ -246,7 +246,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Turn attributes array into a string.
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -269,7 +269,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Get array from $_FILES.
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -302,7 +302,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Return the formatted string for a field.
-	 * 
+	 *
 	 * @access protected
 	 * @return string
 	 */
@@ -366,7 +366,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Return a field's value.
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -416,7 +416,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * For set() and get(), return the variable name being set, and gotten
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $var
 	 * @return string
@@ -437,7 +437,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Congert an error returned from the Validation object to a formatted message
-	 * 
+	 *
 	 * @access protected
 	 * @param array $errors_array (default: NULL)
 	 * @return string
@@ -526,7 +526,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Load values into the form
-	 * 
+	 *
 	 * @access protected
 	 * @param array $array
 	 * @return void
@@ -550,7 +550,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Make an id for a field that doesn't already have one
-	 * 
+	 *
 	 * @access protected
 	 * @return void
 	 */
@@ -569,7 +569,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Merge an array of values with another array of values
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $name
 	 * @param array $array
@@ -589,7 +589,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Internal method to reorder fields
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $field_alias
 	 * @param mixed $new_order
@@ -664,7 +664,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Search for and remove a rule if it exists
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $alias
 	 * @param mixed $rule
@@ -685,7 +685,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Internal method to run all applicable callbacks
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $type (default: NULL)
 	 * @return void
@@ -722,7 +722,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Set a field's driver
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $driver
 	 * @return void
@@ -744,7 +744,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Set a field's id attribute if the auto_id config setting is TRUE
-	 * 
+	 *
 	 * @access protected
 	 * @param array & $array
 	 * @return void
@@ -764,7 +764,7 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Set the field's value
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $val
 	 * @param mixed $force_new (default: FALSE)
@@ -784,10 +784,10 @@ abstract class Formo_Core_Innards {
 
 	/**
 	 * Allow non-associative arrays to define a new field
-	 * 
+	 *
 	 * @access protected
 	 * @param mixed $array
-	 * @return void
+	 * @return array
 	 */
 	protected function _resolve_construct_aliases($array)
 	{
