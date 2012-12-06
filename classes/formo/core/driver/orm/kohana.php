@@ -2,7 +2,8 @@
 
 class Formo_Core_Driver_ORM_Kohana {
 
-protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one');
+	protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one');
+	protected static $_table_columns = array();
 
 	public static function load( array $array)
 	{
@@ -22,6 +23,8 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 			$options['val'] = $model->$alias;
 			// If the field is a belongs_to field, do some extra processing
 			static::_process_belongs_to($alias, $model, $std, $options);
+			// Process enum fields
+			static::_process_enum($alias, $model, $options);
 			//$foreign_key = $this->_process_belongs_to($alias, $options);
 			// Add meta data for the field
 
@@ -142,6 +145,36 @@ protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one
 		{
 			$options['render'] = false;
 		}
+	}
+
+	public static function _process_enum($alias, Kohana_ORM $model, & $options)
+	{
+		$column = Arr::get(static::_table_columns($model), $alias, array());
+
+		if (Arr::get($column, 'data_type') != 'enum')
+		{
+			return;
+		}
+
+		$opts = Arr::get($column, 'options', array());
+
+		$options['driver'] = 'select';
+		$options['opts'] = array_combine($opts, $opts);
+
+		if (empty($options['val']))
+		{
+			$options['val'] = Arr::geT($column, 'column_default');
+		}
+	}
+
+	public static function _table_columns($model)
+	{
+		if (empty(static::$_table_columns))
+		{
+			static::$_table_columns = $model->table_columns();
+		}
+
+		return static::$_table_columns;
 	}
 
 }
