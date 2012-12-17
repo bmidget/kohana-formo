@@ -261,7 +261,14 @@ abstract class Formo_Core_Innards {
 
 		foreach ($attr as $key => $value)
 		{
-			$str.= ' '.$key.'="'.HTML::entities($value).'"';
+			if ($value === true)
+			{
+				$str.= ' '.$key;
+			}
+			elseif ($value !== false)
+			{
+				$str.= ' '.$key.'="'.HTML::entities($value).'"';
+			}
 		}
 
 		return $str;
