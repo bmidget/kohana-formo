@@ -266,6 +266,16 @@ $opts = array
 $form->('hobbies', 'select', null, ['opts' => $opts]);
 ```
 
+## Multiselect
+
+Multiselects work the same as select except you need to modify the `name` attribute and the `multiple` attribute. The main difference here is the value should be an array instead of a string for a multiselect.
+
+Using the select example above, it looks like this
+
+```
+$form->add('hobbies', 'select', ['jump'], ['opts' => $opts, 'attr.name' => 'hobbies[]', 'attr.multiple' => true]);
+```
+
 ## Radios
 
 ```
