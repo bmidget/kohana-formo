@@ -1,6 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-abstract class Formo_Core_Innards {
+abstract class Formo_Core_Innards
+{
 
 	const NOTSET = '_NOTSET';
 	const OPTS = 3;
@@ -261,7 +262,15 @@ abstract class Formo_Core_Innards {
 
 		foreach ($attr as $key => $value)
 		{
-			$str.= ' '.$key.'="'.HTML::entities($value).'"';
+			if($value === true)
+			{
+				$str.= ' '.$key;
+			}
+			else
+			{
+				$str.= ' '.$key.'="'.HTML::entities($value).'"';
+			}
+
 		}
 
 		return $str;
