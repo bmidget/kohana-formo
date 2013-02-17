@@ -79,6 +79,14 @@ abstract class Formo_Core_Innards {
 	protected $_editable = true;
 
 	/**
+	 * HTML instide a tag
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_html;
+
+	/**
 	 * Whether the field should be rendered
 	 * 
 	 * (default value: true)

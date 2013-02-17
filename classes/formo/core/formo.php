@@ -75,6 +75,37 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Convert just the input to html
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function __invoke()
+	{
+		if ($this->get('render') === false)
+		{
+			return NULL;
+		}
+
+		$str = $this->open();
+
+		$opts = $this->driver('get_opts');
+		$str.= implode("\n", $opts);
+
+		foreach ($this->_fields as $field)
+		{
+			if ($field->get('render') === TRUE)
+			{
+				$str.= $field->render();
+			}
+		}
+		
+		$str.= $this->close();
+
+		return $str;
+	}
+
+	/**
 	 * Determine whether a field exists
 	 * 
 	 * @access public
@@ -629,34 +660,22 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Convert field into HTML
+	 * Get or set HTML
 	 * 
 	 * @access public
-	 * @return string
+	 * @param mixed $str
+	 * @return void
 	 */
-	public function html()
+	public function html($str = NULL)
 	{
-		if ($this->get('render') === false)
+		if (func_num_args() === 0)
 		{
-			return NULL;
+			return $this->_html;
 		}
 
-		$str = $this->open();
+		$this->_html = $str;
 
-		$opts = $this->driver('get_opts');
-		$str.= implode("\n", $opts);
-
-		foreach ($this->_fields as $field)
-		{
-			if ($field->get('render') === TRUE)
-			{
-				$str.= $field->render();
-			}
-		}
-		
-		$str.= $this->close();
-
-		return $str;
+		return $this;
 	}
 
 	/**
@@ -1077,6 +1096,18 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
+		if ($var == 'fields' AND is_array($val))
+		{
+			foreach ($val as $field)
+			{
+				$field['parent'] = $this;
+				$new_field = Formo::factory($field);
+				$this->_fields[] = $new_field;
+			}
+
+			return $this;
+		}
+
 		$parts = NULL;
 		if (strpos($var, '.') !== FALSE)
 		{
@@ -1207,6 +1238,37 @@ class Formo_Core_Formo extends Formo_Innards {
 	public function title()
 	{
 		return $this->driver('get_title');
+	}
+
+	/**
+	 * Use for casting to json or across an api
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function to_array()
+	{
+		$array = array
+		(
+			'alias' => $this->alias(),
+			'driver' => $this->get('driver'),
+			'val' => $this->val(),
+			'opts' => $this->get('opts'),
+			'attr' => $this->get('attr'),
+			'rules' => $this->get('rules'),
+			'html' => $this->html(),
+			'fields' => array(),
+		);
+
+		if ($fields = $this->get('fields'))
+		{
+			foreach ($fields as $field)
+			{
+				$array['fields'][] = $field->to_array();
+			}
+		}
+
+		return $array;
 	}
 
 	public function val($new_val = NULL, $force_new = FALSE)

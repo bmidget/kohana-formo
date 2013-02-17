@@ -23,12 +23,4 @@ class Formo_Core_Driver_Button extends Formo_Driver {
 		return 'button';
 	}
 
-	public static function open( array $array)
-	{
-		$str = $array['str'];
-		$field = $array['field'];
-
-		return $str.= $field->alias();
-	}
-
 }

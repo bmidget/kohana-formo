@@ -5,7 +5,7 @@
 		<span class="title"><?=$title?></span>
 	<?php endif; ?>
 
-	<?=$field->open().$field->render_opts().$field->close()?>
+	<?=$field->open().$field->html().$field->render_opts().$field->close()?>
 
 	<?php if ($msg = $field->error()): ?>
 		<span class="help-block"><?=$msg?></span>
