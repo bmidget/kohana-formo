@@ -81,6 +81,7 @@
           <li><a href="#ordering"><i class="icon-chevron-right"></i> Ordering</a></li>
           <li><a href="#subforms"><i class="icon-chevron-right"></i> Subforms</a></li>
           <li><a href="#drivers"><i class="icon-chevron-right"></i> Driver Descriptions</a></li>
+          <li><a href="#helper-methods"><i class="icon-chevron-right"></i> HTML helper methods</a></li>
           <li><a href="#config"><i class="icon-chevron-right"></i> Config settings</a></li>
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
         </ul>
@@ -564,6 +565,8 @@ Used for subforms. The `group` acts like the `form` driver without the opening a
 
 Used for `<button>`
 
+Don't forget to set the field's `html` that goes inside the `<button>` tags.
+
 ### Checkbox driver
 
 For single `<input type="checkbox" />`
@@ -597,6 +600,89 @@ For select dropdowns
 For textarea fields
 
 </div> <!-- md -->
+</section>
+
+<section id="helper-methods">
+	<div class="page-header">
+		<h1>HTML helper methods</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+## These methods add important HTML to your field elements at render time
+
+### Formo::attr()
+
+Add attributes to the field's tag.
+
+```
+$field->attr('class', 'someClass');
+```
+
+You can add multiple attributes by using an array
+
+```
+$field->attr([
+	'id' => 'myId',
+	'onclick' => 'myevent',
+]);
+```
+
+To directly set the `attr` array of a field:
+
+```
+// Directly access array
+$field->set('attr', $array);
+
+// Add it when creating the field object
+$form->add('myfield', 'input', null, [
+	'attr' => [
+		'id' => 'myId',
+		'onclick' => 'myevent',
+	]
+]);
+```
+
+To get it:
+
+```
+$array = $field->get('attr');
+```
+
+### Formo::html()
+
+Set the html string that goes between the open and close tag.
+
+**Note that this will render before any option fields (like for `select`, `radios`, `checkboxes`)
+
+```
+$field->html($myhtml);
+```
+
+To retrieve it:
+```
+$html = $field->html();
+```
+
+To set it when creating the field object
+```
+$field->add('myfield', 'button', $val, [
+	'html' => 'My field is awesome!',
+]);
+```
+
+### Formo::add_class()
+
+Adds a class to the field's `attr` array if it doesn't alreay exist.
+
+Also accepts an array or space-separated classes.
+
+### Formo::remove_class()
+
+Removes a class from the field's `attr` array if it exists.
+
+Also accepts an array or space-separated classes.
+
+</div>
 </section>
 
 <section id="config">
