@@ -131,6 +131,7 @@ Here are some changes that you need to know in order to upgrade from the last ve
 - `Field::set_all($array)` is now `Formo::set_fields($array)`
 - `Formo_Form::add_group()` has been deprecated. Now just use `Formo::add()` and set the `opts` array for option values
 - Formo no longer auto-loads *belongs to*, *has many*, *has one* or *belongs to* relationships
+- Button fields no longer automatically add any html inside the button tag. To do it, set the field's HTML. (See <a href="form-basics#helper-methods"><i class="icon-chevron-right"></i> HTML helper methods</a>)
 </div> <!-- md -->
 </section>
 
