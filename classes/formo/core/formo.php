@@ -53,11 +53,23 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function __construct( array $array = NULL)
 	{
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', 'create objects');
+		}
+
 		$array = $this->_resolve_construct_aliases($array);
 
 		foreach ($array as $key => $value)
 		{
 			$this->set($key, $value);
+		}
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
 		}
 	}
 
@@ -1019,6 +1031,12 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function render()
 	{
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
 		if ($this->get('render') === FALSE)
 		{
 			return NULL;
@@ -1032,7 +1050,15 @@ class Formo_Core_Formo extends Formo_Innards {
 			->set('label', $this->label())
 			->set('title', $this->title());
 
-		return $view->render();
+		$str = $view->render();
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
+		}
+
+		return $str;
 	}
 
 	/**
@@ -1248,6 +1274,12 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function to_array()
 	{
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
 		$array = array
 		(
 			'alias' => $this->alias(),
@@ -1310,6 +1342,12 @@ class Formo_Core_Formo extends Formo_Innards {
 			return;
 		}
 
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
 		$pass_validation = TRUE;
 
 		foreach ($this->_fields as $field)
@@ -1339,6 +1377,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		if ($this->error())
 		{
 			$pass_validation = FALSE;
+		}
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
 		}
 
 		return $pass_validation;
