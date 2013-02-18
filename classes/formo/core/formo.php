@@ -1241,7 +1241,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Use for casting to json or across an api
+	 * Use for casting to json or for sending form objects across an api
 	 * 
 	 * @access public
 	 * @return void
@@ -1257,13 +1257,16 @@ class Formo_Core_Formo extends Formo_Innards {
 			'attr' => $this->get('attr'),
 			'rules' => $this->get('rules'),
 			'html' => $this->html(),
+			'render' => $this->get('render'),
 			'fields' => array(),
 		);
 
-		if ($fields = $this->get('fields'))
+		// Traverse through fields if this field is considered a parent field
+		if ($this->driver('is_a_parent'))
 		{
-			foreach ($fields as $field)
+			foreach ($this->get('fields') as $field)
 			{
+				// Attach the field as an array
 				$array['fields'][] = $field->to_array();
 			}
 		}
