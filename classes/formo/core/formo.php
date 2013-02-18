@@ -129,6 +129,14 @@ class Formo_Core_Formo extends Formo_Innards {
 		return (bool) $this->find($key, TRUE);
 	}
 
+	/**
+	 * Add a field to another field. Only works with Formo objects
+	 * 
+	 * @access public
+	 * @param mixed $key
+	 * @param mixed $value
+	 * @return void
+	 */
 	public function __set($key, $value)
 	{
 		if ( ! $value instanceof Formo)
@@ -186,9 +194,11 @@ class Formo_Core_Formo extends Formo_Innards {
 
 			if ($form->get('driver') === 'form')
 			{
+				// Convert form driver to group driver since form should only be used once
 				$form->set('driver', 'group');
 			}
 
+			// Always set the parent object
 			$form->set('parent', $this);
 
 			return $this;
@@ -200,6 +210,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		$field = Formo::factory($args);
 		$this->_fields[] = $field;
 
+		// Run the 'added' method in field's driver
 		$field->driver('added');
 
 		return $this;
@@ -238,7 +249,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Add a rule for multiple rules
+	 * Add a single rule
 	 * 
 	 * @access public
 	 * @param mixed $alias
@@ -280,7 +291,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $rules)
 		{
-			$field = $this->find($alias);
+			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
 			{
@@ -372,7 +383,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $values)
 		{
-			$field = $this->find($alias);
+			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
 			{
@@ -399,7 +410,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			foreach ($type as $alias => $callbacks)
 			{
-				$field = $this->find($alias);
+				$field = $this->find($alias, TRUE);
 				$field->merge('callbacks', $callbacks);
 			}
 		}
@@ -723,6 +734,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			return $this;
 		}
+
+		if (Kohana::$profiling === TRUE)
+		{
+			// Start a new benchmark
+			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
 		
 		if ($this->config('namespaces') === TRUE)
 		{
@@ -742,6 +759,12 @@ class Formo_Core_Formo extends Formo_Innards {
 		else
 		{
 			$this->_load($array);
+		}
+
+		if (isset($benchmark))
+		{
+			// Stop benchmarking
+			Profiler::stop($benchmark);
 		}
 
 		return $this;
@@ -783,7 +806,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $properties)
 		{
-			$field = $this->find($alias);
+			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
 			{
@@ -1012,7 +1035,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $rules)
 		{
-			$field = $this->find($alias);
+			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
 			{
@@ -1171,7 +1194,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $vals)
 		{
-			$field = $this->find($alias);
+			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
 			{
