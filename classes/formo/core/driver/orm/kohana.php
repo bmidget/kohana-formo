@@ -23,6 +23,7 @@ class Formo_Core_Driver_ORM_Kohana {
 			$options['val'] = $model->$alias;
 			// If the field is a belongs_to field, do some extra processing
 			static::_process_belongs_to($alias, $model, $std, $options);
+			static::_process_has_one($alias, $model, $std, $options);
 			// Process enum fields
 			static::_process_enum($alias, $model, $options);
 			//$foreign_key = $this->_process_belongs_to($alias, $options);
@@ -37,6 +38,8 @@ class Formo_Core_Driver_ORM_Kohana {
 			$field
 				->add($options);
 		}
+
+		static::_process_has_many($alias, $model, $std, $field);
 
 		$rules = static::_get_base_rules($model);
 		$rules = Arr::merge($rules, $model->rules());
@@ -59,8 +62,6 @@ class Formo_Core_Driver_ORM_Kohana {
 			unset($array['model']);
 			$model->formo($field, $array);
 		}
-
-		//$this->_add_has_relationships();
 	}
 
 	public static function select_list($result, $key, $value)
@@ -128,7 +129,7 @@ class Formo_Core_Driver_ORM_Kohana {
 	{
 		if ( ! isset($std->belongs_to['foreign_keys'][$alias]))
 		{
-			// No need to process non-belongs-to fields
+			// No need to process non-belongs-to fields here
 			return NULL;
 		}
 
@@ -136,7 +137,7 @@ class Formo_Core_Driver_ORM_Kohana {
 
 		$options['driver'] = 'select';
 
-		if (Arr::get($std->belongs_to['definitions'][$field_alias], 'formo') !== false)
+		if (Arr::get($std->belongs_to['definitions'][$field_alias], 'formo') === true)
 		{
 			$opts = ORM::factory($std->belongs_to['definitions'][$field_alias]['model'])->find_all();
 			$options['opts'] = static::select_list($opts, 'id', 'name');
@@ -146,6 +147,61 @@ class Formo_Core_Driver_ORM_Kohana {
 			$options['render'] = false;
 		}
 	}
+
+	protected static function _process_has_many($alias, Kohana_ORM $model, stdClass $std, Formo $form)
+	{
+		if (empty($std->has_many))
+		{
+			// No need to process non-has-many fields here
+			return NULL;
+		}
+
+		foreach (Arr::get($std->has_many, 'definitions', array()) as $key => $values)
+		{
+			if (Arr::get($values, 'formo') === true)
+			{
+				$rs_all = ORM::factory($values['model'])
+					->find_all();
+
+				$rs_in = ORM::factory($values['model'])
+					->where($values['foreign_key'], '=', $model->pk())
+					->find_all();
+
+				$opts = static::select_list($rs_all, 'id', 'name');
+				$val = static::select_list($rs_in, 'id', 'id');
+
+				$form->add($key, 'checkboxes', $val, array('opts' => $opts));
+			}
+			else
+			{
+				$form->add($key, 'checkboxes', null, array('render' => false));
+			}
+		}
+	}
+
+	protected static function _process_has_one($alias, Kohana_ORM $model, stdClass $std, array & $options)
+	{
+		if ( ! isset($std->has_one['foreign_keys'][$alias]))
+		{
+			// No need to process non-belongs-to fields here
+			return NULL;
+		}
+
+		$field_alias = $std->has_one['foreign_keys'][$alias];
+
+		$options['driver'] = 'select';
+
+		if (Arr::get($std->has_one['definitions'][$field_alias], 'formo') === true)
+		{
+			$opts = ORM::factory($std->has_one['definitions'][$field_alias]['model'])->find_all();
+			$options['opts'] = static::select_list($opts, 'id', 'name');
+		}
+		else
+		{
+			$options['render'] = false;
+		}
+	}
+
 
 	public static function _process_enum($alias, Kohana_ORM $model, & $options)
 	{
