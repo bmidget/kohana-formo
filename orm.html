@@ -74,6 +74,7 @@
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#integration"><i class="icon-chevron-right"></i> ORM Integration</a></li>
           <li><a href="#rules"><i class="icon-chevron-right"></i> Sharing model rules and filters</a></li>
+          <li><a href="#auto-load"><i class="icon-chevron-right"></i> Auto-loading relationships</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -172,6 +173,29 @@ If the method is not defined in your model, Formo will not call anything.
 </div> <!-- md -->
 </section>
 
+<section id="auto-load">
+	<div class="page-header">
+		<h1>Auto Loading relationships</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+### Formo can auto-load relationship fields
+
+To do this, add `'formo' => TRUE` to your relationship definition.
+
+Here's an example of a model's relationship definitions telling formo to auto-load relationships:
+
+```
+protected $_belongs_to = array('class' => array('formo' => TRUE));
+protected $_has_many = array(
+	'foos' => array(
+		'model' => 'foo',
+		'foreign_key' => 'bar_id',
+		'formo' => TRUE,
+	),
+);
+```
+</div> <!-- md -->
 
 
 
