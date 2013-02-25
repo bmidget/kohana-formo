@@ -66,10 +66,17 @@ class Formo_Core_Driver_File extends Formo_Driver {
 
 				$filename = $new_val;
 				$parts = explode('/', $filename);
+
+				// Determine mime type
+				$finfo = new finfo(FILEINFO_MIME);
+				$finfo_str = $finfo->file($filename);
+				$finfo_parts = explode(';', $finfo_str);
+				$mime = Arr::get($finfo_parts, 0);
+
 				$new_val = array
 				(
 					'name' => Arr::get($parts, count($parts) - 1),
-					'type' => mime_content_type($filename),
+					'type' => $mime,
 					'tmp_name' => $filename,
 					'error' => 0,
 					'size' => filesize($new_val),
