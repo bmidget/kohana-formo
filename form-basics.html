@@ -202,6 +202,7 @@ $form->add([
           </div>
 
 <div class="md">
+For more detailed instructions on validation, see the [full validation documentation](/validation).
 ### Loading posted
 
 The `Formo::load()` method tells the form that whatever array is passed as a parameter is what was posted. If no parameter is specified.
@@ -315,6 +316,32 @@ $form = Formo::form()
 ```
 
 That sets `$form->_config[‘label_message_file’] = $new_file`.
+
+## Setting stuff for a bunch of fields at once.
+
+Use `Formo::set_fields()` for setting variables for a bunch of fields at once.
+
+Note that `Formo::set_fields()` does not throw an exception if a field doesn't exist in the form object. It is intended to be used in general setup methods to define a bunch of defaults, like in `Model::formo()` for instance.
+
+```
+$form->set_fields([
+	'email' => [
+		'driver' => 'input|email',
+		'rules' => [
+			['unique_email']
+		],
+		'attr.placeholder' => 'john@doe.com',
+	],
+	'foo' => [
+		'driver' => 'select',
+		'rules' [
+			['bar', ':model']
+		],
+		'attr.placeholder' => 'foobar',
+		'attr.class' => 'myclass',
+	].
+]);
+```
 
 ## Getting stuff
 
@@ -703,13 +730,13 @@ Here's a rather complicated example:
 
 ```
 $form = Formo::form()
-	->add('first_name', 'input', NULL, array('label_message_file' => 'mymessages2'));
+	->add('first_name', 'input', NULL, ['label_message_file' => 'mymessages2']);
 
 $form2 = Formo::form([
 	'alias' => 'form2',
 	'label_message_file' => 'mymessages3',
 ])
-->add('last_name', 'input', NULL, array('label_message_file' => FALSE))
+->add('last_name', 'input', NULL, ['label_message_file' => FALSE])
 ->add('middle_initial', 'input', NULL);
 
 $form->add($form2);

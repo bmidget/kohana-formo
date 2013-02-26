@@ -119,14 +119,13 @@ Use any of the following driver|type combindations:
 ## Datalist
 
 ```
-$opts = array
-(
+$opts = [
 	'run'        => 'running',
 	'jump'       => 'jumping',
 	'crawl'      => 'crawling',
 	'swim'       => 'swimming',
 	'basketball' => 'basketball',
-);
+];
 
 $form->add('hobbies', 'datalist', NULL, ['opts' => $opts]);
 ```
@@ -221,19 +220,18 @@ $form->attr([
 	</div> <!-- page-header -->
 
 <div class="md">
-These field types require an `opts` array of `value => label` pairs that are used for the checkboxes, readios and options.
+These field types require an `opts` array of `value => label` pairs that are used for the checkboxes, radios and options.
 
 Here, we are creating all three field types from one array.
 
 ```
-$opts = array
-(
+$opts = [
 	'run'        => 'running',
 	'jump'       => 'jumping',
 	'crawl'      => 'crawling',
 	'swim'       => 'swimming',
 	'basketball' => 'basketball',
-);
+];
 ```
 
 ## Select
@@ -248,18 +246,16 @@ For optgroups, use arrays within the `opts` array, like this:
 ```
 $opts = array
 (
-	'on foot' => array
-	(
+	'on foot' => [
 		'run'  => 'running',
 		'jump' => 'jumping',
 		'skip' => 'skipping',
-	),
-	'on water' => array
-	(
+	],
+	'on water' => [
 		'swim' => 'swimming',
 		'boat' => 'boating',
 		'dive' => 'diving',
-	),
+	],
 	'basketball' => 'basketball',
 );
 
@@ -371,16 +367,16 @@ Here's an example
 $form = Formo::form();
 
 $form->mailing_address = Formo::form()
-	->add('city', 'input', null, array('rules' => array(array('not_empty'))))
-	->add('state', 'input', null, array('rules' => array(array('not_empty'))))
-	->add('zip', 'input', null, array('rules' => array(array('not_empty'))));
+	->add('city', 'input', null, ['rules' => [['not_empty']]])
+	->add('state', 'input', null, ['rules' => [['not_empty']]])
+	->add('zip', 'input', null, ['rules' => [['not_empty']]]);
 
 $form->add('different_shipping_address', 'checkbox');
 
 $form->shipping_address = Formo::form()
-	->add('city', 'input', null, array('rules' => array(array('not_empty'))))
-	->add('state', 'input', null, array('rules' => array(array('not_empty'))))
-	->add('zip', 'input', null, array('rules' => array(array('not_empty'))));
+	->add('city', 'input', null, ['rules' => [['not_empty']]])
+	->add('state', 'input', null, ['rules' => [['not_empty']]])
+	->add('zip', 'input', null, ['rules' => [['not_empty']]]);
 
 $form->add('submit', 'input|submit', 'save')
 	->load($this->request->post());
