@@ -485,51 +485,58 @@ abstract class Formo_Core_Innards {
 				':value' => $this->val(),
 			);
 
-			if ($message = Kohana::message($file, "{$field}.{$error}"))
+			if ($file === FALSE)
 			{
-				// Found a message for this field and error
-			}
-			elseif ($message = Kohana::message($file, "{$field}.default"))
-			{
-				// Found a default message for this field
-			}
-			elseif ($message = Kohana::message($file, $error))
-			{
-				// Found a default message for this error
+				$message = $error;
 			}
 			else
 			{
-				// No message exists, display the path expected
-				$message = "{$file}.{$field}.{$error}";
-			}
-
-			if ($params)
-			{
-				foreach ($params as $key => $value)
+				if ($message = Kohana::message($file, "{$field}.{$error}"))
 				{
-					if (is_array($value))
-					{
-						// All values must be strings
-						$value = implode(', ', Arr::flatten($value));
-					}
-					elseif (is_object($value))
-					{
-						// Objects cannot be used in message files
-						continue;
-					}
-
-					if ($field = $this->parent(TRUE)->find($value, TRUE))
-					{
-						// Use a field's label if we're referencing a field
-						$value = $field->label();
-					}
-
-					// Add each parameter as a numbered value, starting from 1
-					$values[':param'.($key + 1)] = $value;
+					// Found a message for this field and error
 				}
+				elseif ($message = Kohana::message($file, "{$field}.default"))
+				{
+					// Found a default message for this field
+				}
+				elseif ($message = Kohana::message($file, $error))
+				{
+					// Found a default message for this error
+				}
+				else
+				{
+					// No message exists, display the path expected
+					$message = "{$file}.{$field}.{$error}";
+				}
+	
+				if ($params)
+				{
+					foreach ($params as $key => $value)
+					{
+						if (is_array($value))
+						{
+							// All values must be strings
+							$value = implode(', ', Arr::flatten($value));
+						}
+						elseif (is_object($value))
+						{
+							// Objects cannot be used in message files
+							continue;
+						}
+	
+						if ($field = $this->parent(TRUE)->find($value, TRUE))
+						{
+							// Use a field's label if we're referencing a field
+							$value = $field->label();
+						}
+	
+						// Add each parameter as a numbered value, starting from 1
+						$values[':param'.($key + 1)] = $value;
+					}
+				}
+	
+				$message = strtr($message, $values);
 			}
-
-			$message = strtr($message, $values);
 
 			return ($translate === TRUE)
 				? __($message)
