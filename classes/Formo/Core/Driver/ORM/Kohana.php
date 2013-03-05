@@ -135,16 +135,11 @@ class Formo_Core_Driver_ORM_Kohana {
 
 		$field_alias = $std->belongs_to['foreign_keys'][$alias];
 
-		$options['driver'] = 'select';
-
 		if (Arr::get($std->belongs_to['definitions'][$field_alias], 'formo') === true)
 		{
+			$options['driver'] = 'select';
 			$opts = ORM::factory($std->belongs_to['definitions'][$field_alias]['model'])->find_all();
 			$options['opts'] = static::select_list($opts, 'id', 'name');
-		}
-		else
-		{
-			$options['render'] = false;
 		}
 	}
 
@@ -189,16 +184,11 @@ class Formo_Core_Driver_ORM_Kohana {
 
 		$field_alias = $std->has_one['foreign_keys'][$alias];
 
-		$options['driver'] = 'select';
-
 		if (Arr::get($std->has_one['definitions'][$field_alias], 'formo') === true)
 		{
+			$options['driver'] = 'select';
 			$opts = ORM::factory($std->has_one['definitions'][$field_alias]['model'])->find_all();
 			$options['opts'] = static::select_list($opts, 'id', 'name');
-		}
-		else
-		{
-			$options['render'] = false;
 		}
 	}
 
