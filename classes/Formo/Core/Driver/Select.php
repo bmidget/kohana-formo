@@ -49,9 +49,9 @@ class Formo_Core_Driver_Select extends Formo_Driver {
 	{
 		$new_val = $array['new_val'];
 
-		return $new_val
-			? $new_val
-			: NULL;
+		return ($new_val === NULL OR $new_val === '')
+			? NULL
+			: $new_val;
 	}
 
 }
