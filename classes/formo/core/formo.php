@@ -872,7 +872,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			foreach($field as $alias => $values)
 			{
-				$this->order($alias, $values[0], $values[1]);
+				$this->order($alias, Arr::get($values, 0), Arr::get($values, 1));
 			}
 		}
 		else
