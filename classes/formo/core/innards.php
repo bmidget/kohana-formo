@@ -861,4 +861,35 @@ abstract class Formo_Core_Innards {
 
 		return $_array;
 	}
+
+	/**
+	 * Validation method that properly validates for html5 range
+	 * 
+	 * @access public
+	 * @static
+	 * @param mixed $field
+	 * @param mixed $form
+	 * @return boolean
+	 */
+	public static function range($field, $form)
+	{
+		$value = $form->$field->val();
+		$attr = $form->$field->get('attr');
+
+		$max = Arr::get($attr, 'max');
+		$min = Arr::get($attr, 'min');
+		$step = Arr::get($attr, 'step');
+
+		if ($min AND $value <= $min)
+			return FALSE;
+
+		if ($max AND $value >= $max)
+			return FALSE;
+
+		// Use the default step of 1
+		( ! $step AND $step = 1);
+
+		return strpos(($value - $min) / $step, '.') === FALSE;
+	}
+
 }
