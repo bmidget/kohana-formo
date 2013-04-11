@@ -1052,7 +1052,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * @access public
 	 * @return string
 	 */
-	public function render()
+	public function render($template = NULL)
 	{
 		if (Kohana::$profiling === TRUE)
 		{
@@ -1065,8 +1065,11 @@ class Formo_Core_Formo extends Formo_Innards {
 			return NULL;
 		}
 
-		$template = $this->driver('get_template');
-		$template = $this->config('template_dir').$template;
+		if ($template == NULL)
+		{
+			$template = $this->driver('get_template');
+			$template = $this->config('template_dir').$template;
+		}
 
 		$view = View::factory($template)
 			->set('field', $this)
