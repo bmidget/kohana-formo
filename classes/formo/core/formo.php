@@ -100,6 +100,8 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$str = $this->open();
+		$str.= $this->html();
+		$str.= $this->render_opts();
 
 		$opts = $this->driver('get_opts');
 		$str.= implode("\n", $opts);
