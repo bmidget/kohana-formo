@@ -773,7 +773,7 @@ abstract class Formo_Core_Innards {
 	 */
 	protected function _set_id( array & $array)
 	{
-		if ($this->config('auto_id') === TRUE AND empty($array['attr']['id']))
+		if ($this->config('auto_id') === TRUE AND Arr::path($array, 'attr.id') === NULL)
 		{
 			if (empty($array['attr']))
 			{
