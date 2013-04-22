@@ -73,7 +73,7 @@
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#html5"><i class="icon-chevron-right"></i> HTML5 Inputs</a></li>
-          <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/Attributes</a></li>
+          <li><a href="#class"><i class="icon-chevron-right"></i> Add Class/HTML Attributes</a></li>
           <li><a href="#cb"><i class="icon-chevron-right"></i> Checkboxes, Radios, Select</a></li>
           <li><a href="#templates"><i class="icon-chevron-right"></i> Custom templates</a></li>
           <li><a href="#optional-subforms"><i class="icon-chevron-right"></i> Optional subforms</a></li>
@@ -135,7 +135,7 @@ $form->add('hobbies', 'datalist', NULL, ['opts' => $opts]);
 
 <section id="class">
 	<div class="page-header">
-		<h1>Add class/attributes</h1>
+		<h1>Add class/HTML attributes</h1>
 	</div> <!-- page-header -->
 
 
@@ -158,7 +158,7 @@ $form->add('email', 'input|email', NULL, ['attr.class' => 'foo bar']);
 $form->email->set('attr.class', 'foo bar');
 ```
 
-## Attributes
+## HTML Attributes
 
 HTML attributes can be directly manipulated in Formo objects as well. They exist in the `attr` field attribute.
 
@@ -210,6 +210,16 @@ $form->attr([
 	'class' => 'foobar',
 	'onclick' => 'do_somethign()',
 ])
+```
+
+# Single tags, such as 'disabled'
+
+For HTML tags that don't require a value, set the value to `true`. Here's an example of disabling a field:
+
+```
+$field->set('attr.disabled', true);
+
+// Renders as &lt;tagName disabled...&gt;
 ```
 </div> <!-- md -->
 </section>
