@@ -563,7 +563,7 @@ abstract class Formo_Core_Innards {
 			{
 				$field->driver('load', array('val' => $value));
 			}
-			elseif ($field->driver('can_be_empty') === TRUE)
+			elseif ($field->get('can_be_empty', $field->driver('can_be_empty')) === TRUE)
 			{
 				$field->val(null);
 			}
