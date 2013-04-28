@@ -93,22 +93,32 @@
 <div class="md">
 ## Adding rules
 
-To add a rule to a field, use `Formo::add_rule($array)`.
+When adding rules to a field, you can either:
 
-Using this method, you can either:
+1. Add a rule to a field using `Formo::add_rule()`
+2. Add a bunch of rules to a bunch of different fields using `Formo::add_rules()`
 
-1. Add a bunch of rules to a bunch of different fields
-2. Add a rule to the field
-
-To add a single rule, pass an array containing a Kohana Validation rule definition
+To add a single rule, you can pass a Kohana Validation rule definition as a single array (similar to `Validation::rules()`):
 
 ```
 $form->email
 	->add_rule(['not_empty'])
 	->add_rule(['email']);
+$form->confirm
+	->add_rule(['matches', [':form_val', 'password', 'confirm']]);
 ```
 
-To add more than one field at a time, use `Formo::add_rules()`:
+or as separate `rule` and `params` arguments (similar to `Validation::rule()`):
+
+```
+$form->email
+	->add_rule('not_empty')
+	->add_rule('email');
+$form->confirm
+	->add_rule('matches', [':form_val', 'password', 'confirm']);
+```
+
+To add more than one field at a time, pass an array of Validation rule definition arrays to `Formo::add_rules()`:
 
 ```
 $form->email->add_rules([
@@ -236,7 +246,7 @@ What this is saying is: “Update all field values from the `$_POST` array, and 
 
 Formo first checks whether the form appears to be sent at all, and returns `FALSE` if it wasn’t sent.
 
-IF you don’t specify an array in `Formo::load()`, Formo will load values from `Request::$current->post()` by default. Thus, this is the most common syntax for validation:
+If you don’t specify an array in `Formo::load()`, Formo will load values from `Request::$current->post()` by default. Thus, this is the most common syntax for validation:
 
 ```
 if ($form->load()->validate())
@@ -244,6 +254,46 @@ if ($form->load()->validate())
 	// Passed!
 }
 ```
+
+One important thing to note is that, in most cases, `Formo::load()` loads only what's passed to it and not necessarily what's defined in the form.  This means that if you have a field defined in the form but nothing present in the passed array, the value will remain how you set it.  This is typically a desired behavior, as it allows you to set and maintain a default value for the field.
+
+However, it can sometimes be an issue.  Here's a relevant example using CSRF tokens:
+
+```
+$csrf = Security::token();
+
+$form = Formo::form();
+// Add stuff meaningful stuff to form, then:
+	->add('csrf', 'input|hidden', $csrf);
+
+$form->csrf
+	->add_rule(['equals', [':value', $csrf]]);
+
+if ($form->load()->validate())
+{
+	// Passed... but perhaps not securely.
+}
+```
+
+If the user sends a $_POST that has an invalid CSRF token, this will correctly fail validation.  However, if the user sends a $_POST with no CSRF set at all, it will pass.  To override this default behavior, set the `can_be_empty` parameter.  This tells Formo that the contents should be loaded even if they're empty, and is enabled by default for `checkbox` and `checkboxes` drivers.  Here's our example slightly reworked:
+
+```
+$csrf = Security::token();
+
+$form = Formo::form();
+// Add stuff meaningful stuff to form, then:
+	->add('csrf', 'input|hidden', $csrf);
+
+$form->csrf
+	->add_rule(['equals', [':value', $csrf]])
+	->set('can_be_empty', true);
+
+if ($form->load()->validate())
+{
+	// Passed securely!
+}
+```
+
 </div> <!-- md -->
 
 </section>
