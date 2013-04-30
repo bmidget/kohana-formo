@@ -502,7 +502,7 @@ $form = Formo::form()
 	</div> <!-- page-header -->
 
 <div class="md">
-You can attach 'pass' and 'fail' callbacks to fields and forms. Callbacks are anonymous functions that run in the order they are added to the field or form.
+You can attach 'pass' and 'fail' callbacks to fields and forms. Callbacks are anonymous or named functions that run in the order they are added to the field or form.
 
 The field or form object — whichever object contains the callback — is the single value passed into the callback function.
 
@@ -523,7 +523,8 @@ $form->callback([
 			},
 			function($field) {
 				// Do something else
-			}
+			},
+			'Foo::add_email'    // Call Foo::add_email($field)
 		]
 	]
 ]);
