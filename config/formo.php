@@ -16,6 +16,9 @@ return array
 	'auto_id'                 => TRUE,
 	// The directory for the formo templates (ex: 'formo' or 'formo_bootstrap')
 	'template_dir'            => 'formo_bootstrap/',
+	// The extension for the formo templates
+	// FALSE or extension (ex: FALSE looks for 'template.php', 'html' looks for 'template.html.php')
+	'template_ext'            => FALSE,
 	// Namespace fields (name="parent_alias[field_alias]")
 	'namespaces'              => TRUE,
 	// Driver used for ORM integration
