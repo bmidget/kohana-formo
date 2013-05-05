@@ -333,7 +333,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * 
 	 * @access public
 	 * @param mixed $value (default: NULL)
-	 * @param mixed $recursive (default: FALSE)
+	 * @param boolean $recursive (default: FALSE)
 	 * @return array
 	 */
 	public function as_array($value = NULL, $recursive = FALSE)
@@ -578,7 +578,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * 
 	 * @access public
 	 * @param mixed $alias
-	 * @param mixed $not_recursive (default: FALSE)
+	 * @param boolean $not_recursive (default: FALSE)
 	 * @return mixed
 	 */
 	public function find($alias, $not_recursive = FALSE)
