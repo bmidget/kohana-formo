@@ -1,0 +1,8 @@
+{
+	"minimum-stability": "dev",
+    "name": "external/formo",
+    "type": "kohana-module",
+    "description": "Object-based form handling for Kohana 3",
+    "keywords": ["kohana", "forms"],
+    "homepage": "https://github.com/dfox288/kohana-formo"
+}
