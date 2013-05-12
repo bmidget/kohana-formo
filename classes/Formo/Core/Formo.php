@@ -1275,6 +1275,31 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Set a single variable for a set of fields
+	 * 
+	 * @access public
+	 * @param mixed $var
+	 * @param array $array
+	 * @return void
+	 */
+	public function set_var_fields($var, array $array)
+	{
+		foreach ($array as $alias => $val)
+		{
+			$field = $this->find($alias, TRUE);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->set($var, $val);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Determine whether a form or field has been sent
 	 * 
 	 * @access public
