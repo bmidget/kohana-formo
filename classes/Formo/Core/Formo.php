@@ -439,6 +439,8 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			$this->merge('callbacks', array($type => $callbacks));
 		}
+		
+		return $this;
 	}
 
 	/**
@@ -671,11 +673,13 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function get($var, $default = NULL)
 	{
-		$parts = NULL;
 		if (strpos($var, '.') !== FALSE)
 		{
-			$parts = explode('.', $var);
-			$var = array_shift($parts);
+			list($var, $parts) = explode('.', $var, 2);
+		}
+		else
+		{
+			$parts = NULL;
 		}
 
 		if ($var === 'val')
@@ -688,12 +692,19 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		if ($array_name === '_vars')
 		{
-			return Arr::get($this->_vars, $var, $default);
+			if ($parts)
+			{
+				return Arr::path($this->_vars, "{$var}.{$parts}", $default);
+			}
+			else
+			{
+				return Arr::get($this->_vars, $var, $default);
+			}
 		}
 
 		if ($parts)
 		{
-			return Arr::path($this->$array_name, implode('.', $parts), $default);
+			return Arr::path($this->$array_name, $parts, $default);
 		}
 		else
 		{
@@ -1050,6 +1061,8 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			$this->remove_rule($rule_to_remove);
 		}
+		
+		return $this;
 	}
 
 	/**
@@ -1072,6 +1085,8 @@ class Formo_Core_Formo extends Formo_Innards {
 
 			$field->remove_rule($rules);
 		}
+		
+		return $this;
 	}
 
 	/**
@@ -1200,22 +1215,31 @@ class Formo_Core_Formo extends Formo_Innards {
 			return $this;
 		}
 
-		$parts = NULL;
 		if (strpos($var, '.') !== FALSE)
 		{
-			$parts = explode('.', $var);
-			$var = array_shift($parts);
+			list($var, $parts) = explode('.', $var, 2);
+		}
+		else
+		{
+			$parts = NULL;
 		}
 
 		$array_name = $this->_get_var_name($var);
 
-		if ($parts)
+		if ($array_name === '_vars')
 		{
-			Arr::set_path($this->$array_name, implode('.', $parts), $val);
+			if ($parts)
+			{
+				return Arr::set_path($this->_vars, "{$var}.{$parts}", $val);
+			}
+			else
+			{
+				$this->_vars[$var] = $val;
+			}
 		}
-		elseif ($array_name === '_vars')
+		elseif ($parts)
 		{
-			$this->_vars[$var] = $val;
+			Arr::set_path($this->$array_name, $parts, $val);
 		}
 		else
 		{
@@ -1245,6 +1269,31 @@ class Formo_Core_Formo extends Formo_Innards {
 			}
 
 			$field->set($vals);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set a single variable for a set of fields
+	 * 
+	 * @access public
+	 * @param mixed $var
+	 * @param array $array
+	 * @return void
+	 */
+	public function set_var_fields($var, array $array)
+	{
+		foreach ($array as $alias => $val)
+		{
+			$field = $this->find($alias, TRUE);
+
+			if ( ! $field)
+			{
+				continue;
+			}
+
+			$field->set($var, $val);
 		}
 
 		return $this;
