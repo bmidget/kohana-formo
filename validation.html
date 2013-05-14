@@ -134,6 +134,14 @@ $form->add_rules_fields([
 ]);
 ```
 
+Also, you can add a single rule across a set of fields using `Formo::add_rule_fields()`.
+
+```
+$rule = ['not_empty'];
+
+$form->add_rule_fields($rule, ['email', 'name', 'password']);
+```
+
 ## Removing rules
 
 Removing rules works much like adding rules. You reference the rule you are removing by exactly matching the rule's first parameter (which is the function call).
