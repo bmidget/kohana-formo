@@ -93,22 +93,32 @@
 <div class="md">
 ## Adding rules
 
-To add a rule to a field, use `Formo::add_rule($array)`.
+When adding rules to a field, you can either:
 
-Using this method, you can either:
+1. Add a rule to a field using `Formo::add_rule()`
+2. Add a bunch of rules to a bunch of different fields using `Formo::add_rules()`
 
-1. Add a bunch of rules to a bunch of different fields
-2. Add a rule to the field
-
-To add a single rule, pass an array containing a Kohana Validation rule definition
+To add a single rule, you can pass a Kohana Validation rule definition as a single array (similar to `Validation::rules()`):
 
 ```
 $form->email
 	->add_rule(['not_empty'])
 	->add_rule(['email']);
+$form->confirm
+	->add_rule(['matches', [':form_val', 'password', 'confirm']]);
 ```
 
-To add more than one field at a time, use `Formo::add_rules()`:
+or as separate `rule` and `params` arguments (similar to `Validation::rule()`):
+
+```
+$form->email
+	->add_rule('not_empty')
+	->add_rule('email');
+$form->confirm
+	->add_rule('matches', [':form_val', 'password', 'confirm']);
+```
+
+To add more than one field at a time, pass an array of Validation rule definition arrays to `Formo::add_rules()`:
 
 ```
 $form->email->add_rules([
@@ -244,7 +254,7 @@ What this is saying is: “Update all field values from the `$_POST` array, and 
 
 Formo first checks whether the form appears to be sent at all, and returns `FALSE` if it wasn’t sent.
 
-IF you don’t specify an array in `Formo::load()`, Formo will load values from `Request::$current->post()` by default. Thus, this is the most common syntax for validation:
+If you don’t specify an array in `Formo::load()`, Formo will load values from `Request::$current->post()` by default. Thus, this is the most common syntax for validation:
 
 ```
 if ($form->load()->validate())
@@ -252,6 +262,46 @@ if ($form->load()->validate())
 	// Passed!
 }
 ```
+
+One important thing to note is that, in most cases, `Formo::load()` loads only what's passed to it and not necessarily what's defined in the form.  This means that if you have a field defined in the form but nothing present in the passed array, the value will remain how you set it.  This is typically a desired behavior, as it allows you to set and maintain a default value for the field.
+
+However, it can sometimes be an issue.  Here's a relevant example using CSRF tokens:
+
+```
+$csrf = Security::token();
+
+$form = Formo::form();
+// Add stuff meaningful stuff to form, then:
+	->add('csrf', 'input|hidden', $csrf);
+
+$form->csrf
+	->add_rule(['equals', [':value', $csrf]]);
+
+if ($form->load()->validate())
+{
+	// Passed... but perhaps not securely.
+}
+```
+
+If the user sends a $_POST that has an invalid CSRF token, this will correctly fail validation.  However, if the user sends a $_POST with no CSRF set at all, it will pass.  To override this default behavior, set the `can_be_empty` parameter.  This tells Formo that the contents should be loaded even if they're empty, and is enabled by default for `checkbox` and `checkboxes` drivers.  Here's our example slightly reworked:
+
+```
+$csrf = Security::token();
+
+$form = Formo::form();
+// Add stuff meaningful stuff to form, then:
+	->add('csrf', 'input|hidden', $csrf);
+
+$form->csrf
+	->add_rule(['equals', [':value', $csrf]])
+	->set('can_be_empty', true);
+
+if ($form->load()->validate())
+{
+	// Passed securely!
+}
+```
+
 </div> <!-- md -->
 
 </section>
@@ -460,7 +510,7 @@ $form = Formo::form()
 	</div> <!-- page-header -->
 
 <div class="md">
-You can attach 'pass' and 'fail' callbacks to fields and forms. Callbacks are anonymous functions that run in the order they are added to the field or form.
+You can attach 'pass' and 'fail' callbacks to fields and forms. Callbacks are anonymous or named functions that run in the order they are added to the field or form.
 
 The field or form object — whichever object contains the callback — is the single value passed into the callback function.
 
@@ -481,7 +531,8 @@ $form->callback([
 			},
 			function($field) {
 				// Do something else
-			}
+			},
+			'Foo::add_email'    // Call Foo::add_email($field)
 		]
 	]
 ]);
@@ -547,6 +598,22 @@ $form->email->callback('pass', function($field) {
 ```
 </div> <!-- md -->
 </section>
+
+	<div style="height:40px"></div>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'formo'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
       </div>

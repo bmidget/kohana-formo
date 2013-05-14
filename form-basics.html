@@ -242,14 +242,17 @@ Note that a `Formo` object's `__toString()` method also runs `$form->render()`.
 echo $form;
 ```
 
-There are two variables Formo uses to decide which view file to use as a field's template:
+There are three variables Formo uses to decide which view file to use as a field's template:
 
 - `template_dir`
 - `template`
+- `template_ext`
 
 The default `template_dir` is defined in the Formo config.php file.
 
 The `template` variable is defined per-driver (and can also be customized per field or form). When the field renders, Formo finds a view file named `$template_dir/$template`.
+
+The `template_ext` is defined in the Formo config.php file, and can optionally add an extension to the template filenames.  This is in addition to the extension Kohana adds, defined by the `EXT` constant (typically `php`).  By default this is set to FALSE, so Formo will search for template filenames like `form_template.php`.  If set to `html`, for example, it will search for filenames like `form_template.html.php`.
 </div> <!-- md -->
 </section>
 
@@ -812,7 +815,6 @@ $form2->middle_initial - 'mymessages3'
 
 </table>
 
-<table>
 
 </div> <!-- md -->
 </section>
@@ -872,6 +874,23 @@ Filters are run on field values before validation
 </div> <!-- md -->
 </section>
 
+
+	<div style="height:40px"></div>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'formo'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
 
       </div>
     </div>
