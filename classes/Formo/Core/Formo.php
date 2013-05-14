@@ -303,9 +303,14 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function add_rule_fields( array $rule, array $fields)
 	{
-		foreach ($fields as $field)
+		foreach ($fields as $alias)
 		{
-			$field->add_rule($rule);
+			$field = $this->find($alias);
+
+			if ($field)
+			{
+				$field->add_rule($rule);
+			}
 		}
 
 		return $this;
