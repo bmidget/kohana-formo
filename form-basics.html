@@ -346,6 +346,28 @@ $form->set_fields([
 ]);
 ```
 
+By default, `Formo::set_fields()` does not recursively look for fields to set options across. You can search recursively by passing `FALSE` as the second parameter:
+
+```
+$form->set_fields([
+	'email' => [
+		'driver' => 'input|email',
+		'rules' => [
+			['unique_email']
+		],
+		'attr.placeholder' => 'john@doe.com',
+	],
+	'foo' => [
+		'driver' => 'select',
+		'rules' [
+			['bar', ':model']
+		],
+		'attr.placeholder' => 'foobar',
+		'attr.class' => 'myclass',
+	].
+], FALSE);
+```
+
 ## Getting stuff
 
 The only properties you can access directly in a Formo object are fields. Thus, if you have a field named `first_name` and want to retrieve the `Formo::$_label` variable, you cannot use `$form->first_name->_label`. Instead you need to use `Formo::get()`.
