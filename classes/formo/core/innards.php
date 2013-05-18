@@ -485,6 +485,11 @@ abstract class Formo_Core_Innards {
 				':value' => $this->val(),
 			);
 
+			if (is_array($values[':value']))
+			{
+				$values[':value'] = print_r($values[':value'], 1);
+			}
+
 			if ($file === FALSE)
 			{
 				$message = $error;
