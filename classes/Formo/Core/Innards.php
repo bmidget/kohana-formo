@@ -564,6 +564,11 @@ abstract class Formo_Core_Innards {
 		{
 			$value = Arr::get($array, $field->alias(), Formo::NOTSET);
 
+			if (is_array($value))
+			{
+				$field->_load($value);
+			}
+
 			if ($value !== Formo::NOTSET)
 			{
 				$field->driver('load', array('val' => $value));
