@@ -795,33 +795,9 @@ class Formo_Core_Formo extends Formo_Innards {
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
-		
-		if ($this->config('namespaces') === TRUE)
-		{
-			// First find all the fields that can be empty
-			foreach ($array as $namespace => $values)
-			{
-				if ($namespace === $this->alias())
-				{
-					$this->_load($values);
-				}
-				elseif ($field = $this->find($namespace) AND $field->driver('is_a_parent'))
-				{
-					$field->load($values);
-				}
-			}
-		}
-		else
-		{
-			$this->_load($array);
-			foreach ($this->_fields as $field)
-			{
-				if ($field->driver('is_a_parent'))
-				{
-					$field->_load($array);
-				}
-			}
-		}
+
+		// Formo_Innards recursively loads values into the form
+		$this->_load($array);
 
 		if (isset($benchmark))
 		{

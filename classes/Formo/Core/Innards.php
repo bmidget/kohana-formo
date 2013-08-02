@@ -562,14 +562,31 @@ abstract class Formo_Core_Innards {
 	{
 		foreach ($this->_fields as $field)
 		{
-			$value = Arr::get($array, $field->alias(), Formo::NOTSET);
+			$value = ($this->config('namespaces') === TRUE)
+				? Arr::path($array, $this->alias().'.'.$field->alias(), Formo::NOTSET)
+				: Arr::get($array, $field->alias(), Formo::NOTSET);
 
-			if ($value !== Formo::NOTSET)
+			if ($field->driver('is_a_parent'))
 			{
+				if ($field->config('namespaces') === TRUE AND $value !== Formo::NOTSET)
+				{
+					// Load values for each namespace
+					$field->load(array($field->alias() => $value));
+				}
+				else
+				{
+					// Otherwise, send all values recursively through each subform
+					$field->load($array);
+				}
+			}
+			elseif ($value !== Formo::NOTSET)
+			{
+				// Load values through the field's driver
 				$field->driver('load', array('val' => $value));
 			}
 			elseif ($field->get('can_be_empty', $field->driver('can_be_empty')) === TRUE)
 			{
+				// Set the value to null if the field can be empty
 				$field->val(null);
 			}
 		}
