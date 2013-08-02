@@ -125,6 +125,15 @@ class Formo_Core_Driver_ORM_Kohana {
 		return $rules;
 	}
 
+	protected static function _get_field_name( Model $model)
+	{
+		$field_name = ( ! empty($model->_primary_val))
+			? $model->_primary_val
+			: 'name';
+
+		return $field_name;
+	}
+
 	protected static function _process_belongs_to($alias, Kohana_ORM $model, stdClass $std, array & $options)
 	{
 		if ( ! isset($std->belongs_to['foreign_keys'][$alias]))
@@ -137,9 +146,11 @@ class Formo_Core_Driver_ORM_Kohana {
 
 		if (Arr::get($std->belongs_to['definitions'][$field_alias], 'formo') === true)
 		{
+			$foreign_model = ORM::factory($std->belongs_to['definitions'][$field_alias]['model']);
+			$opts = $foreign_model->find_all();
+
 			$options['driver'] = 'select';
-			$opts = ORM::factory($std->belongs_to['definitions'][$field_alias]['model'])->find_all();
-			$options['opts'] = static::select_list($opts, 'id', 'name');
+			$options['opts'] = static::select_list($opts, $foreign_model->primary_key(), static::_get_field_name($foreign_model));
 		}
 	}
 
@@ -158,12 +169,14 @@ class Formo_Core_Driver_ORM_Kohana {
 				$rs_all = ORM::factory($values['model'])
 					->find_all();
 
-				$rs_in = ORM::factory($values['model'])
+				$foreign_model = ORM::factory($values['model']);
+
+				$rs_in = $foreign_model
 					->where($values['foreign_key'], '=', $model->pk())
 					->find_all();
 
-				$opts = static::select_list($rs_all, 'id', 'name');
-				$val = static::select_list($rs_in, 'id', 'id');
+				$opts = static::select_list($rs_all, $foreign_model->primary_key(), static::_get_field_name($foreign_model));
+				$val = static::select_list($rs_in, $foreign_model->primary_key(), $foreign_model->primary_key());
 
 				$form->add($key, 'checkboxes', $val, array('opts' => $opts));
 			}
@@ -187,8 +200,9 @@ class Formo_Core_Driver_ORM_Kohana {
 		if (Arr::get($std->has_one['definitions'][$field_alias], 'formo') === true)
 		{
 			$options['driver'] = 'select';
-			$opts = ORM::factory($std->has_one['definitions'][$field_alias]['model'])->find_all();
-			$options['opts'] = static::select_list($opts, 'id', 'name');
+			$foreign_model = ORM::factory($std->has_one['definitions'][$field_alias]['model']);
+			$opts = $foreign_model->find_all();
+			$options['opts'] = static::select_list($opts, $foreign_model->primary_key(), static::_get_field_name($foreign_model));
 		}
 	}
 
