@@ -75,6 +75,7 @@
           <li><a href="#integration"><i class="icon-chevron-right"></i> ORM Integration</a></li>
           <li><a href="#rules"><i class="icon-chevron-right"></i> Sharing model rules and filters</a></li>
           <li><a href="#auto-load"><i class="icon-chevron-right"></i> Auto-loading relationships</a></li>
+          <li><a href="#primary-val"><i class="icon-chevron-right"></i> Primary Val and relationships</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -196,6 +197,27 @@ protected $_has_many = array(
 );
 ```
 </div> <!-- md -->
+
+<section id="primary-val">
+	<div class="page-header">
+		<h1>Primary Val and relationships</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+### Formo needs a primary val from the model
+
+When Formo auto-loads a foreign model, it uses the **primary_val** in to use for the display name in a select field.
+
+By default, Formo looks for a field named `name` in the model for this display name.
+
+### How to define `primary_val` for a model
+
+If your table doesn't use a field name **name** for its primary value, you can set this by definining property `public $_primary_val = 'myField'`;
+
+*Note that the `$_primary_val` property must be **public** since it's not built into Kohana's ORM already, and Formo needs to access it.*
+
+</div> <!-- md -->
+
 
 	<div style="height:40px"></div>
     <div id="disqus_thread"></div>
