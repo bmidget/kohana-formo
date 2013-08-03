@@ -43,7 +43,7 @@ class Formo_Core_Driver_ORM_Kohana {
 
 		static::_process_has_many($alias, $model, $std, $field);
 
-		$rules = static::_get_base_rules($model);
+		$rules = static::_get_base_rules($model, $field);
 		$rules = Arr::merge($rules, $model->rules());
 
 		if ($rules)
@@ -101,8 +101,23 @@ class Formo_Core_Driver_ORM_Kohana {
 		}
 	}
 
-	protected static function _get_base_rules($model)
+	/**
+	 * Apply rules based on mysql field definitions
+	 * While you can skip these, it's a good idea to include them in your fields
+	 * 
+	 * @access protected
+	 * @static
+	 * @param mixed $model
+	 * @return void
+	 */
+	protected static function _get_base_rules($model, $field)
 	{
+		if ($field->config('model_base_rules') === false)
+		{
+			// Skip appending rules based on config setting
+			return array();
+		}
+
 		$info = $model->list_columns();
 
 		$rules = array();

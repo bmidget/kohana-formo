@@ -23,6 +23,8 @@ return array
 	'namespaces'              => TRUE,
 	// Driver used for ORM integration
 	'orm_driver'              => 'kohana',
+	// When using ORM driver, whether to automatically add mysql field base rules to formo field
+	'model_base_rules'        => TRUE,
 	// Automatically add these rules to 'input' fields for html5 compatability
 	'input_rules' => array
 	(
