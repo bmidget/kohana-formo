@@ -26,6 +26,8 @@ class Formo_Core_Driver_ORM_Kohana {
 			static::_process_has_one($alias, $model, $std, $options);
 			// Process enum fields
 			static::_process_enum($alias, $model, $options);
+			// Process set fields
+			static::_process_set($alias, $model, $options);
 			//$foreign_key = $this->_process_belongs_to($alias, $options);
 			// Add meta data for the field
 
@@ -106,7 +108,7 @@ class Formo_Core_Driver_ORM_Kohana {
 		$rules = array();
 		foreach ($info as $alias => $data)
 		{
-			if ($data['is_nullable'] !== TRUE)
+			if ($data['is_nullable'] !== TRUE AND Arr::get($data, 'data_type') !== 'set')
 			{
 				$rules[$alias][] = array('not_empty');
 			}
@@ -221,9 +223,35 @@ class Formo_Core_Driver_ORM_Kohana {
 		$options['driver'] = 'select';
 		$options['opts'] = array_combine($opts, $opts);
 
-		if (empty($options['val']))
+		if (empty($options['val']) AND $model->loaded() === FALSE)
 		{
 			$options['val'] = Arr::geT($column, 'column_default');
+		}
+	}
+
+	public static function _process_set($alias, Kohana_ORM $model, & $options)
+	{
+		$column = Arr::get(static::_table_columns($model), $alias, array());
+
+		if (Arr::get($column, 'data_type') != 'set')
+		{
+			return;
+		}
+
+		$opts = Arr::get($column, 'options', array());
+		$options['driver'] = 'set';
+		$options['opts'] = array_combine($opts, $opts);
+
+		if (empty($options['val']) AND $model->loaded() === FALSE)
+		{
+			$column_default = Arr::get($column, 'column_default', '');
+			$options['val'] = ( ! empty($column_default))
+				? explode(',', $column_default)
+				: array();
+		}
+		elseif (isset($options['val']) AND is_string($options['val']))
+		{
+			$options['val'] = explode(',', $options['val']);
 		}
 	}
 
