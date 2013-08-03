@@ -171,6 +171,25 @@ In this example, we are setting many fields (id, logins, last_login, password) t
 You can see the sky’s the limit inside your `$model::formo()` method.
 
 If the method is not defined in your model, Formo will not call anything.
+
+### How to skip loading base rules from the model
+
+Though it's a good idea to always tack on the base rules from the mysql field definition data (such as NOT NULL, digit, range, maxlength), there may be times when you need to not append base rules to a form generated from formo.
+
+You define whether to add base rules during `$formo->orm('load')` by the config setting `model_base_rules`.
+
+You can set this in the `formo.php` config file, or by individually setting adding the config setting to the object like this:
+
+```
+$form = Formo::form(['config.model_base_rules' => FALSE])
+	->orm('load', ['model' => $model]);
+```
+
+Or by using `Formo::set()`:
+
+```
+$form->set('config.model_base_rules', FALSE);
+```
 </div> <!-- md -->
 </section>
 
