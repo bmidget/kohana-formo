@@ -539,8 +539,28 @@ abstract class Formo_Core_Innards {
 						$values[':param'.($key + 1)] = $value;
 					}
 				}
-	
-				$message = strtr($message, $values);
+
+				$tr_vals = $values;
+
+				// Fix problem that occurs when :value is an array
+				// by creating :value, :value1, :value2, etc. params
+				if (is_array(Arr::get($values, ':value')))
+				{
+					$i = 1;
+					foreach ($values[':value'] as $tr_val)
+					{
+						$key = ($i === 1)
+							? ':value'
+							: ':value'.$i;
+
+						$tr_vals[$key] = $tr_val;
+
+						$i++;
+					}
+				}
+
+				// Send the message through strtr
+				$message = strtr($message, $tr_vals);
 			}
 
 			return ($translate === TRUE)
