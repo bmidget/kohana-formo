@@ -2,6 +2,26 @@
 
 class Formo_Core_Driver_Group extends Formo_Driver {
 
+	public static function added( array $array)
+	{
+		$field = $array['field'];
+
+		// Specifically look for attr.enctype="multipart/form-data"
+		// and add it to the parent-most form
+		if ($field->get('attr.enctype') === 'multipart/form-data')
+		{
+			// Find the highest-level parent, not just the immediate parent
+			$parent = $field->parent();
+			while ($parent->parent())
+			{
+				$parent = $parent->parent();
+			}
+
+			$parent->set('attr.enctype', 'multipart/form-data');
+			$field->set('attr.enctype', NULL);
+		}
+	}
+
 	public static function get_template( array $array)
 	{
 		$field = $array['field'];

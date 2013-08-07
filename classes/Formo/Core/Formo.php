@@ -199,6 +199,7 @@ class Formo_Core_Formo extends Formo_Innards {
 
 			// Always set the parent object
 			$form->set('parent', $this);
+			$form->driver('added');
 
 			return $this;
 		}
@@ -772,16 +773,22 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * 
 	 * @access public
 	 * @param array $array (default: NULL)
-	 * @return void
+	 * @return Formo
 	 */
-	public function load( array $array = NULL)
+	public function load( array $values = NULL, array $files = NULL)
 	{
-		if ($array === NULL)
+		if ($values === NULL)
 		{
-			$post = Request::$current->post();
-			$files = $this->_get_files_array();
-			$array = Arr::merge($post, $files);
+			$values = Request::$current->post();
 		}
+
+		if ($files === NULL)
+		{
+			$files = $_FILES;
+		}
+
+		$resolved_files = $this->_get_files_array($files);
+		$array = Arr::merge($values, $resolved_files);
 
 		$this->set('input_array', $array);
 

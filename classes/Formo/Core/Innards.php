@@ -253,6 +253,35 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
+	 * Convert a multidmensional array to dot-syntax key values
+	 * 
+	 * @access protected
+	 * @param array $array
+	 * @return array
+	 */
+	protected function _arr_dotsyntax( array $array)
+	{
+		// Convert $files array to dot keys
+		$ritit = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
+		$dot_keys = array();
+		foreach ($ritit as $leafValue)
+		{
+			$keys = array();
+			foreach (range(0, $ritit->getDepth()) as $depth)
+			{
+				// Add the key
+				$keys[] = $ritit->getSubIterator($depth)->key();
+			}
+
+			$path = join('.', $keys);
+
+			$dot_keys[] = $path;
+		}
+
+		return $dot_keys;
+	}
+
+	/**
 	 * Turn attributes array into a string.
 	 * 
 	 * @access protected
@@ -283,32 +312,29 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
-	 * Get array from $_FILES.
+	 * Convert $_FILES array to one Formo understands
 	 * 
 	 * @access protected
-	 * @return void
+	 * @param array $files
+	 * @return array
 	 */
-	protected function _get_files_array()
+	protected function _get_files_array( array $files)
 	{
-		$files = $_FILES;
 		$vars = array('name', 'type', 'tmp_name', 'error', 'size');
 
 		$array = array();
+
 		foreach ($files as $parent_alias => $vals)
 		{
-			foreach ($vars as $var_name)
+			if (is_array($files[$parent_alias]['tmp_name']))
 			{
-				if (is_array($vals[$var_name]))
-				{
-					foreach ($vals[$var_name] as $key => $val)
-					{
-						$array[$parent_alias][$key][$var_name] = $val;
-					}
-				}
-				else
-				{
-					$array[$parent_alias][$var_name] = $vals[$var_name];
-				}
+				$array = $this->_resolve_namespaced_files($files);
+				return $array;
+			}
+			else
+			{
+				// Non namespaced $_FILES values
+				return $files;
 			}
 		}
 
@@ -902,6 +928,50 @@ abstract class Formo_Core_Innards {
 		$this->_set_id($_array);
 
 		return $_array;
+	}
+
+	/**
+	 * Convert namespaced $_FILES array into values Formo can understand
+	 * 
+	 * @access protected
+	 * @param array $files
+	 * @return array
+	 */
+	protected function _resolve_namespaced_files( array $files)
+	{
+		// The array we will eventually return
+		$array = array();
+
+		// Convert $files array to dot keys
+		$dot_keys = array();
+		foreach ($files as $parent_key => $values)
+		{
+			if ( ! empty($values['name']))
+			{
+				$dot_keys = $this->_arr_dotsyntax($values['name']);
+				break;
+			}
+		}
+
+		// All the parts of each $_FILES contents
+		$file_parts = array('name', 'type', 'tmp_name', 'error', 'size');
+
+		foreach ($dot_keys as $dot_key)
+		{
+			$parts = explode('.', $dot_key);
+			$file_name = array_pop($parts);
+
+			foreach ($file_parts as $file_part)
+			{
+				// Create values pulled from the complex $_FILES array
+				// for namespaced file inputs
+				$set_path = $parent_key.'.'.$dot_key.'.'.$file_part;
+				$find_path = $parent_key.'.'.$file_part.'.'.$dot_key;
+				Arr::set_path($array, $set_path, Arr::path($files, $find_path));
+			}
+		}
+
+		return $array;
 	}
 
 	/**
