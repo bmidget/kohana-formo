@@ -35,7 +35,7 @@ class Formo_Core_Driver_Checkbox extends Formo_Driver {
 			return $template;
 		}
 
-		return 'opts/checkbox_template';
+		return 'checkbox_template';
 	}
 
 	public static function get_tag()
