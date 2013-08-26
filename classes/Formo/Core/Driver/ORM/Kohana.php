@@ -123,12 +123,12 @@ class Formo_Core_Driver_ORM_Kohana {
 		$rules = array();
 		foreach ($info as $alias => $data)
 		{
-			if ($data['is_nullable'] !== TRUE AND Arr::get($data, 'data_type') !== 'set')
+			if ($data['is_nullable'] !== TRUE AND ! (in_array(Arr::get($data, 'data_type'), array('set', 'tinyint'))))
 			{
 				$rules[$alias][] = array('not_empty');
 			}
 
-			if ($data['type'] === 'int')
+			if ($data['type'] === 'int' AND $data['data_type'] !== 'tinyint')
 			{
 				$rules[$alias][] = array('digit', array(':value', true));
 				$rules[$alias][] = array('range', array(':value', Arr::get($data, 'min', 0), Arr::get($data, 'max', 1)));
