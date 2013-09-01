@@ -365,6 +365,13 @@ class Formo_Core_Formo extends Formo_Innards {
 		$array = array();
 		foreach ($this->_fields as $field)
 		{
+			if ($field->_is_blueprint_def($this))
+			{
+				// Fields that are part of the blueprint definition do not get
+				// included in the value
+				continue;
+			}
+
 			if ($recursive AND $field->driver('is_a_parent'))
 			{
 				$array += array($field->alias() => $field->as_array($value, $recursive));
@@ -490,6 +497,35 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			return NULL;
 		}
+	}
+
+	/**
+	 * Create a copy from form or group object
+	 * 
+	 * @access public
+	 * @return Formo
+	 */
+	public function copy_blueprint()
+	{
+		// The copy is a new formo object with the count of blueprint copies as its alis
+		$blueprint_copy = Formo::form(array('alias' => $this->_blueprint_count, 'blueprint_key' => $this->_blueprint_count));
+
+		// Keep track how many blueprints copies have been made
+		$this->_blueprint_count++;
+
+		foreach ($this->_fields as $field)
+		{
+			if ($this->_blueprint_count > 0 AND is_int($field->alias()))
+			{
+				// Don't include other blueprint copies in the fields
+				continue;
+			}
+
+			// Add field definition to blueprint
+			$blueprint_copy->add($field->to_array());
+		}
+
+		return $blueprint_copy;
 	}
 
 	/**
@@ -631,7 +667,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		foreach ($this->_fields as $field)
 		{
 			// First look directly at through all this object's fields
-			if ($field->alias() == $alias)
+			if ($field->alias() === $alias)
 			{
 				return $field;
 			}
@@ -955,6 +991,29 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Pad group with number of blueprints
+	 * 
+	 * @access public
+	 * @param int $number (default: 1)
+	 * @return Formo
+	 */
+	public function pad_blueprint($number = 1)
+	{
+		for ($i = 0; $i < $number; $i++)
+		{
+			if ($this->find($i, TRUE))
+			{
+				// Only pad extra copies of the blueprint
+				continue;
+			}
+
+			$this->add($this->copy_blueprint());
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Find a field's parent
 	 * If TRUE passed, find the field's parent (return that field if it is the parent)
 	 * 
@@ -1107,6 +1166,18 @@ class Formo_Core_Formo extends Formo_Innards {
 		{
 			// Start a new benchmark
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
+		}
+
+		if ($this->get('blueprint') === true)
+		{
+			foreach ($this->_fields as $field)
+			{
+				if ($field->_is_blueprint_def($this))
+				{
+					// Fields in a blueprint that aren't blueprint copies do not get rendered
+					$field->set('render', false);
+				}
+			}
 		}
 
 		if ($this->get('render') === FALSE)
@@ -1475,6 +1546,11 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		foreach ($this->_fields as $field)
 		{
+			if ($this->_is_blueprint_def())
+			{
+				continue;
+			}
+
 			if ($field->validate() === FALSE)
 			{
 				$pass_validation = FALSE;

@@ -51,6 +51,26 @@ abstract class Formo_Core_Innards {
 	);
 
 	/**
+	 * Whether the object should be treated as a blueprint
+	 * 
+	 * (default value: false)
+	 * 
+	 * @var bool
+	 * @access protected
+	 */
+	protected $_blueprint = false;
+
+	/**
+	 * Track number of blueprints copies that have been made
+	 * 
+	 * (default value: 0)
+	 * 
+	 * @var int
+	 * @access protected
+	 */
+	protected $_blueprint_count = 0;
+
+	/**
 	 * Config options
 	 * 
 	 * (default value: array())
@@ -598,6 +618,37 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
+	 * Determine whether a field is paret of a blueprint definition
+	 * 
+	 * @access protected
+	 * @param Formo $parent (default: FALSE)
+	 * @return void
+	 */
+	protected function _is_blueprint_def( Formo $parent = NULL)
+	{
+		if ($parent === NULL)
+		{
+			$parent = $this;
+		}
+		else
+		{
+			$parent = $this->parent();
+		}
+
+		if ($parent === NULL)
+		{
+			return FALSE;
+		}
+
+		if ($parent->get('blueprint') !== TRUE)
+		{
+			return FALSE;
+		}
+
+		return (is_int($this->alias()) === FALSE);
+	}
+
+	/**
 	 * Load values into the form
 	 * 
 	 * @access protected
@@ -606,6 +657,16 @@ abstract class Formo_Core_Innards {
 	 */
 	protected function _load( array $array)
 	{
+		// Special handling only for blueprint objects
+		if ($this->get('blueprint') === TRUE)
+		{
+			if ($arr = Arr::get($array, $this->alias()))
+			{
+				// If the field is a blueprint, pad it with the correct number of blueprint copies
+				$this->pad_blueprint(count($arr));
+			}
+		}
+
 		foreach ($this->_fields as $field)
 		{
 			$value = ($this->config('namespaces') === TRUE)
@@ -920,7 +981,8 @@ abstract class Formo_Core_Innards {
 			$this->set('config', $config);
 		}
 
-		if (empty($_array['alias']))
+		$alias = Arr::get($_array, 'alias');
+		if (empty($alias) AND $alias !== 0 AND $alias !== '0')
 		{
 			throw new Kohana_Exception('Every formo field must have an alias');
 		}
