@@ -624,18 +624,19 @@ abstract class Formo_Core_Innards {
 	 * @param Formo $parent (default: FALSE)
 	 * @return void
 	 */
-	protected function _is_blueprint_def( Formo $parent = NULL)
+	protected function _is_blueprint_def( Formo $parent = NULL, $test = false)
 	{
 		if ($parent === NULL)
-		{
-			$parent = $this;
-		}
-		else
 		{
 			$parent = $this->parent();
 		}
 
 		if ($parent === NULL)
+		{
+			return FALSE;
+		}
+
+		if ($this->get('blueprint') === TRUE)
 		{
 			return FALSE;
 		}

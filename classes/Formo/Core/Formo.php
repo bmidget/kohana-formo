@@ -1544,13 +1544,13 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		$pass_validation = TRUE;
 
+		if ($this->_is_blueprint_def())
+		{
+			return $this;
+		}
+
 		foreach ($this->_fields as $field)
 		{
-			if ($this->_is_blueprint_def())
-			{
-				continue;
-			}
-
 			if ($field->validate() === FALSE)
 			{
 				$pass_validation = FALSE;
