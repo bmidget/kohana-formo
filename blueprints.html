@@ -41,13 +41,13 @@
 			  <li class="">
 				<a href="./validation.html">Validation</a>
 			  </li>
-			  <li class="">
+			  <li class="active">
 				<a href="./blueprints.html">Blueprints</a>
 			  </li>
 			  <li class="">
 				<a href="./orm.html">ORM</a>
 			  </li>
-			  <li class="active">
+			  <li class="">
 				<a href="./files.html">Files</a>
 			  </li>
 			  <li class="">
@@ -75,91 +75,81 @@
     <div class="row">
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
-          <li><a href="#field"><i class="icon-chevron-right"></i> Adding a file field</a></li>
-          <li><a href="#validating"><i class="icon-chevron-right"></i> Validating files</a></li>
-          <li><a href="#value"><i class="icon-chevron-right"></i> Field value</a></li>
+          <li><a href="#what-is-blueprint"><i class="icon-chevron-right"></i> Blueprint overview</a></li>
+          <li><a href="#create-blueprint"><i class="icon-chevron-right"></i> Create a blueprint</a></li>
+          <li><a href="#dynamic-blueprint"><i class="icon-chevron-right"></i> Dynamic blueprints</a></li>
         </ul>
       </div>
       <div class="span9">
 
 
 
-<section id="field">
+<section id="what-is-blueprint">
 	<div class="page-header">
-		<h1>Adding a file field</h1>
-	</div> <!-- md -->
+		<h1>Blueprint overview</h1>
+	</div> <!-- page-header -->
 
 <div class="md">
-Use the file driver (not `input|file`)
+Formo blueprints give you a powerful way to create subform templates that can be reused any number of times.
 
-```
-$form->add(‘upload’, ‘file’);
-```
+These are especially useful for one to many relationships.
 
-When you add a file field to a form, the form automatically adds the `enctype="multipart/form-data"` attribute.
+The basic idea behind a Formo blueprint is that you create a subform and turn it into a blueprint to be reused any number of times. Like a group full of any number of groups within itself.
+
+Blueprints require you to set `namespaces` to `TRUE` in your Formo config or at least for the parent form containing the blueprint.
 </div> <!-- md -->
 
 </section>
 
-<section id="validating">
+<section id="create-blueprint">
 	<div class="page-header">
-		<h1>Validating files</h1>
-	</div> <!-- md -->
+		<h1>Create a blueprint</h1>
+	</div> <!-- page-header -->
 
 <div class="md">
-A file field’s value is always `NULL` when it’s empty (as opposed to an empty array from `$_FILES`). Because of this, you use the regular `not_empty` validation rule for making the field required.
+To create a blueprint, just set a subform's `blueprint` property to `TRUE`.
 
-You can use Kohana’s file validation rules for any other file field rules.
-
-```
-$form->add_rule([
-	‘upload’ => [
-		[‘not_empty’],
-		['Upload::type', [':value', ['jpg','png','gif']]],
-	]
-]);
-```
-When you run `Formo::load()`, Formo always looks for any file fields inside the $_FILES array without having to pass the array into `Formo::load()`.
-
-Thus, this will work correctly:
+In the example below, we are creating an blueprint named 'address', padding it with two empty records.
 
 ```
-$form->add('thumbnail', 'file')
-	->rule([
-		'thumbnail' => [
+$blueprint = Formo::form(['alias' => 'address', 'blueprint' => true])
+	->add('city')
+	->add('street')
+	->add_rules_fields([
+		'city' => [
 			['not_empty'],
-			['Upload::type', [':value', ['jpg','png','gif']]],
-		]
-	]);
+		],
+		'state' => [
+			['not_empty']
+		],
+	])
+	->pad_blueprint(2);
 
-// Formo will load the 'thumbnail' field from $_FILES when you call Formo::load()
-if ($form->load()->validate())
-{
-	// File passed
-}
+$form = Formo::form(['alias' => 'parent_form'])
+	->add('name', 'input', null, ['attr.placeholder' => 'John Doe'])
+	->add('email', 'input|email', null, ['attr.placeholder' => 'john@doe.com'])
+	->add($blueprint)
+	->add('submit', 'button', null, ['html' => 'Submit']);
 ```
-
 </div> <!-- md -->
 
 </section>
 
-<section id="value">
+<section id="dynamic-blueprint">
 	<div class="page-header">
-		<h1>Field Value</h1>
-	</div> <!-- md -->
+		<h1>Dynamic Blueprints</h1>
+	</div> <!-- page-header -->
 
 <div class="md">
-When a file has a value, it is an array from `$_FILES`. The value looks like this:
+Blueprints are great for dynamic forms because they watch for additional fields to add to the form and validate against when the form is posted.
 
-```
-array(5) (
-    "name" => string(40) "Screen Shot 2012-09-20 at 9.44.28 PM.png"
-    "type" => string(9) "image/png"
-    "tmp_name" => string(26) "/private/var/tmp/phpB4cFSq"
-    "error" => integer 0
-    "size" => integer 62393
-)
-```
+In the example above, Formo generates city and state fields with names like `parent_form[address][0][city]` and `parent_form[address][0][state]`. The form above also has `parent_form[address][1][city]` and `parent_form[address][1][city]`.
+
+If wanted to add another city and state group to the form, all you need to do is match the naming structure. In this case, you could add inputs named `parent_form[address][2][city]` and `parent_form[address][2][city]`.
+
+When you post the form after adding these fields, Formo's address blueprint looks for the user input and adds another blueprint copy to itself, then loads the user posted data into that blueprint copy, and validates against it using the blueprint's rules.
+
+Formo's default group driver adds the attribute `data-blueprint-key` to the `formo_group` div container so it's easy to determine the next key for the next blueprint set. 
 </div> <!-- md -->
 
 </section>
