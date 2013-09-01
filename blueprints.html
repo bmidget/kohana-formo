@@ -131,6 +131,28 @@ $form = Formo::form(['alias' => 'parent_form'])
 	->add($blueprint)
 	->add('submit', 'button', null, ['html' => 'Submit']);
 ```
+
+Notice that when you look at the form's value, the blueprint group only shows values for the blueprint copies mad with `Formo::pad_blueprint()`. The `city` and `state` fields do not render and do not show in the group's value.
+
+`$form->val()` looks like this from the above example:
+
+```
+array(4) (
+	"name" => NULL
+	"email" => NULL
+	"address" => array(2) (
+		0 => array(2) (
+			"city" => NULL
+			"street" => NULL
+		)
+		1 => array(2) (
+			"city" => NULL
+			"street" => NULL
+		)
+	)
+	"submit" => NULL
+)
+```
 </div> <!-- md -->
 
 </section>
