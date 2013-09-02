@@ -134,10 +134,6 @@ That means you don’t have to repeat any of these. Just define ‘em once insid
 
 Like rules, when you create a form using `Formo::orm(‘load’)`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
 
-## Sharing filters with the model
-
-Like rules, when you create a form using `Formo::orm(‘load’)`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
-
 ## The special `$model::formo()` method.
 
 After `Formo::orm(‘load’)` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will run call it.

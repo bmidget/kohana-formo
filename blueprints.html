@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Formo Files</title>
+    <title>Formo Blueprints</title>
   </head>
 
   <body data-spy="scroll" data-target=".bs-docs-sidebar">
@@ -132,7 +132,7 @@ $form = Formo::form(['alias' => 'parent_form'])
 	->add('submit', 'button', null, ['html' => 'Submit']);
 ```
 
-Notice that when you look at the form's value, the blueprint group only shows values for the blueprint copies mad with `Formo::pad_blueprint()`. The `city` and `state` fields do not render and do not show in the group's value.
+Notice that when you look at the form's value, the blueprint group only shows values for the blueprint copies made with `Formo::pad_blueprint()`. The `city` and `state` fields do not render and do not show in the group's value.
 
 `$form->val()` looks like this from the above example:
 
