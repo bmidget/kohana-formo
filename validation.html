@@ -155,6 +155,20 @@ $rule = ['not_empty'];
 $form->add_rule_fields($rule, ['email', 'name', 'password']);
 ```
 
+For both `Formo::add_rule_fields()` and `Foro::add_rules_fields` you can use the `*` syntax to specify a rule for all fields.
+
+```
+$form->add_rule_fields(['not_empty'], ['*']);
+```
+
+```
+$form->add_rules_fields([
+	'*' => [
+		['not_empty'],
+		['another_rule'],
+	],
+]);
+
 ## Removing rules
 
 Removing rules works much like adding rules. You reference the rule you are removing by exactly matching the rule's first parameter (which is the function call).

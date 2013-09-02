@@ -371,6 +371,16 @@ $form->set_fields([
 ], FALSE);
 ```
 
+You can set for all fields using the `*` syntax:
+
+```
+$form->set_fields([
+	'*' => [
+		'attr.class' => 'form-control'
+	]
+]);
+```
+
 ## Getting stuff
 
 The only properties you can access directly in a Formo object are fields. Thus, if you have a field named `first_name` and want to retrieve the `Formo::$_label` variable, you cannot use `$form->first_name->_label`. Instead you need to use `Formo::get()`.
