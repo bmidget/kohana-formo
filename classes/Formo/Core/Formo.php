@@ -306,6 +306,16 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($fields as $alias)
 		{
+			if ($alias === '*')
+			{
+				foreach ($this->_fields as $field)
+				{
+					$field->add_rule($rule);
+				}
+
+				continue;
+			}
+
 			$field = $this->find($alias);
 
 			if ($field)
@@ -328,6 +338,16 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $rules)
 		{
+			if ($alias === '*')
+			{
+				foreach ($this->_fields as $field)
+				{
+					$field->add_rules($rules);
+				}
+
+				continue;
+			}
+
 			$field = $this->find($alias, TRUE);
 
 			if ( ! $field)
@@ -1339,6 +1359,16 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $vals)
 		{
+			if ($alias === '*')
+			{
+				foreach ($this->_fields as $field)
+				{
+					$field->set($vals);
+				}
+
+				continue;
+			}
+
 			$field = $this->find($alias, $not_recursive);
 
 			if ( ! $field)
@@ -1365,6 +1395,17 @@ class Formo_Core_Formo extends Formo_Innards {
 	{
 		foreach ($array as $alias => $val)
 		{
+			if ($alias === '*')
+			{
+				foreach ($this->_fields as $field)
+				{
+					echo \Debug::vars($var, $val);
+					$field->set($var, $val);
+				}
+
+				continue;
+			}
+
 			$field = $this->find($alias, $not_recursive);
 
 			if ( ! $field)
