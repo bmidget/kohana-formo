@@ -77,6 +77,7 @@
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#what-is-blueprint"><i class="icon-chevron-right"></i> Blueprint overview</a></li>
           <li><a href="#create-blueprint"><i class="icon-chevron-right"></i> Create a blueprint</a></li>
+          <li><a href="#pad-orm"><i class="icon-chevron-right"></i> Pad from ORM</a></li>
           <li><a href="#dynamic-blueprint"><i class="icon-chevron-right"></i> Dynamic blueprints</a></li>
         </ul>
       </div>
@@ -152,6 +153,43 @@ array(4) (
 	)
 	"submit" => NULL
 )
+```
+</div> <!-- md -->
+
+<section id="pad-orm">
+	<div class="page-header">
+		<h1>Pad from ORM</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+You can pass an argument to `Formo::pad_blueprint()` that represents either the number of empty copies to pad or the actual values to create copies from.
+
+### Pad 5 empty copies
+
+```
+$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
+	->orm('load', ['model' => ORM::factory('class')])
+	->pad_blueprint(5);
+```
+
+### Pad from Database Result
+
+```
+$class_result_set = ORM::factory($school->classes->find_all());
+
+$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
+	->orm('load', ['model' => ORM::factory('class')])
+	->pad_blueprint($classes_result_set);
+```
+
+### Pad from single ORM Model
+
+```
+$class = ORM::factory('class', 10);
+
+$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
+	->orm('load', ['model' => ORM::factory('class')])
+	->pad_blueprint($class);
 ```
 </div> <!-- md -->
 
