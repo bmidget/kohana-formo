@@ -45,6 +45,10 @@ class Formo_Core_Driver_Set extends Formo_Driver {
 	public static function get_val( array $array)
 	{
 		$val = $array['val'];
+		if (is_string($val))
+		{
+			$val = explode(',', $val);
+		}
 
 		return $val
 			? implode(',', $val)

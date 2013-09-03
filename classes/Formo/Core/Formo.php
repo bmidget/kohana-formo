@@ -523,15 +523,22 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * Create a copy from form or group object
 	 * 
 	 * @access public
+	 * @param array $vals (default: array())
 	 * @return Formo
 	 */
-	public function copy_blueprint()
+	public function copy_blueprint($vals = array())
 	{
 		// The copy is a new formo object with the count of blueprint copies as its alis
 		$blueprint_copy = Formo::form(array('alias' => $this->_blueprint_count, 'blueprint_key' => $this->_blueprint_count));
 
 		// Keep track how many blueprints copies have been made
 		$this->_blueprint_count++;
+
+		if ( ! empty($vals) AND $vals instanceof ORM)
+		{
+			// Look for ORM object and cast it as an array
+			$vals = $vals->as_array();
+		}
 
 		foreach ($this->_fields as $field)
 		{
@@ -541,8 +548,16 @@ class Formo_Core_Formo extends Formo_Innards {
 				continue;
 			}
 
+			$array = $field->to_array();
+
+			$alias = $field->alias();
+			if (isset($vals[$alias]))
+			{
+				$array['val'] = $vals[$alias];
+			}
+
 			// Add field definition to blueprint
-			$blueprint_copy->add($field->to_array());
+			$blueprint_copy->add($array);
 		}
 
 		return $blueprint_copy;
@@ -1014,11 +1029,43 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * Pad group with number of blueprints
 	 * 
 	 * @access public
-	 * @param int $number (default: 1)
+	 * @param mixed $count_or_values (default: 1)
 	 * @return Formo
 	 */
-	public function pad_blueprint($number = 1)
+	public function pad_blueprint($count_or_vals = 1)
 	{
+		if (is_int($count_or_vals))
+		{
+			// If an int is passed as argument, pad with empty blueprint copy or copies
+			$number = $count_or_vals;
+			$vals = array();
+		}
+		elseif (is_array($count_or_vals))
+		{
+			// If an array is passed, pad with the number of items in the array
+			// and pas the values of the array as the values for the copy or copies
+			$number = count($count_or_vals);
+			$vals = $count_or_vals;
+		}
+		elseif ($count_or_vals instanceof Database_Result)
+		{
+			// If a result set is a Database_Result object
+			// the number of copies to pad is the count of the result set
+			// and the value(s) of the copy or copies is the result set as an array
+			$number = $count_or_vals->count();
+			$vals = $count_or_vals;
+		}
+		elseif ($count_or_vals instanceof ORM)
+		{
+			// If an ORM model is passed, the number to pad is one
+			$number = 1;
+			$vals = array($count_or_vals);
+		}
+		else
+		{
+			throw new Kohana_Exception('\':val\' is not :types', array(':val' => empty($count_or_vals) ? gettype($count_or_vals) : $count_or_vals, ':types' => 'Integer, Array, ORM, or Database_Result'));
+		}
+
 		for ($i = 0; $i < $number; $i++)
 		{
 			if ($this->find($i, TRUE))
@@ -1027,7 +1074,14 @@ class Formo_Core_Formo extends Formo_Innards {
 				continue;
 			}
 
-			$this->add($this->copy_blueprint());
+			// Determine what to send to Formo::copy_blueprint as values.
+			// If there are no values, then send an empty array
+			$_vals = (empty($vals))
+				? array()
+				: $vals[$i];
+
+			// Add a copy to the blueprint object
+			$this->add($this->copy_blueprint($_vals));
 		}
 
 		return $this;
