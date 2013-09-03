@@ -179,7 +179,7 @@ $class_result_set = ORM::factory($school->classes->find_all());
 
 $classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
 	->orm('load', ['model' => ORM::factory('class')])
-	->pad_blueprint($classes_result_set);
+	->pad_blueprint($class_result_set);
 ```
 
 ### Pad from single ORM Model
