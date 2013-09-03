@@ -1517,14 +1517,18 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		$array = array
 		(
-			'alias' => $this->alias(),
-			'driver' => $this->get('driver'),
+			'alias' => $this->_alias,
+			'driver' => $this->_driver,
 			'val' => $this->val(),
-			'opts' => $this->get('opts'),
-			'attr' => $this->get('attr'),
-			'rules' => $this->get('rules'),
-			'html' => $this->html(),
-			'render' => $this->get('render'),
+			'opts' => $this->_opts,
+			'attr' => $this->_attr,
+			'rules' => $this->_rules,
+			'filters' => $this->_filters,
+			'callbacks' => $this->_callbacks,
+			'html' => $this->_html,
+			'render' => $this->_render,
+			'label' => $this->_label,
+			'html' => $this->_html,
 			'fields' => array(),
 		);
 
