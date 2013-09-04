@@ -1589,7 +1589,7 @@ class Formo_Core_Formo extends Formo_Innards {
 		if ($template = $this->get('template'))
 		{
 			// Pass template conditionally
-			$array['template'] = 'template';
+			$array['template'] = $template;
 		}
 
 		// Traverse through fields if this field is considered a parent field
