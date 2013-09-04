@@ -154,6 +154,25 @@ array(4) (
 	"submit" => NULL
 )
 ```
+
+### Blueprint Template
+
+You can specify a blueprint template to be used just for blueprint copies. The variable name for this is `blueprint_template`.
+
+At creation:
+
+```
+$blueprint = Formo::form([
+	'alias' = 'address',
+	'blueprint' => true,
+	'blueprint_template' => 'bar']);
+```
+
+Using `Formo::set()`:
+
+```
+$blueprint->set('blueprint_template', 'foo');
+```
 </div> <!-- md -->
 
 <section id="pad-orm">
