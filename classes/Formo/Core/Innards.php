@@ -32,6 +32,19 @@ abstract class Formo_Core_Innards {
 	);
 
 	/**
+	 * List of attributes that get copied by default in Formo::to_array()
+	 * 
+	 * @var mixed
+	 * @access protected
+	 * @static
+	 */
+	protected static $_to_array_attrs = array
+	(
+		'alias', 'driver', 'template', 'val', 'opts', 'attr', 'rules',
+		'filters', 'callbacks', 'html', 'render', 'label', 'html', 'fields'
+	);
+
+	/**
 	 * The field alias
 	 * 
 	 * @var mixed
@@ -69,6 +82,14 @@ abstract class Formo_Core_Innards {
 	 * @access protected
 	 */
 	protected $_blueprint_count = 0;
+
+	/**
+	 * Allow for setting custom blueprint template separate from blueprint
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $_blueprint_template;
 
 	/**
 	 * Config options

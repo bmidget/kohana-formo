@@ -528,8 +528,24 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function copy_blueprint($vals = array())
 	{
-		// The copy is a new formo object with the count of blueprint copies as its alis
+		// The copy is a new formo object with the count of blueprint copies as its alias
 		$blueprint_copy = Formo::form(array('alias' => $this->_blueprint_count, 'blueprint_key' => $this->_blueprint_count));
+
+		$attrs = array_combine(static::$_to_array_attrs, static::$_to_array_attrs);
+		$attrs['blueprint_template'] = 'blueprint_template';
+		unset($attrs['alias']);
+		unset($attrs['driver']);
+		unset($attrs['fields']);
+
+		$array = $blueprint_copy->to_array($attrs);
+
+		if ($blueprint_template = $this->get('blueprint_template'))
+		{
+			// Look for blueprint_template and set it as the template for each blueprint copy
+			$array['template'] = $blueprint_template;
+		}
+
+		$blueprint_copy->set($array);
 
 		// Keep track how many blueprints copies have been made
 		$this->_blueprint_count++;
@@ -548,7 +564,9 @@ class Formo_Core_Formo extends Formo_Innards {
 				continue;
 			}
 
-			$array = $field->to_array();
+			$attrs = array_combine(static::$_to_array_attrs, static::$_to_array_attrs);
+			unset($attrs['fields']);
+			$array = $field->to_array($attrs);
 
 			$alias = $field->alias();
 			if (isset($vals[$alias]))
@@ -1559,9 +1577,10 @@ class Formo_Core_Formo extends Formo_Innards {
 	 * Use for casting to json or for sending form objects across an api
 	 * 
 	 * @access public
-	 * @return void
+	 * @param array $fields (default: array('alias', 'driver', 'template', 'val', 'opts', 'attr', 'rules', 'filters', 'callbacks', 'html', 'render', 'label', 'html', 'fields'))
+	 * @return array
 	 */
-	public function to_array()
+	public function to_array( array $attributes = NULL)
 	{
 		if (Kohana::$profiling === TRUE)
 		{
@@ -1569,36 +1588,36 @@ class Formo_Core_Formo extends Formo_Innards {
 			$benchmark = Profiler::start('Formo', __FUNCTION__);
 		}
 
-		$array = array
-		(
-			'alias' => $this->_alias,
-			'driver' => $this->_driver,
-			'val' => $this->val(),
-			'opts' => $this->_opts,
-			'attr' => $this->_attr,
-			'rules' => $this->_rules,
-			'filters' => $this->_filters,
-			'callbacks' => $this->_callbacks,
-			'html' => $this->_html,
-			'render' => $this->_render,
-			'label' => $this->_label,
-			'html' => $this->_html,
-			'fields' => array(),
-		);
-
-		if ($template = $this->get('template'))
+		if ($attributes === NULL)
 		{
-			// Pass template conditionally
-			$array['template'] = $template;
+			$attributes = static::$_to_array_attrs;
 		}
 
-		// Traverse through fields if this field is considered a parent field
-		if ($this->driver('is_a_parent'))
+		$array = array();
+		foreach ($attributes as $attr)
 		{
-			foreach ($this->get('fields') as $field)
+			if ($attr === 'val')
 			{
-				// Attach the field as an array
-				$array['fields'][] = $field->to_array();
+				$array[$attr] = $this->val();
+			}
+			elseif ($attr === 'fields')
+			{
+				$val = array();
+				// Traverse through fields if this field is considered a parent field
+				if ($this->driver('is_a_parent'))
+				{
+					foreach ($this->get('fields') as $field)
+					{
+						// Attach the field as an array
+						$val[] = $field->to_array($attributes);
+					}
+				}
+
+				$array['fields'] = $val;
+			}
+			else
+			{
+				$array[$attr] = $this->{'_'.$attr};
 			}
 		}
 
