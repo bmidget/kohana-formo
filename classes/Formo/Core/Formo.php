@@ -1615,9 +1615,13 @@ class Formo_Core_Formo extends Formo_Innards {
 
 				$array['fields'] = $val;
 			}
-			else
+			elseif (property_exists($this, '_'.$attr))
 			{
 				$array[$attr] = $this->{'_'.$attr};
+			}
+			else
+			{
+				$array[$attr] = $this->get($attr);
 			}
 		}
 
