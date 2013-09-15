@@ -53,12 +53,13 @@ trait Formo_ORM {
 	 * @param Formo $form (default: NULL)
 	 * @return Formo
 	 */
-	public function get_form( array $fields = NULL, Formo $form = NULL)
+	public function get_form( array $fields, Formo $form = NULL)
 	{
-		if ($fields === NULL)
+		if ($fields === ['*'])
 		{
 			// Get the default set of fields
-			$fields = $this->_formo_default_fields();
+		// By default, load all the fields
+			$fields = array_keys($this->as_array());
 		}
 
 		if ($form === NULL)
@@ -77,7 +78,7 @@ trait Formo_ORM {
 		{
 			if (is_array($field_name))
 			{
-				$method = 'with_'.$key;
+				$method = 'formo_'.$key;
 				$rs = $this->$method();
 
 				if ($rs instanceof Database_Result)
@@ -86,10 +87,16 @@ trait Formo_ORM {
 					$blueprint = $model->get_form($field_name)
 						->set('blueprint', true)
 						->pad_blueprint($rs);
-				}
 
-				$form->add($blueprint);
-				continue;
+					$form->add($blueprint);
+					continue;
+				}
+				elseif ($rs instanceof ORM)
+				{
+					$subform = $rs->get_form($field_name);
+					$form->add($subform);
+					continue;
+				}
 			}
 
 			// Create the field definition array
@@ -234,18 +241,6 @@ trait Formo_ORM {
 	}
 
 	/**
-	 * Get default set of fields if nothing is passed as an argument for get_form()
-	 * 
-	 * @access protected
-	 * @return array
-	 */
-	protected function _formo_default_fields()
-	{
-		// By default, load all the fields
-		return array_keys($this->as_array());
-	}
-
-	/**
 	 * Apply rules based on mysql field definitions
 	 * While you can skip these, it's a good idea to include them in your fields
 	 * 
@@ -304,50 +299,6 @@ trait Formo_ORM {
 
 			$options['driver'] = 'select';
 			$options['opts'] = static::select_list($opts, $foreign_model->primary_key(), static::_get_field_name($foreign_model));
-		}
-	}
-
-	/**
-	 * Add Has Many relationships to the form
-	 * 
-	 * @access protected
-	 * @static
-	 * @param mixed $alias
-	 * @param Kohana_ORM $model
-	 * @param stdClass $std
-	 * @param Formo $form
-	 * @return void
-	 */
-	protected static function _process_has_many($alias, Kohana_ORM $model, stdClass $std, Formo $form)
-	{
-		if (empty($std->has_many))
-		{
-			// No need to process non-has-many fields here
-			return NULL;
-		}
-
-		foreach (Arr::get($std->has_many, 'definitions', []) as $key => $values)
-		{
-			if (Arr::get($values, 'formo') === true)
-			{
-				$rs_all = ORM::factory($values['model'])
-					->find_all();
-
-				$foreign_model = ORM::factory($values['model']);
-
-				$rs_in = $foreign_model
-					->where($values['foreign_key'], '=', $model->pk())
-					->find_all();
-
-				$opts = static::select_list($rs_all, $foreign_model->primary_key(), static::_get_field_name($foreign_model));
-				$val = static::select_list($rs_in, $foreign_model->primary_key(), $foreign_model->primary_key());
-
-				$form->add($key, 'checkboxes', $val, ['opts' => $opts]);
-			}
-			else
-			{
-				$form->add($key, 'checkboxes', null, ['render' => false]);
-			}
 		}
 	}
 

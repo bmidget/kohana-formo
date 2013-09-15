@@ -83,6 +83,11 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function __get($key)
 	{
+		if (ctype_digit($key))
+		{
+			$key = (int) $key;
+		}
+
 		return $this->find($key, TRUE);
 	}
 
@@ -466,6 +471,42 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		return $this;
+	}
+
+	public function blueprint_deleted($field = NULL)
+	{
+		$blueprint = ($field !== NULL)
+			? $this->$field
+			: $this;
+
+		$array = array();
+		foreach ($blueprint->_blueprint_pks as $alias => $pk)
+		{
+			if ( ! $blueprint->$alias)
+			{
+				$array[] = $pk;
+			}
+		}
+
+		return $array;
+	}
+
+	public function blueprint_dynamic($field = NULL)
+	{
+		$blueprint = ($field !== NULL)
+			? $this->$field
+			: $this;
+
+		$array = array();
+		foreach ($blueprint->as_array() as $field)
+		{
+			if ($field->get('blueprint_dynamic') === TRUE)
+			{
+				$array[$field->alias()] = $field;
+			}
+		}
+
+		return $array;
 	}
 
 	/**
@@ -1018,32 +1059,6 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
-	 * Run a method through the ORM driver
-	 * 
-	 * @access public
-	 * @param mixed $method
-	 * @param array $vals (default: NULL)
-	 * @return Formo obj
-	 */
-	public function orm($method, array $vals = NULL)
-	{
-		if ($vals === NULL)
-		{
-			$vals = array();
-		}
-
-		$vals = Arr::merge($vals, array('field' => $this));
-
-		$driver = $this->config('orm_driver');
-
-		$class_name = 'Formo_Driver_ORM_'.ucfirst($driver);
-
-		$class_name::$method($vals);
-
-		return $this;
-	}
-
-	/**
 	 * Pad group with number of blueprints
 	 * 
 	 * @access public
@@ -1099,7 +1114,14 @@ class Formo_Core_Formo extends Formo_Innards {
 				: $vals[$i];
 
 			// Add a copy to the blueprint object
-			$this->add($this->copy_blueprint($_vals));
+			$copy = $this->copy_blueprint($_vals);
+
+			if ($_vals instanceof ORM)
+			{
+				$this->_blueprint_pks[$copy->alias()] = $_vals->pk();
+			}
+
+			$this->add($copy);
 		}
 
 		return $this;
