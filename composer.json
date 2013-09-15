@@ -12,7 +12,7 @@
 		}
 	],
 	"support": {
-		"issues":   "https://github.com/bmidget/kohana-formo/issues?direction=desc&sort=created&state=open",
+		"issues":   "https://github.com/bmidget/kohana-formo/issues",
 		"source":   "https://github.com/bmidget/kohana-formo"
 	},
 	"require": {
