@@ -1,5 +1,5 @@
 {
-	"name":        "kohana-formo",
+	"name":        "bmidget/kohana-formo",
 	"type":        "kohana-module",
 	"description": "Formo is a form module for Kohana 3 that lets you work with forms as objects",
 	"homepage":    "http://bmidget.github.io/kohana-formo/",
