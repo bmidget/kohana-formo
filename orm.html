@@ -78,7 +78,9 @@
           <li><a href="#integration"><i class="icon-chevron-right"></i> ORM Integration</a></li>
           <li><a href="#rules"><i class="icon-chevron-right"></i> Sharing model rules and filters</a></li>
           <li><a href="#auto-load"><i class="icon-chevron-right"></i> Auto-loading relationships</a></li>
+          <li><a href="#custom-relationships"><i class="icon-chevron-right"></i> Has Many and custom relationships</a></li>
           <li><a href="#primary-val"><i class="icon-chevron-right"></i> Primary Val and relationships</a></li>
+          <li><a href="#enums"><i class="icon-chevron-right"></i> Enums and Sets</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -95,13 +97,23 @@
 <div class="md">
 Formo makes it easy to share model fields, rules and filters with Kohana’s official ORM. You can generate a form directly from your ORM model.
 
-To make a form from your model, use `Formo::orm()`. Here’s an example of making a form from the user model:
+To integrate Formo with your ORM model, use the `Formo_ORM` trait in your model:
 
 ```
-$user = ORM::factory(‘user’, 10);
+class Model_User extends ORM {
 
-$form = Formo::form()
-	->orm(‘load’, [‘model’ => $user]);
+	user Formo_ORM;
+
+}
+```
+
+To make a form from your model, use `get_form()`. Here’s an example of making a form from the user model:
+
+```
+$user = ORM::factory('user', 10);
+
+// This makes a form from all the fields in the model
+$form = $user->get_form(['*']);
 
 if ($form->load()->validate())
 {
@@ -126,17 +138,17 @@ It’s that simple.
 <div class="md">
 ## Model rules
 
-When you create a form using `Formo::orm(‘load’)`, Formo automatically looks for and applies any rules returned from the `$model->rules()` method. Formo uses Kohana’s built-in validation library for all its validation, so it can use and understand rules inside the model.
+When you create a form using `get_form()`, Formo automatically looks for and applies any rules returned from the `$model->rules()` method. Formo uses Kohana’s built-in validation library for all its validation, so it can use and understand rules inside the model.
 
 That means you don’t have to repeat any of these. Just define ‘em once inside your model.
 
 ## Sharing filters with the model
 
-Like rules, when you create a form using `Formo::orm(‘load’)`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
+Like rules, when you create a form using `get_form()`, Formo also looks for any filters returned from the `$model->filters()` method. Formo will use the filters as they are defined inside your model.
 
 ## The special `$model::formo()` method.
 
-After `Formo::orm(‘load’)` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will run call it.
+After `get_form()` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will run call it.
 
 This gives you a chance to do anything else you may want to do with your form.
 
@@ -200,21 +212,99 @@ $form->set('config.model_base_rules', FALSE);
 <div class="md">
 ### Formo can auto-load relationship fields
 
-To do this, add `'formo' => TRUE` to your relationship definition.
+To do this, add `'formo' => TRUE` to your relationship definition for `has_one` and `belongs_to` relationships.
 
 Here's an example of a model's relationship definitions telling formo to auto-load relationships:
 
 ```
+// In the model
 protected $_belongs_to = array('class' => array('formo' => TRUE));
-protected $_has_many = array(
-	'foos' => array(
-		'model' => 'foo',
-		'foreign_key' => 'bar_id',
-		'formo' => TRUE,
-	),
-);
+
+
+// Then
+$form = $user->get_form(['name', 'class']);
 ```
 </div> <!-- md -->
+</section>
+
+<section id="custom-relationships">
+	<div class="page-header">
+		<h1>Has Many and custom relationships</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+Formo doesn't auto-load has_many relationships because the creating a field from every entry in the database gets ridiculous very quickly. Also, you may find that more often than not you want to narrow result sets for fields like belongs_to, etc.
+
+It's very easy with the Formo ORM trait.
+
+## How to load a custom relationship
+You define it in your fields list as a custom relationship by making it an array. For instance, if your model **User** has many **Assignments**, you could do this:
+
+```
+$user = ORM::factory('user', 10);
+$form = $user->get_form([
+	'email',
+	// This means use the costom relationship 'assignments' and fetch the 'name' and 'date' records from it
+	'assignments' => [
+		'name',
+		'date',
+	]
+]);
+```
+When the Formo_ORM trait sees an array definition like this, it looks for a method in the model prepended by `formo_`. Thus in the example above, Formo_ORM looks for the method `$user->formo_assignments()`.
+
+In that custom formo relationship method, Formo expects either a Database Collection or Model to be returned.
+
+For this example, let's return a collection:
+
+```
+class Model_User extends ORM {
+
+	use Formo_ORM;
+
+	protected $_has_many => ['assignments' => []];
+
+	public function formo_assignments()
+	{
+		return $this->assignments->where('date', '>', strtotime('-1 week'))->find_all();
+	}
+
+}
+```
+
+The form creates a blueprint named 'assignments' and loads all the records as blueprint copies. This makes it very easy to add new dynamic records or delete any directly from the form.
+
+Also, in this example, only the fields 'name' and 'date' are taken from the assignment records and added to the form.
+
+## Custom relationship summary
+
+There really is no limit to custom relationships with the Formo_ORM trait. The rules are simple:
+
+1. If the custom relationship method returns a Database Collection, then a blueprint is created and padded with each row from the collection.
+2. If the custom relationship method returns a model, the model is added to the form.
+
+## Custom relationship model example
+
+Here's an example of using a custom formo relationship 'class';
+
+In the user model:
+```
+public function formo_class()
+{
+	return ORM::factory('class')->where('teacher_id', '=', $this->id)->find();
+}
+```
+
+Where you are creating your form
+
+```
+$user = ORM::factory('user', 10);
+$form = $user->get_form(['email', 'first', 'last', 'class' => ['start_time', 'name']]);
+```
+
+</div> <!-- md -->
+</section>
+
 
 <section id="primary-val">
 	<div class="page-header">
@@ -235,6 +325,21 @@ If your table doesn't use a field name **name** for its primary value, you can s
 *Note that the `$_primary_val` property must be **public** since it's not built into Kohana's ORM already, and Formo needs to access it.*
 
 </div> <!-- md -->
+</section>
+
+<section id="enums">
+	<div class="page-header">
+		<h1>Enums and Sets</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+The Formo_ORM trait will automatically understand enum and set fields using the metadata from the model to pre-populate exceptable values.
+
+By default, enums use the select driver, and sets use the checkboxes driver.
+</div> <!-- md -->
+
+</section>
+
 
 
 	<div style="height:40px"></div>

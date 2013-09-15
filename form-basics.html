@@ -322,7 +322,7 @@ $form = Formo::form()
 	->set(‘config.label_message_file’, $new_file);
 ```
 
-That sets `$form->_config[‘label_message_file’] = $new_file`.
+That sets `$form->_config[‘config.label_message_file’] = $new_file`.
 
 ## Setting stuff for a bunch of fields at once.
 
@@ -829,13 +829,13 @@ Here's a rather complicated example:
 
 ```
 $form = Formo::form()
-	->add('first_name', 'input', NULL, ['label_message_file' => 'mymessages2']);
+	->add('first_name', 'input', NULL, ['config.label_message_file' => 'mymessages2']);
 
 $form2 = Formo::form([
 	'alias' => 'form2',
-	'label_message_file' => 'mymessages3',
+	'config.label_message_file' => 'mymessages3',
 ])
-->add('last_name', 'input', NULL, ['label_message_file' => FALSE])
+->add('last_name', 'input', NULL, ['config.label_message_file' => FALSE])
 ->add('middle_initial', 'input', NULL);
 
 $form->add($form2);

@@ -79,6 +79,8 @@
           <li><a href="#create-blueprint"><i class="icon-chevron-right"></i> Create a blueprint</a></li>
           <li><a href="#pad-orm"><i class="icon-chevron-right"></i> Pad from ORM</a></li>
           <li><a href="#dynamic-blueprint"><i class="icon-chevron-right"></i> Dynamic blueprints</a></li>
+          <li><a href="#dynamic-example"><i class="icon-chevron-right"></i> Dynamic example</a></li>
+          <li><a href="#dynamic-find"><i class="icon-chevron-right"></i> Find new and deleted blueprints</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -229,6 +231,174 @@ If wanted to add another city and state group to the form, all you need to do is
 When you post the form after adding these fields, Formo's address blueprint looks for the user input and adds another blueprint copy to itself, then loads the user posted data into that blueprint copy, and validates against it using the blueprint's rules.
 
 Formo's default group driver adds the attribute `data-blueprint-key` to the `formo_group` div container so it's easy to determine the next key for the next blueprint set. 
+</div> <!-- md -->
+
+</section>
+
+<section id="dynamic-example">
+	<div class="page-header">
+		<h1>Dynamic Example</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+This is an example of using a Formo blueprint on a form that has a user who can have multiple phone numbers.
+
+In this example a phone record looks like this:
+
+1. Id (input|hidden)
+1. Name (input)
+2. Type (select)
+3. Number (input)
+
+First, the PHP.
+
+```
+$phones = $user->phones->find_all();
+
+// Create the phone blueprint
+$phone = Formo::form([
+		'alias' => 'phone',
+		'blueprint' => true,
+		'blueprint_template' => 'Phone record'])
+	// We will use this data attribute to know what the primary key field is
+	->set('attr.data-pk' => 'id')
+	->orm('load', ['model' => ORM::factory('phone')])
+	// Add a 'deleted' field for keeping track of records that have been deleted
+	->add('deleted', 'input|hidden', '0')
+	// Pad the blueprint with the user's phone records
+	->pad_blueprint($phones);
+
+$form = $user->get_edit_user_form
+	->add($phone)
+	->add('submit', 'button', null, ['html' => 'Save User']);
+```
+
+Next, some simple jQuery for adding new new phone records. Sure this example is quick and dirty,
+but it gets the job done and it is easy to follow
+
+```
+// First some reusable boilerplate
+$.fn.extend({
+	formoClone: function() {
+		var that = this;
+	
+		// Clone the last group
+		var groupCopy = that.find('.formo-group:last').clone();
+	
+		console.log(groupCopy.data());
+		// Increase the blueprint key
+		var key = parseInt(groupCopy.data().blueprintkey);
+		key++;
+		groupCopy.data().blueprintkey = key;
+	
+		$(groupCopy).find('input,select').each(function(k, element){
+			// Set the values to empty
+			$(element).val('');
+	
+			// set the name
+			var name = $(element).attr('name');
+			// Replace the [i] with [j] in the element names
+			var newName = name.replace(/\[[0-9]+\]/, '['+key+']')
+
+			$(element).attr('name', newName);
+		});
+	
+		// Append the clone to the page
+		that.append(groupCopy);
+	},
+
+	formoDelete: function() {
+		if (pk = $(this).data('pk')) {
+			if ( ! $(this).find('[name="'+pk+'"]')) {
+				// Go ahead and delete the group altogether if there isn't a primary key
+				$(this).remove();
+			}
+		}
+		// Set the deleted value to 1
+		$(this).find('input[name="deleted"]').val(1);
+		$(this).addClass('deleted');
+	},
+
+	formoUndelete: function() {
+		$(this).find('input[name="deleted"]').val(0);
+		$(this).removeClass('deleted');
+	}
+});
+
+// Now attach some simple click events
+$('a.add-address').click(function(e){
+	$('#formo-container-phone').formoClone();
+});
+
+$('a.delete-address').click(function(e){
+	$(this).closest('.formo-group').formoDelete();
+});
+
+$('a.undelete-address').click(function(e){
+	$(this).closest('.formo-group').formoUndelete();
+});
+```
+
+Now back to the PHP
+
+```
+if ($form->load()->validate())
+{
+	foreach ($user->phone->as_array() as $field)
+	{
+		if ($field->deleted->val() == 1 AND $field->id->val())
+		{
+			// Delete the record
+			$phone = ORM::factory('phone', $field->id->val());
+			$phone->delete();
+		}
+		elseif ( ! $field->id->val())
+		{
+			// Create a record
+			$phone = ORM::factory('phone');
+				->values($field->val());
+			$phone->save();
+		}
+	}
+}
+```
+</div> <!-- md -->
+
+</section>
+
+<section id="dynamic-find">
+	<div class="page-header">
+		<h1>Find new and deleted blueprints</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+When working with the Formo ORM and blueprints, it's very easy to determine which blueprint copies have been deleted from your form and which have been added dynamically via post.
+
+When you use `Formo::pad_blueprint()` with an ORM result set as the value, Formo keeps track of the primary keys involved with those fields. You can easily see if those primary keys have been removed dynamically using `Formo::blueprint_deleted()`.
+
+Just make sure you do it after loading the post values:
+
+```
+if ($form->load()->validate())
+{
+	$deleted_pimary_keys = $form->assignments->blueprint_deleted();
+
+	// Or you can pass the field name as the argument
+	$deleted_pimary_keys = $form->blueprint_deleted('assignments');
+}
+```
+
+Likewise, you can determine fields that have ben dynamically added using `Formo::blueprint_dynamic`:
+
+```
+if ($form->load()->validate())
+{
+	$new_fields = $form->assignments->blueprint_dynamic();
+
+	// Or you can pass the field name as the argument
+	$new_fields = $form->blueprint_dynamic('assignments');
+}
+```
 </div> <!-- md -->
 
 </section>
