@@ -1059,6 +1059,32 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * (Deprecated) Run a method through the ORM driver
+	 * 
+	 * @access public
+	 * @param mixed $method
+	 * @param array $vals (default: NULL)
+	 * @return Formo obj
+	 */
+	public function orm($method, array $vals = NULL)
+	{
+		if ($vals === NULL)
+		{
+			$vals = array();
+		}
+
+		$vals = Arr::merge($vals, array('field' => $this));
+
+		$driver = $this->config('orm_driver');
+
+		$class_name = 'Formo_Driver_ORM_'.ucfirst($driver);
+
+		$class_name::$method($vals);
+
+		return $this;
+	}
+
+	/**
 	 * Pad group with number of blueprints
 	 * 
 	 * @access public
