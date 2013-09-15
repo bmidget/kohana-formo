@@ -84,6 +84,25 @@ abstract class Formo_Core_Innards {
 	protected $_blueprint_count = 0;
 
 	/**
+	 * Whether the field was dynamically added
+	 * 
+	 * (default value: false)
+	 * 
+	 * @var bool
+	 * @access protected
+	 */
+	protected $_blueprint_dynamic = false;
+
+	/**
+	 * Primary key
+	 * 
+	 * (default value=: array())
+	 * @var aray
+	 * @access protected
+	 */
+	protected $_blueprint_pks = array();
+
+	/**
 	 * Allow for setting custom blueprint template separate from blueprint
 	 * 
 	 * @var mixed
@@ -684,8 +703,23 @@ abstract class Formo_Core_Innards {
 		{
 			if ($arr = Arr::get($array, $this->alias()))
 			{
-				// If the field is a blueprint, pad it with the correct number of blueprint copies
-				$this->pad_blueprint(count($arr));
+				foreach ($arr as $key => $vals)
+				{
+					if ( ! $this->$key)
+					{
+						$copy = $this->copy_blueprint();
+						$copy->set('blueprint_dynamic', TRUE);
+						$this->add($copy);
+					}
+				}
+
+				foreach ($this->as_array() as $field)
+				{
+					if ( ! Arr::get($arr, $field->alias()))
+					{
+						$this->remove($field->alias());
+					}
+				}
 			}
 		}
 

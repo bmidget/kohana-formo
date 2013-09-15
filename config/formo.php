@@ -21,7 +21,7 @@ return array
 	'template_ext'            => FALSE,
 	// Namespace fields (name="parent_alias[field_alias]")
 	'namespaces'              => TRUE,
-	// Driver used for ORM integration
+	// Driver used for ORM integration (Deprecated in favor of using the Formo_ORM trait)
 	'orm_driver'              => 'kohana',
 	// When using ORM driver, whether to automatically add mysql field base rules to formo field
 	'model_base_rules'        => TRUE,

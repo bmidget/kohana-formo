@@ -1,5 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * This driver has been deprected in favor of using the Formo_ORM trait.
+ */
 class Formo_Core_Driver_ORM_Kohana {
 
 	protected static $_relationship_types = array('has_many', 'belongs_to', 'has_one');
