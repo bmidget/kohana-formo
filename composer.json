@@ -1,0 +1,23 @@
+{
+	"name":        "bmidget/kohana-formo",
+	"type":        "kohana-module",
+	"description": "Formo is a form module for Kohana 3 that lets you work with forms as objects",
+	"homepage":    "http://bmidget.github.io/kohana-formo/",
+	"license":     "Apache",
+	"keywords":    ["formo", "form", "kohana"],
+	"authors": [
+		{
+			"name":     "Ben Midget",
+			"role":     "developer"
+		}
+	],
+	"support": {
+		"issues":   "https://github.com/bmidget/kohana-formo/issues",
+		"source":   "https://github.com/bmidget/kohana-formo"
+	},
+	"require": {
+		"composer/installers": "~1.0",
+		"kohana/core":         ">=3.3",
+		"php":                 ">=5.3.3"
+	}
+}
