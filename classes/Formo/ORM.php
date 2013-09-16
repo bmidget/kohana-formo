@@ -85,6 +85,7 @@ trait Formo_ORM {
 				{
 					$model = $rs->current();
 					$blueprint = $model->get_form($field_name)
+						->set('alias', $key)
 						->set('blueprint', true)
 						->pad_blueprint($rs);
 
