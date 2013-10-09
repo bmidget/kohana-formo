@@ -668,6 +668,116 @@ For textarea fields
 </div> <!-- md -->
 </section>
 
+<section id="helper-methods">
+	<div class="page-header">
+		<h1>HTML helper methods</h1>
+	</div> <!-- page-header -->
+	
+<div class="md">
+Form and field objects have HTML helper methods that make working with objects as html simpler.
+
+### add_class()
+
+Add a class or classes to a field/form object
+
+```
+$form->add_class('new-class');
+
+$form->add_class('new-class1 new-class2');
+
+$form->add_class(['new-class1', 'new-class2']);
+```
+
+### attr()
+
+Get or set html tag attribute
+
+```
+$field->attr('placeholder', 'john@doe.com');
+
+$field->attr([
+	'placeholder' => 'john@doe.com',
+	'disabled' => true,
+	'style' => 'width: 300px',
+]);
+
+$placeholder = $field->attr('placeholder');
+```
+
+### attr_fields()
+
+Set attributes for a set of fields
+
+```
+$form->attr_fields([
+	'email' => [
+		'placeholder' => 'john@doe.com',
+	],
+	'first_name' => [
+		'disabled' => true',
+		'style' => 'background: purple',
+	],
+]);
+```
+
+### close();
+
+Return the field's closing tag
+
+```
+echo $form->close();
+```
+
+### html()
+
+Get or set HTML part of the tag
+
+```
+$button->html('Click me to submit');
+
+$html = $button->html();
+```
+
+### label()
+
+Get field's label
+
+```
+$label = $field->label();
+```
+
+### name()
+
+Return a field's HTML 'name' tag value
+
+```
+$name = $field->name();
+```
+
+### open()
+
+Return a field's HTML opening tag
+
+```
+echo $form->open();
+```
+
+
+### remove_class()
+
+Remove class or classes from a field/form object
+
+$form->removeClass('foo');
+
+$form->removeClass('foo1 foo2');
+
+$form->removeClass(['foo1', 'foo2']);
+```
+
+</div> <!-- md -->
+
+</section>
+
 <section id="to-array">
 	<div class="page-header">
 		<h1>To Array</h1>
