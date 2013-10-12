@@ -81,6 +81,7 @@
           <li><a href="#custom-relationships"><i class="icon-chevron-right"></i> Has Many and custom relationships</a></li>
           <li><a href="#primary-val"><i class="icon-chevron-right"></i> Primary Val and relationships</a></li>
           <li><a href="#enums"><i class="icon-chevron-right"></i> Enums and Sets</a></li>
+          <li><a href="#nonmodelfields"><i class="icon-chevron-right"></i> Non-model fields</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -340,6 +341,53 @@ By default, enums use the select driver, and sets use the checkboxes driver.
 
 </section>
 
+<section id="nonmodelfields">
+	<div class="page-header">
+		<h1>Non-model fields</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+You may need to make formo field definition for special form fields that aren't fields in your ORM models.
+
+A good example is you may want to retrieve a "create user" form but include an extra field named "confirm password" that you re-use in several places in your site, but isn't a field inside the model.
+
+### Request a non-model field
+
+To ask the Formo_ORM `get_form()` method to use a custom field, just add it to the array.
+
+```
+$form = $user->get_form(['email', 'password', 'confirm_password']);
+```
+
+In the example above, `email` and `password` are properties in the User ORM Model. But `confirm_password` isn't.
+
+### Custom field naming convention
+
+Formo's naming convention is it looks for method named `_formo_$fieldname()`;
+
+Thus, in the example above, Formo looks for `User_Model::_formo_confirm_password()`.
+
+### The costom field method must return an array
+
+Formo expects your custom field method to return an array. The minimum requirement for this array is that it has an alias definition.
+
+Here's an example of this method using the `confirm_password` example above:
+
+```
+protected function _formo_confirm_password()
+{
+	return [
+		'alias' => 'confirm_password',
+		'rules' => [
+			['not_empty'],
+			['matches', [':value', ':confirm_password', ':password']]
+		]
+	];
+}
+```
+</div> <!-- md -->
+
+</section>
 
 
 	<div style="height:40px"></div>
