@@ -46,11 +46,22 @@ trait Formo_ORM {
 	 */
 	public function get_form( array $fields, Formo $form = NULL)
 	{
-		if ($fields === ['*'])
+		if (Arr::get($fields, 0) === '*')
 		{
 			// Get the default set of fields
-		// By default, load all the fields
-			$fields = array_keys($this->as_array());
+			// By default, load all the fields
+			$arr = array_keys($this->as_array());
+
+			if (count($fields) > 1)
+			{
+				// If other fields are listed, add them to the array
+				// this allows for something like ['*', 'foo', 'bar']
+				array_shift($fields);
+				$arr = Arr::merge($arr, $fields);
+			}
+
+			// Set the fields to the combined array
+			$fields = $arr;
 		}
 
 		if ($form === NULL)
