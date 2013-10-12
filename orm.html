@@ -113,8 +113,8 @@ To make a form from your model, use `get_form()`. Here’s an example of making 
 ```
 $user = ORM::factory('user', 10);
 
-// This makes a form from all the fields in the model
-$form = $user->get_form(['*']);
+// This makes a form from email, first, and last fields from the model
+$form = $user->get_form(['email', 'first', 'last']);
 
 if ($form->load()->validate())
 {
@@ -126,6 +126,19 @@ if ($form->load()->validate())
 ```
 
 It’s that simple.
+
+### Asterisk wildcard
+
+You can tell Formo to get all the model fields by using an asterisk.
+
+```
+// This adds all the fields from the model
+$form = $model->get_form(['*']);
+
+// This gets all the fields from the model and the custom field 'confirm_password'
+$form = $model->get_form(['*', 'custom_password']);
+```
+
 </div> <!-- md -->
 
 </section>
