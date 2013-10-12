@@ -35,15 +35,6 @@ trait Formo_ORM {
 	 */
 	protected $_primary_val = 'name';
 
-	public function __call($method, $args)
-	{
-		if (strpos($method, '.') !== FALSE)
-		{
-			$method = str_replace('.', '_', $method);
-			return call_user_func_array([$this, $method], $args);
-		}
-	}
-
 	/**
 	 * Create a form from an ORM Model
 	 * You can optionally pass a form to have fields added to
@@ -79,6 +70,12 @@ trait Formo_ORM {
 			if (is_array($field_name))
 			{
 				$method = 'formo_'.$key;
+
+				if (strpos($method, '.') !== FALSE)
+				{
+					$method = str_replace('.', '_', $method);
+				}
+
 				$rs = $this->$method();
 
 				if ($rs instanceof Database_Result)
