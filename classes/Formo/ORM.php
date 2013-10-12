@@ -97,18 +97,33 @@ trait Formo_ORM {
 				}
 			}
 
-			// Create the field definition array
-			$options = [
-				'alias' => $field_name,
-				'val' => $this->$field_name,
-				'driver' => 'input',
-			];
+			if ( ! isset($this->$field_name))
+			{
+				// Custom method looks like _formo_$field_name()
+				$method = '_formo_'.$field_name;
+				if ( ! method_exists($this, $method))
+				{
+					// Throw an exception if a field is requested but there's no method defining its options array
+					throw new Kohana_Exception('Formo custom field method, :method, does not exist.', [':method' => __CLASS__.'::'.$method.'()']);
+				}
 
-			// Do any special processing if the field is a relational field
-			$this->_process_belongs_to($field_name, $options);
-			$this->_process_has_one($field_name, $options);
-			$this->_process_enum($field_name, $options);
-			$this->_process_set($field_name, $options);
+				$options = $this->$method();
+			}
+			else
+			{
+				// Create the field definition array
+				$options = [
+					'alias' => $field_name,
+					'val' => $this->$field_name,
+					'driver' => 'input',
+				];
+
+				// Do any special processing if the field is a relational field
+				$this->_process_belongs_to($field_name, $options);
+				$this->_process_has_one($field_name, $options);
+				$this->_process_enum($field_name, $options);
+				$this->_process_set($field_name, $options);
+			}
 
 			// Add the field to the form
 			$form->add($options);
