@@ -108,7 +108,7 @@ trait Formo_ORM {
 				}
 			}
 
-			if ( ! isset($this->$field_name))
+			if ($this->_field_exists($field_name) !== TRUE)
 			{
 				// Custom method looks like _formo_$field_name()
 				$method = '_formo_'.$field_name;
@@ -232,6 +232,15 @@ trait Formo_ORM {
 			: 'name';
 
 		return $field_name;
+	}
+
+	protected function _field_exists($column)
+	{
+		return (array_key_exists($column, $this->_object) OR
+			array_key_exists($column, $this->_related) OR
+			array_key_exists($column, $this->_has_one) OR
+			array_key_exists($column, $this->_belongs_to) OR
+			array_key_exists($column, $this->_has_many));
 	}
 
 	/**
