@@ -438,14 +438,12 @@ Let’s say I created a form from a model, but I want to add a new filter to the
 It’s dirt-simple using `Formo::merge()`.
 
 ```
-$user = ORM::factory(‘user’, $id);
+$user = ORM::factory(‘User’, $id);
 $other_email_filters = [
 	‘remove_fugly_chars’,
 ];
 
-
-$form = Formo::form()
-	->orm(‘load’, [‘model’ => $user]);
+$form = $user->get_form();
 
 $form->email
 	->merge(‘filters’, $other_email_filters);

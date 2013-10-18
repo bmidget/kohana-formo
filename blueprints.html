@@ -188,8 +188,12 @@ You can pass an argument to `Formo::pad_blueprint()` that represents either the 
 ### Pad 5 empty copies
 
 ```
-$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
-	->orm('load', ['model' => ORM::factory('class')])
+$classes = ORM::factory('Class')
+	->get_form()
+	->set([
+		'alias' => 'classes',
+		'blueprint' => TRUE,
+	])
 	->pad_blueprint(5);
 ```
 
@@ -198,18 +202,26 @@ $classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
 ```
 $class_result_set = ORM::factory($school->classes->find_all());
 
-$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
-	->orm('load', ['model' => ORM::factory('class')])
+$classes = ORM::factory('Class')
+	->get_form()
+	->set([
+		'alias' => 'classes',
+		'blueprint' => TRUE,
+	])
 	->pad_blueprint($class_result_set);
-```
+	```
 
 ### Pad from single ORM Model
 
 ```
-$class = ORM::factory('class', 10);
+$class = ORM::factory('Class', 10);
 
-$classes = Formo::form['alias' => 'classes', 'blueprint' => TRUE]
-	->orm('load', ['model' => ORM::factory('class')])
+$classes = ORM::factory('Class')
+	->get_form()
+	->set([
+		'alias' => 'classes',
+		'blueprint' => TRUE,
+	])
 	->pad_blueprint($class);
 ```
 </div> <!-- md -->
@@ -256,13 +268,14 @@ First, the PHP.
 $phones = $user->phones->find_all();
 
 // Create the phone blueprint
-$phone = Formo::form([
+$phone = ORM::factory('Phone')
+	->set([
 		'alias' => 'phone',
-		'blueprint' => true,
-		'blueprint_template' => 'Phone record'])
-	// We will use this data attribute to know what the primary key field is
-	->set('attr.data-pk' => 'id')
-	->orm('load', ['model' => ORM::factory('phone')])
+		'blueprint' => TRUE,
+		'blueprint_template' => 'Phone record',
+		// We will use this data attribute to know what the primary key field is
+		'attr.data-pk' => 'id',
+	])
 	// Add a 'deleted' field for keeping track of records that have been deleted
 	->add('deleted', 'input|hidden', '0')
 	// Pad the blueprint with the user's phone records
@@ -349,13 +362,13 @@ if ($form->load()->validate())
 		if ($field->deleted->val() == 1 AND $field->id->val())
 		{
 			// Delete the record
-			$phone = ORM::factory('phone', $field->id->val());
+			$phone = ORM::factory('Phone', $field->id->val());
 			$phone->delete();
 		}
 		elseif ( ! $field->id->val())
 		{
 			// Create a record
-			$phone = ORM::factory('phone');
+			$phone = ORM::factory('Phone');
 				->values($field->val());
 			$phone->save();
 		}

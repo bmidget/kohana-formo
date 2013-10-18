@@ -111,7 +111,7 @@ class Model_User extends ORM {
 To make a form from your model, use `get_form()`. Here’s an example of making a form from the user model:
 
 ```
-$user = ORM::factory('user', 10);
+$user = ORM::factory('User', 10);
 
 // This makes a form from email, first, and last fields from the model
 $form = $user->get_form(['email', 'first', 'last']);
@@ -171,14 +171,15 @@ Since the entire form object is passed into the method, you can manipulate it ho
 Here’s an example of using `model::formo()`:
 
 ```
-$user = ORM::factory('user', 10);
-$form->orm('load', ['model' => $user, $opt2, $opt3]);
+$user = ORM::factory('User', 10);
 
-// From the methods above, when the ORM driver calls formo(), it passes
+$form = $user->get_form();
+
+// From the methods above, when the ORM trait calls formo(), it passes
 // any options from 'load' except for the model option as the second parameter
 // which means the parameter can be empty or an array of values
-// Here it would runs this: $user->formo($form, [$opt2, $opt3])
-public function formo($form, $opts)
+// Here it would runs this: $user->formo($form)
+public function formo($form)
 {
 	$form->set([
 		'id' => ['render' => FALSE],
@@ -201,13 +202,13 @@ If the method is not defined in your model, Formo will not call anything.
 
 Though it's a good idea to always tack on the base rules from the mysql field definition data (such as NOT NULL, digit, range, maxlength), there may be times when you need to not append base rules to a form generated from formo.
 
-You define whether to add base rules during `$formo->orm('load')` by the config setting `model_base_rules`.
+You define whether to add base rules during `$model->get_form([])` by the config setting `model_base_rules`.
 
 You can set this in the `formo.php` config file, or by individually setting adding the config setting to the object like this:
 
 ```
 $form = Formo::form(['config.model_base_rules' => FALSE])
-	->orm('load', ['model' => $model]);
+	->add($model->get_form());
 ```
 
 Or by using `Formo::set()`:
@@ -255,7 +256,7 @@ It's very easy with the Formo ORM trait.
 You define it in your fields list as a custom relationship by making it an array. For instance, if your model **User** has many **Assignments**, you could do this:
 
 ```
-$user = ORM::factory('user', 10);
+$user = ORM::factory('User', 10);
 $form = $user->get_form([
 	'email',
 	// This means use the costom relationship 'assignments' and fetch the 'name' and 'date' records from it
@@ -305,14 +306,14 @@ In the user model:
 ```
 public function formo_class()
 {
-	return ORM::factory('class')->where('teacher_id', '=', $this->id)->find();
+	return ORM::factory('Class')->where('teacher_id', '=', $this->id)->find();
 }
 ```
 
 Where you are creating your form
 
 ```
-$user = ORM::factory('user', 10);
+$user = ORM::factory('User', 10);
 $form = $user->get_form(['email', 'first', 'last', 'class' => ['start_time', 'name']]);
 ```
 
