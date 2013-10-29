@@ -162,7 +162,7 @@ Like rules, when you create a form using `get_form()`, Formo also looks for any 
 
 ## The special `$model::formo()` method.
 
-After `get_form()` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will run call it.
+After `get_form()` has added all your fields, rules and filters as defined in your model, Formo will then look for the presence of `$model::formo($form)` inside your model. If the method exists, Formo will call it.
 
 This gives you a chance to do anything else you may want to do with your form.
 
@@ -175,13 +175,10 @@ $user = ORM::factory('User', 10);
 
 $form = $user->get_form();
 
-// From the methods above, when the ORM trait calls formo(), it passes
-// any options from 'load' except for the model option as the second parameter
-// which means the parameter can be empty or an array of values
-// Here it would runs this: $user->formo($form)
+// When the trait calls formo(), it passes the Formo object into the method
 public function formo($form)
 {
-	$form->set([
+	$form->set_fields([
 		'id' => ['render' => FALSE],
 		'class_id' => ['label' => 'Class', 'blank' => TRUE],
 		'email' => ['driver' => 'input|email',],
@@ -335,9 +332,7 @@ By default, Formo looks for a field named `name` in the model for this display n
 
 ### How to define `primary_val` for a model
 
-If your table doesn't use a field name **name** for its primary value, you can set this by definining property `public $_primary_val = 'myField'`;
-
-*Note that the `$_primary_val` property must be **public** since it's not built into Kohana's ORM already, and Formo needs to access it.*
+If your table doesn't use a field name **name** for its primary value, you can set this by definining property `protected $_primary_val = 'myField'`;
 
 </div> <!-- md -->
 </section>
