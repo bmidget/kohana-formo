@@ -25,17 +25,6 @@ trait Formo_ORM {
 	protected $_foreign_keys = [];
 
 	/**
-	 * Formo adds back in $_primary_val key which it uses to determine the 'name'
-	 * field. Formo uses that column's value for labels
-	 * 
-	 * (default value: 'name')
-	 * 
-	 * @var string
-	 * @access protected
-	 */
-	protected $_primary_val = 'name';
-
-	/**
 	 * Create a form from an ORM Model
 	 * You can optionally pass a form to have fields added to
 	 * 
