@@ -896,6 +896,27 @@ abstract class Formo_Core_Innards {
 	}
 
 	/**
+	 * Reset field values to their original values
+	 *
+	 * @access protected
+	 * @return Formo obj
+	 */
+	protected function _reset()
+	{
+		if ($this->_vals['new'] !== self::NOTSET)
+		{
+			$this->_vals['new'] = self::NOTSET;
+		}
+
+		foreach ($this->_fields as $field)
+		{
+			$field->reset();
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Internal method to run all applicable callbacks
 	 *
 	 * @access protected

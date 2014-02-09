@@ -1380,6 +1380,17 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Reset field values to their original values
+	 *
+	 * @access public
+	 * @return Formo obj
+	 */
+	public function reset()
+	{
+		return $this->_reset();
+	}
+
+	/**
 	 * Set a value for a field's attribute
 	 * You can use Arr::set_path's dot-syntax to set an attribute
 	 *
