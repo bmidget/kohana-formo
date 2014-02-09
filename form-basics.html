@@ -83,6 +83,7 @@
           <li><a href="#merging"><i class="icon-chevron-right"></i> Merging stuff</a></li>
           <li><a href="#ordering"><i class="icon-chevron-right"></i> Ordering</a></li>
           <li><a href="#subforms"><i class="icon-chevron-right"></i> Subforms</a></li>
+          <li><a href="#resetting"><i class="icon-chevron-right"></i> Resetting</a></li>
           <li><a href="#drivers"><i class="icon-chevron-right"></i> Driver Descriptions</a></li>
           <li><a href="#helper-methods"><i class="icon-chevron-right"></i> HTML helper methods</a></li>
           <li><a href="#to-array"><i class="icon-chevron-right"></i> To Array</a></li>
@@ -597,6 +598,28 @@ You can also specify a numeric order for the subform
 ```
 $form->subform('address', ['street', 'city', 'state'], [1]);
 ```
+
+</div> <!-- md -->
+</section>
+
+<section id="resetting">
+	<div class="page-header">
+		<h1>Resetting</h1>
+	<div class="page-header">
+
+<div class="md">
+You can reset any form or field's values using the `Formo::reset()` method.
+
+This recursively resets any field values within the field also.
+
+```
+// Reset entire form's values recursively
+$form->reset();
+
+// Reset individual field
+$form->first_name->reset();
+```
+
 
 </div> <!-- md -->
 </section>
