@@ -76,7 +76,6 @@
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
           <li><a href="#installation"><i class="icon-chevron-right"></i> Installation</a></li>
-          <li><a href="#upgrading"><i class="icon-chevron-right"></i> Upgrading</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -115,34 +114,6 @@ Note that Formo follows a different standard for it's filesystem. Rather than pl
 </div>
 
         </section>
-
-<section id="upgrading">
-	<div class="page-header">
-		<h1>Upgrading</h1>
-	</div> <!-- page-header -->
-
-<div class="md">
-Here are some changes that you need to know in order to upgrade from the last version of Formo
-
-- Rules are no longer added using `Formo::rule()` or `Formo::rules()`. Instead you must use `Formo::add_rule()`. [See validation documentation](validation.html)
-- There is no longer a `Formo::field()` method. Just use `Formo::form()` and `Formo::factory()`
-- `create_sub()` is now `subform()`, and it returns the form object, not the subform
-- Formo doesn't do automatic belongs to, has many, or has many through relationships because it's ridiculous to auto-generate these
-- File fields have a `NULL` empty value, not an empty `$_FILES` array
-- Out-of-the box styling works now with Twitter Bootstrap. If you need backwards compatibility with the old version of Formo, ste the `template_dir` variable in Formo's config file to `'formo/'`
-- Views are not located in `views/formo/html/{file}`, they are instead located in `template_dir/template`
-- The `view` variable is now `template`
-- The array of values for select options, radios and checkboxes is no longer called `options` and is now called `opts`.
-- If creating a field using an array of key/value pairs, use `val` instead of `value` as the option for the field's value
-- `bool` driver is now `checkbox`
-- `hidden`, `password`, `submit` are now `input|hidden`, `input|password`, `input|submit`
-- `Field::set_all($array)` is now `Formo::set_fields($array)`
-- `Formo_Form::add_group()` has been deprecated. Now just use `Formo::add()` and set the `opts` array for option values
-- Formo no longer auto-loads *belongs to*, *has many*, *has one* or *belongs to* relationships
-- Button fields no longer automatically add any html inside the button tag. To do it, set the field's HTML. (See <a href="form-basics#helper-methods"><i class="icon-chevron-right"></i> HTML helper methods</a>)
-</div> <!-- md -->
-</section>
-
 
 
 	<div style="height:40px"></div>
