@@ -99,26 +99,7 @@ class Formo_Core_Formo extends Formo_Innards {
 	 */
 	public function __invoke()
 	{
-		if ($this->get('render') === false)
-		{
-			return NULL;
-		}
-
-		$str = $this->open();
-		$str.= $this->html();
-		$str.= $this->render_opts();
-
-		foreach ($this->_fields as $field)
-		{
-			if ($field->get('render') === TRUE)
-			{
-				$str.= $field->render();
-			}
-		}
-
-		$str.= $this->close();
-
-		return $str;
+		return $this->input();
 	}
 
 	/**
@@ -885,6 +866,36 @@ class Formo_Core_Formo extends Formo_Innards {
 		$this->_html = $str;
 
 		return $this;
+	}
+
+	/**
+	 * Convert just the input to html
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function input()
+	{
+		if ($this->get('render') === false)
+		{
+			return NULL;
+		}
+
+		$str = $this->open();
+		$str.= $this->html();
+		$str.= $this->render_opts();
+
+		foreach ($this->_fields as $field)
+		{
+			if ($field->get('render') === TRUE)
+			{
+				$str.= $field->render();
+			}
+		}
+
+		$str.= $this->close();
+
+		return $str;
 	}
 
 	/**
