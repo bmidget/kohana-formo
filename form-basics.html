@@ -525,13 +525,13 @@ $form->order('confirm_password', 'after', 'password');
 <div class="md">
 A subform is a form within a form.
 
-Formo supports deep form objects and allows as many forms to exist within other forms as you deem necessary.
+Formo supports deep form objects and allows as many forms to exist within other forms as necessary.
 
 Only the parent-most form will have the `form` driver. Others added to it will be converted to `group` by default.
 
 ## How to add a subform
 
-Since a subform is just a form within a form, it's creation is just like a form. Then it's added to a parent form
+Since a subform is just a form within a form, it's creation is like a form. Then it's added to a parent form
 
 ```
 $address = Formo::form(['alias' => 'address'])
@@ -553,7 +553,7 @@ If you wanted to access street, to set its value for instance, you could do this
 $user_form->address->street->val();
 ```
 
-Additionally, since PHP passes objects by reference, you could access the same value from the orinal subform object too:
+Since PHP passes objects by reference, you could access the same value from the orinal subform object too:
 
 ```
 $address->street->val();
@@ -578,7 +578,7 @@ elseif ($form->subform->validate())
 
 ## Create a subform on the fly from existing fields
 
-You may want to namespace a part of your form or simply turn a few fields into a subform on the fly. There are many reasons you may want to do this, but one is to allow the "group" or other specific driver for formatting reasons.
+You may want to namespace a part of your form or turn a few fields into a subform on the fly. There are many reasons you may want to do this, but one is to allow the "group" or other specific driver for formatting reasons.
 
 Doing this always appends your subform to the bottom of its parent.
 

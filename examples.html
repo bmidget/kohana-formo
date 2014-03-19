@@ -80,6 +80,7 @@
           <li><a href="#cb"><i class="icon-chevron-right"></i> Checkboxes, Radios, Select</a></li>
           <li><a href="#templates"><i class="icon-chevron-right"></i> Custom templates</a></li>
           <li><a href="#optional-subforms"><i class="icon-chevron-right"></i> Optional subforms</a></li>
+          <li><a href="#form-array"><i class="icon-chevron-right"></i> Form from array</a></li>
         </ul>
       </div>
       <div class="span9">
@@ -411,6 +412,98 @@ if ($form->different_shipping_address->val() AND $form->address2->validate())
 ```
 
 You can see it's not difficult to validate an entire subform based on meeting certain criteria.
+</div> <!-- md -->
+</section>
+
+<a id="form-array" class="anchor"></a>
+<section>
+	<div class="page-header">
+		<h1>Create a form from an array</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+Formo allows you to create entire, complex form definitions from an array. Here is an example:
+
+```
+$array = [
+	'fields' => [
+		[
+			'alias' => 'first',
+			'driver' => 'input',
+			'rules' => [
+				['not_empty'],
+				['alpha'],
+			]
+		],
+		[
+			'alias' => 'last',
+			'driver' => 'input',
+			'rules' => [
+				['not_empty'],
+				['alpha'],
+			]
+		],
+		[
+			'alias' => 'email',
+			'driver' => 'input|email',
+			'rules' => [
+				['not_empty'],
+			]
+		],
+		[
+			'alias' => 'notes',
+			'driver' => 'textarea',
+		],
+		// This is a subform
+		[
+			'alias' => 'address',
+			'driver' => 'group',
+			'fields' => [
+				[
+					'alias' => 'street',
+					'driver' => 'input',
+					'rules' => [
+						['not_empty'],
+					]
+				],
+				[
+					'alias' => 'city',
+					'driver' => 'input',
+					'rules' => [
+						['not_empty'],
+					]
+				],
+				[
+					'alias' => 'state',
+					'driver' => 'select',
+					'opts' => [
+						'CA' => 'California',
+						'NY' => 'New York',
+					],
+					'rules' => [
+						['not_empty'],
+					]
+				],
+				[
+					'alias' => 'zip',
+					'driver' => 'input|number',
+					'rules' => [
+						['not_empty'],
+						['regex', [':value', '[0-9]{5}']],
+					]
+				],
+			]
+		],
+		[
+			'alias' => 'submit',
+			'driver' => 'button',
+			'html' => 'Submit this!'
+		]
+	]
+];
+
+$form = Formo::form($array);
+```
 </div> <!-- md -->
 </section>
 
