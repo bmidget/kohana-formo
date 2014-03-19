@@ -1,4 +1,4 @@
-<div class="field control-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
+<div class="field form-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
 	<?php if ($title): ?>
 		<span class="title"><?=$title?></span>
 	<?php elseif ($label = $field->label()): ?>

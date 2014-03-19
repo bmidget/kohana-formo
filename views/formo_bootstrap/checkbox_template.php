@@ -1,4 +1,4 @@
-<div class="field control-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
+<div class="field form-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
 	<label class="checkbox"><?=$field->open().$field->html().$field->render_opts().$field->close()?> <span class="checkbox-label"><?=$field->label()?></span></label>
 
 	<?php if ($msg = $field->error()): ?>
