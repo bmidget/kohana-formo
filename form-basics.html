@@ -390,7 +390,7 @@ $form->set_fields([
 
 ## Getting stuff
 
-The only properties you can access directly in a Formo object are fields. Thus, if you have a field named `first_name` and want to retrieve the `Formo::$_label` variable, you cannot use `$form->first_name->_label`. Instead you need to use `Formo::get()`.
+**The only properties you can access directly in a Formo object are fields.** Thus, if you have a field named `first_name` and want to retrieve the `Formo::$_label` variable, you cannot use `$form->first_name->_label`. Instead you need to use `Formo::get()`.
 
 `Formo::get($property, [$default = null])` takes two parameters:
 
