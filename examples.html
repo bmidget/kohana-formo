@@ -489,7 +489,7 @@ $array = [
 					'driver' => 'input|number',
 					'rules' => [
 						['not_empty'],
-						['regex', [':value', '[0-9]{5}']],
+						['regex', [':value', '/[0-9]{5}/']],
 					]
 				],
 			]
