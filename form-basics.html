@@ -213,7 +213,7 @@ $form->add([
 For more detailed instructions on validation, see the [full validation documentation](./validation).
 ### Loading posted
 
-The `Formo::load()` method tells the form that whatever array is passed as a parameter is what was posted. If no parameter is specified.
+The `Formo::load()` method tells the form that whatever array is passed as a parameter is what was posted. If no parameter is specified, Formo will use `Request::$current->post()` as the posted array.
 
 ### Validation
 
