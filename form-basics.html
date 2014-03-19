@@ -262,6 +262,23 @@ The default `template_dir` is defined in the Formo config.php file.
 The `template` variable is defined per-driver (and can also be customized per field or form). When the field renders, Formo finds a view file named `$template_dir/$template`.
 
 The `template_ext` is defined in the Formo config.php file, and can optionally add an extension to the template filenames.  This is in addition to the extension Kohana adds, defined by the `EXT` constant (typically `php`).  By default this is set to FALSE, so Formo will search for template filenames like `form_template.php`.  If set to `html`, for example, it will search for filenames like `form_template.html.php`.
+
+## Render a field
+
+You can also render an individual field.
+
+To render a full individual field including label:
+
+```
+echo $form->$field->render();
+```
+
+Or you can render just the input part of the Formo field using `Formo::input()`:
+
+```
+echo $form->$field->input();
+```
+
 </div> <!-- md -->
 </section>
 
