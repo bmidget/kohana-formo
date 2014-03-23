@@ -47,4 +47,10 @@ return array
 			array('Formo::range', array(':field', ':form')),
 		),
 	),
+    'attr'                   =>
+        array(
+            'form' => array( 'class' => 'form-horizontal' ),
+            'fields' => array( 'class' => 'form-control' ),
+            'button|submit' => array( 'class' => 'btn btn-default' ),
+        )
 );

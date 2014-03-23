@@ -59,7 +59,13 @@ trait Formo_ORM {
 			// create that form object here
 			$alias = $this->_formo_alias ?: $this->_object_name;
 			$form = Formo::form(['alias' => $alias]);
-		}
+            $form_attrs = $form->config ( 'attr.form' );
+
+            if ( $form_attrs )
+            {
+                $form->set ( 'attr', $form_attrs );
+            }
+        }
 
 		// Set up foreign keys map for easy access
 		$this->_find_foreign_keys();
@@ -124,6 +130,16 @@ trait Formo_ORM {
 				$this->_process_enum($field_name, $options);
 				$this->_process_set($field_name, $options);
 			}
+
+            if ( !Arr::get ( $options, 'driver' ) || !$attrs = $form->config ( 'attr.' . $options['driver'] ) )
+            {
+                $attrs = $form->config ( 'attr.fields' );
+            }
+
+            if ( $attrs )
+            {
+                $options['attr'] = $attrs;
+            }
 
 			// Add the field to the form
 			$form->add($options);
