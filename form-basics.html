@@ -88,6 +88,7 @@
           <li><a href="#helper-methods"><i class="icon-chevron-right"></i> HTML helper methods</a></li>
           <li><a href="#to-array"><i class="icon-chevron-right"></i> To Array</a></li>
           <li><a href="#config"><i class="icon-chevron-right"></i> Config settings</a></li>
+          <li><a href="#default-defs"><i class="icon-chevron-right"></i> Default definitions (ftype)</a></li>
           <li><a href="#terminology"><i class="icon-chevron-right"></i> Formo Terminology</a></li>
         </ul>
       </div>
@@ -963,10 +964,111 @@ $form2->middle_initial - 'mymessages3'
 			<td>These are pre-defined rules that get added to `input` elements with HTML 5 `type` attributes that are supposed to have built-in validation. These pre-defined rules are supposed to mimic those that are built into the browser with these type tags.</td>
 		</tr>
 
+		<tr>
+			<td>`ftype`</td>
+			<td>Pre-defined defaults for forms and fields. See <a href="form-basics.html#default-defs">ftype docs</a></td>
+		</tr>
+
 	</tbody>
 
 </table>
 
+
+</div> <!-- md -->
+</section>
+
+<a id="default-defs" class="anchor"></a>
+<section>
+	<div class="page-header">
+		<h1>Default Definitions (ftype)</h1>
+	</div> <!-- page-header -->
+
+<div class="md">
+You may want to create a set of default form and field definitions that get reused everywhere. For instance, you may want to add a class attribute to all your inputs to match Twitter Bootstrap or another css framework markup.
+
+Whatever the reason, it's simple to pre-define form defaults.
+
+### ftype config format
+
+The format of the `ftype` config param looks like this:
+
+```
+'ftype' => [
+	// This applies to all forms that don't match an ftype in this config array
+	':all' => [
+		':self' => [
+			'attr.class' => 'someclass'
+		],
+		// These apply to fields with specific drivers that are within the form
+		'driver' => [
+			'input' => [
+				'attr.class' => 'form-control',
+			],
+			'input|email' => [
+				'attr.class' = 'form-control',
+			]
+			'textarea' => [
+				'attr.class' => 'form-control',
+			],
+		],
+		// These apply to fields based on the ftype. (This overrides the driver-based definition)
+		'ftype' => [
+			'special' => [
+				'attr.class' => 'special',
+				'rules' => $rules_array,
+			],
+		],
+	],
+	// This refers to a parent with the ftype 'inline'
+	'inline' = [
+		// The form default settings with the ftype 'inline'
+		':self' => [
+			'attr.class' => 'form-horizontal',
+		],
+		// Look for fields based on drivers within the form with ftype 'inline'
+		'driver' => [
+			'input' => [
+				'attr.class' => 'form-control',
+			],
+		],
+		// Look for fields based on ftype within the form with ftype 'inline'
+		'ftype' => [
+			'street' => [
+				'attr.class' => 'special-street-class',
+				'rules' => $street_rules_array,
+			],
+		],
+	],
+]
+```
+
+Formo allows a config option called `ftype` to determine which pre-defined attributes to load into your form and field objects. These definitions look for form and field `ftype` to decide whether the options appy to that field. Consider the following form and subform:
+
+```
+$form = Formo::form([
+		'alias' => 'myform'
+	])
+	->add('first', 'input')
+	->add('email', 'input|email')
+	->add('notes', 'textarea');
+
+$form->address = Formo::form([
+		'ftype' => 'inline',
+	])
+	->add([
+		'alias' => 'street',
+		'ftype' => 'street',
+	])
+	->add('city')
+	->add('state', 'select', $states);
+```
+That's a typical form definition. There's a form and a subform. The suborm has the `ftype` of `address` and its street.
+
+In the form above, the parent form matches the ':all' ftype definitions, so the appropriate defaults are applied within.
+
+The subform 'address' matches the 'inline' ftype definitions, so the appropriate definitions are all from within that. The field 'street' matches the 'street' ftype within the 'inline' ftype, so it is used instead of the 'input' driver definition.
+
+Formo's `ftype` offers a powerful way to create reusable, base configs for all your forms and subforms.
 
 </div> <!-- md -->
 </section>
