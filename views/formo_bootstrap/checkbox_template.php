@@ -1,9 +1,9 @@
-<div class="field form-group formo-<?=$field->get('driver')?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?=$field->alias()?>">
-	<label class="checkbox"><?=$field->open().$field->html().$field->render_opts().$field->close()?> <span class="checkbox-label"><?=$field->label()?></span></label>
+<div class="field form-group formo-<?php echo $field->get('driver'); ?><?php if ($error = $field->error()) echo ' error'; ?>" id="field-container-<?php echo $field->alias(); ?>">
+	<label class="checkbox"><?php echo $field->open().$field->html().$field->render_opts().$field->close(); ?> <span class="checkbox-label"><?php echo $field->label(); ?></span></label>
 
 	<?php if ($msg = $field->error()): ?>
-		<span class="help-block"><?=$msg?></span>
+		<span class="help-block"><?php echo $msg; ?></span>
 	<?php elseif ($msg = $field->get('message')): ?>
-		<span class="help-block"><?=$msg?></span>
+		<span class="help-block"><?php echo $msg; ?></span>
 	<?php endif; ?>
 </div>

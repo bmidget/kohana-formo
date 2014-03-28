@@ -2,7 +2,7 @@
 	<?php if ($title): ?>
 		<span class="title"><?php echo $title; ?></span>
 	<?php elseif ($label = $field->label()): ?>
-		<label for="<?php echo $field->attr('id'); ?>"><?php echo $label; ?></label>
+		<label><?php echo $label; ?></label>
 	<?php endif; ?>
 
 	<?php echo $field->open().$field->html().$field->render_opts().$field->close(); ?>
