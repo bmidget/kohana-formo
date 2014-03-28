@@ -47,4 +47,5 @@ return array
 			array('Formo::range', array(':field', ':form')),
 		),
 	),
+	'ftype' => [],
 );

@@ -139,6 +139,14 @@ abstract class Formo_Core_Innards {
 	protected $_editable = true;
 
 	/**
+	 * Used for auto-loading config defaults
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $_ftype;
+
+	/**
 	 * HTML instide a tag
 	 *
 	 * @var mixed
@@ -993,6 +1001,58 @@ abstract class Formo_Core_Innards {
 
 			Arr::set_path($array, 'attr.id', $array['alias']);
 		}
+	}
+
+	/**
+	 * Default field definitions from config file
+	 *
+	 * @access protected
+	 * @param array & $array
+	 * @return void
+	 */
+	protected function _setup_from_ftype( array $array)
+	{
+		$config = Kohana::$config->load('formo.ftype');
+		if (empty($config))
+		{
+			// No need to continue if there aren't any definitions
+			return;
+		}
+
+		$driver = Arr::get($array, 'driver', $this->_driver);
+		$ftype = Arr::get($array, 'ftype', $this->_ftype);
+		$parent = Arr::get($array, 'parent', $this->_parent);
+		$parent_ftype = ($parent)
+			? $parent->get('ftype')
+			: null;
+
+		$config_path = null;
+
+		// Build the config path
+		if ($parent)
+		{
+			$config_path.= $parent_ftype
+				? $parent_ftype
+				: ':all';
+	
+			$config_path.= $ftype
+				? '.ftype.'.$ftype
+				: '.driver.'.$driver;
+		}
+		else
+		{
+			$config_path.= $ftype
+				? $ftype.':self'
+				: ':all.:self';
+		}
+
+		if ($arr = Arr::path($config, $config_path))
+		{
+			// If the config path was found, set all the defaults
+			$this->set($arr);
+		}
+
+		return;
 	}
 
 	/**
