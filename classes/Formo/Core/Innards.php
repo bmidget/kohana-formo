@@ -1010,7 +1010,7 @@ abstract class Formo_Core_Innards {
 	 * @param array & $array
 	 * @return void
 	 */
-	protected function _setup_from_ftype( array $array)
+	protected function _setup_from_ftype()
 	{
 		$config = Kohana::$config->load('formo.ftype');
 		if (empty($config))
@@ -1019,40 +1019,35 @@ abstract class Formo_Core_Innards {
 			return;
 		}
 
-		$driver = Arr::get($array, 'driver', $this->_driver);
-		$ftype = Arr::get($array, 'ftype', $this->_ftype);
-		$parent = Arr::get($array, 'parent', $this->_parent);
-		$parent_ftype = ($parent)
-			? $parent->get('ftype')
+		$parent_ftype = ($this->_parent)
+			? $this->_parent->get('ftype')
 			: null;
 
-		$config_path = null;
+		$config_path = 'ftype.';
 
 		// Build the config path
-		if ($parent)
+		if ($this->_parent)
 		{
 			$config_path.= $parent_ftype
 				? $parent_ftype
 				: ':all';
 	
-			$config_path.= $ftype
-				? '.ftype.'.$ftype
-				: '.driver.'.$driver;
+			$config_path.= $this->_ftype
+				? '.ftype.'.$this->_ftype
+				: '.driver.'.$this->_driver;
 		}
 		else
 		{
-			$config_path.= $ftype
-				? $ftype.':self'
+			$config_path.= $this->_ftype
+				? $this->_ftype.':self'
 				: ':all.:self';
 		}
 
-		if ($arr = Arr::path($config, $config_path))
+		if ($arr = $this->config($config_path))
 		{
 			// If the config path was found, set all the defaults
 			$this->set($arr);
 		}
-
-		return;
 	}
 
 	/**

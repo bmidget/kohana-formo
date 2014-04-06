@@ -153,6 +153,9 @@ trait Formo_ORM {
 
 		$this->formo($form);
 
+		// Load defaults
+		$form->ftype();
+
 		return $form;
 	}
 

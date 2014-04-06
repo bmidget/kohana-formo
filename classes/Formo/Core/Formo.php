@@ -61,8 +61,6 @@ class Formo_Core_Formo extends Formo_Innards {
 
 		$array = $this->_resolve_construct_aliases($array);
 
-		$this->_setup_from_ftype($array);
-
 		foreach ($array as $key => $value)
 		{
 			$this->set($key, $value);
@@ -795,6 +793,18 @@ class Formo_Core_Formo extends Formo_Innards {
 		}
 
 		$this->_fields = $array;
+
+		return $this;
+	}
+
+	public function ftype( Array $array = array())
+	{
+		$this->_setup_from_ftype($array);
+
+		foreach ($this->_fields as $field)
+		{
+			$field->ftype();
+		}
 
 		return $this;
 	}
