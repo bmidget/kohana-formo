@@ -1042,7 +1042,9 @@ The format of the `ftype` config param looks like this:
 ]
 ```
 
-Formo allows a config option called `ftype` to determine which pre-defined attributes to load into your form and field objects. These definitions look for form and field `ftype` to decide whether the options appy to that field. Consider the following form and subform:
+Formo allows a config option called `ftype` to determine which pre-defined attributes to load into your form and field objects. These definitions look for form and field `ftype` to decide whether the options appy to that field. Consider the following form and subform.
+
+To once your form is set up, you can inject all these definitions into your form object with the method `Formo::ftype()`.
 
 ```
 $form = Formo::form([
@@ -1061,6 +1063,8 @@ $form->address = Formo::form([
 	])
 	->add('city')
 	->add('state', 'select', $states);
+
+$form->ftype();
 ```
 That's a typical form definition. There's a form and a subform. The suborm has the `ftype` of `address` and its street.
 
