@@ -1,7 +1,7 @@
-<div class="<?=$field->get('driver')?>" id="form-container-<?=$field->alias()?>">
-	<?=$field->open()?>
+<div class="<?php echo $field->get('driver'); ?>" id="form-container-<?php echo $field->alias(); ?>">
+	<?php echo $field->open(); ?>
 		<?php foreach ($field->as_array() as $_field): ?>
-		<?=$_field->render()?>
+		<?php echo $_field->render(); ?>
 		<?php endforeach; ?>
-	<?=$field->close()?>
+	<?php echo $field->close(); ?>
 </div>

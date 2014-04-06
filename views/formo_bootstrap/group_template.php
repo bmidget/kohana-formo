@@ -1,7 +1,7 @@
-<div class="formo-<?=$field->get('driver')?>" id="form-container-<?=$field->alias()?>" <?php if (($key = $field->get('blueprint_key')) !== NULL) echo ' data-blueprintKey="'.$key.'"'; ?>>
-	<?=$field->open()?>
+<div class="formo-<?php echo $field->get('driver'); ?>" id="form-container-<?php echo $field->alias(); ?>" <?php if (($key = $field->get('blueprint_key')) !== NULL) echo ' data-blueprintKey="'.$key.'"'; ?>>
+	<?php echo $field->open(); ?>
 		<?php foreach ($field->as_array() as $_field): ?>
-		<?=$_field->render()?>
+		<?php echo $_field->render(); ?>
 		<?php endforeach; ?>
-	<?=$field->close()?>
+	<?php echo $field->close(); ?>
 </div>
