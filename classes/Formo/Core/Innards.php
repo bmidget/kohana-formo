@@ -652,9 +652,19 @@ abstract class Formo_Core_Innards {
 							? ':value'
 							: ':value'.$i;
 
+							if (is_array($tr_val))
+							{
+								$tr_val = implode(',', $tr_val);
+							}
+
 						$tr_vals[$key] = $tr_val;
 
 						$i++;
+					}
+
+					if (isset($tr_vals[':value']) AND is_array($tr_vals[':value']))
+					{
+						$tr_vals[':value'] = implode(',', $tr_vals[':value']);
 					}
 				}
 
@@ -669,7 +679,6 @@ abstract class Formo_Core_Innards {
 
 		return FALSE;
 	}
-
 	/**
 	 * Determine whether a field is paret of a blueprint definition
 	 *
@@ -1031,7 +1040,7 @@ abstract class Formo_Core_Innards {
 			$config_path.= $parent_ftype
 				? $parent_ftype
 				: ':all';
-	
+
 			$config_path.= $this->_ftype
 				? '.ftype.'.$this->_ftype
 				: '.driver.'.$this->_driver;
