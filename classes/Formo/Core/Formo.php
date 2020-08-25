@@ -911,6 +911,17 @@ class Formo_Core_Formo extends Formo_Innards {
 	}
 
 	/**
+	 * Simple check to see if not_empty rule exists on object
+	 *
+	 * @access public
+	 * @return boolean
+	 */
+	public function is_required()
+	{
+		return in_array(['not_empty'], $this->_rules);
+	}
+
+	/**
 	 * Return a field's label
 	 *
 	 * @access public
